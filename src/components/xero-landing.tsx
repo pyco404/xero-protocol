@@ -24,6 +24,7 @@ import {
   WalletCards,
   X,
   Zap,
+  type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -50,6 +51,13 @@ const policies = [
   { id: "03", name: "Recurring", icon: Clock3, title: "EVERY 30 DAYS", value: "$49.00", copy: "Authorize recurring payments without exposing activity." },
   { id: "04", name: "Agents", icon: Bot, title: "AI AGENT", value: "Active", copy: "Give agents funds with strict programmable boundaries." },
 ] as const;
+
+const securityPillars: ReadonlyArray<readonly [string, LucideIcon]> = [
+  ["ZERO-KNOWLEDGE", KeyRound],
+  ["ENCRYPTION", LockKeyhole],
+  ["ONCHAIN VERIFICATION", ShieldCheck],
+  ["PROGRAMMABLE POLICIES", Braces],
+];
 
 const layers = [
   ["XERO WALLET", "Controls private funds.", WalletCards],
@@ -253,6 +261,7 @@ function PrivateVerifiable() {
 
 function ProgrammableMoney() {
   const [active, setActive] = useState(0);
+  const activePolicy = policies[active] ?? policies[0];
   return (
     <section className="section-shell border-y border-border bg-surface/30">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
@@ -263,8 +272,8 @@ function ProgrammableMoney() {
             {policies.map((policy, index) => <button key={policy.name} onClick={() => setActive(index)} className={`min-h-44 cursor-pointer bg-background p-5 text-left transition-colors ${active === index ? "bg-primary/5" : "hover:bg-card"}`}><span className="font-mono text-[9px] text-muted-foreground">{policy.id}</span><policy.icon className={`my-5 size-5 ${active === index ? "text-primary" : "text-muted-foreground"}`} /><span className="block text-sm font-medium">{policy.name}</span></button>)}
           </div>
           <div className="border border-border bg-card p-6 sm:p-8">
-            <div className="flex items-center justify-between border-b border-border pb-5"><p className="terminal-label">XERO POLICY / {policies[active].id}</p><span className="status-dot">ACTIVE</span></div>
-            <AnimatePresence mode="wait"><motion.div key={active} initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }} className="py-10"><p className="terminal-label">{policies[active].title}</p><p className="mt-3 font-mono text-3xl text-primary">{policies[active].value}</p><p className="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">{policies[active].copy}</p></motion.div></AnimatePresence>
+            <div className="flex items-center justify-between border-b border-border pb-5"><p className="terminal-label">XERO POLICY / {activePolicy.id}</p><span className="status-dot">ACTIVE</span></div>
+            <AnimatePresence mode="wait"><motion.div key={active} initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }} className="py-10"><p className="terminal-label">{activePolicy.title}</p><p className="mt-3 font-mono text-3xl text-primary">{activePolicy.value}</p><p className="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">{activePolicy.copy}</p></motion.div></AnimatePresence>
             <div className="flex flex-wrap items-center gap-3 border-t border-border pt-6 font-mono text-[9px]"><span>PAYMENT REQUEST</span><ArrowRight className="size-3 text-muted-foreground" /><span>POLICY CHECK</span><ArrowRight className="size-3 text-muted-foreground" /><span className="text-primary">ALLOW ✓</span></div>
           </div>
         </div>
@@ -366,7 +375,7 @@ function Developers() {
 
 function Security() {
   return (
-    <section className="section-shell"><div className="mx-auto max-w-7xl px-5 lg:px-8"><SectionLabel>14 / Security</SectionLabel><Reveal><h2 className="heading-xl">Cryptography, not promises.</h2></Reveal><div className="mt-14 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">{[["ZERO-KNOWLEDGE",KeyRound],["ENCRYPTION",LockKeyhole],["ONCHAIN VERIFICATION",ShieldCheck],["PROGRAMMABLE POLICIES",Braces]].map(([title,Icon]) => { const SecurityIcon = Icon; return <Reveal key={String(title)} className="min-h-48 bg-background p-6"><SecurityIcon className="size-5 text-primary"/><p className="mt-16 font-mono text-[9px] tracking-[0.12em]">{String(title)}</p></Reveal>})}</div><div className="mt-10 grid gap-4 text-sm text-muted-foreground sm:grid-cols-2 lg:grid-cols-5">{["Non-custodial architecture","Cryptographic verification","Transparent protocol rules","Security-first development","Independent audits before production"].map(x => <p key={x} className="flex gap-2"><Check className="mt-0.5 size-3 shrink-0 text-primary"/>{x}</p>)}</div></div></section>
+    <section className="section-shell"><div className="mx-auto max-w-7xl px-5 lg:px-8"><SectionLabel>14 / Security</SectionLabel><Reveal><h2 className="heading-xl">Cryptography, not promises.</h2></Reveal><div className="mt-14 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">{securityPillars.map(([title, SecurityIcon]) => <Reveal key={title} className="min-h-48 bg-background p-6"><SecurityIcon className="size-5 text-primary"/><p className="mt-16 font-mono text-[9px] tracking-[0.12em]">{title}</p></Reveal>)}</div><div className="mt-10 grid gap-4 text-sm text-muted-foreground sm:grid-cols-2 lg:grid-cols-5">{["Non-custodial architecture","Cryptographic verification","Transparent protocol rules","Security-first development","Independent audits before production"].map(x => <p key={x} className="flex gap-2"><Check className="mt-0.5 size-3 shrink-0 text-primary"/>{x}</p>)}</div></div></section>
   );
 }
 

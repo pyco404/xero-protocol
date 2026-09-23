@@ -19,6 +19,9 @@
  */
 
 @theme inline {
+  --font-sans: "Geist", sans-serif;
+  --font-display: "Geist", sans-serif;
+  --font-mono: "Geist Mono", monospace;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -59,29 +62,37 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-surface: var(--surface);
+  --color-proof: var(--proof);
+  --color-warning: var(--warning);
+  --color-code: var(--code);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  --radius: 0.25rem;
+  --background: oklch(0.137 0.009 248);
+  --foreground: oklch(0.962 0.004 247);
+  --card: oklch(0.192 0.012 248);
+  --card-foreground: oklch(0.962 0.004 247);
+  --popover: oklch(0.192 0.012 248);
+  --popover-foreground: oklch(0.962 0.004 247);
+  --primary: oklch(0.885 0.116 165);
+  --primary-foreground: oklch(0.137 0.009 248);
+  --secondary: oklch(0.225 0.014 248);
+  --secondary-foreground: oklch(0.962 0.004 247);
+  --muted: oklch(0.225 0.014 248);
+  --muted-foreground: oklch(0.671 0.015 248);
+  --accent: oklch(0.263 0.016 248);
+  --accent-foreground: oklch(0.962 0.004 247);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --border: oklch(0.278 0.015 248);
+  --input: oklch(0.278 0.015 248);
+  --ring: oklch(0.885 0.116 165);
+  --surface: oklch(0.168 0.011 248);
+  --proof: oklch(0.687 0.155 289);
+  --warning: oklch(0.84 0.105 88);
+  --code: oklch(0.79 0.095 315);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -140,5 +151,58 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    letter-spacing: 0;
+    text-rendering: optimizeLegibility;
   }
+
+  html { scroll-behavior: smooth; }
+
+  ::selection { background: color-mix(in oklab, var(--primary) 24%, transparent); }
+}
+
+@utility section-shell {
+  padding-block: 7rem;
+  @media (min-width: 640px) { padding-block: 9rem; }
+}
+
+@utility heading-xl {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  line-height: 1.05;
+  font-weight: 600;
+  @media (min-width: 640px) { font-size: 3.75rem; }
+}
+
+@utility terminal-label {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  line-height: 1rem;
+  letter-spacing: 0.14em;
+  color: var(--muted-foreground);
+}
+
+@utility status-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  color: var(--primary);
+  &::before { content: ""; width: 0.35rem; height: 0.35rem; background: var(--primary); box-shadow: 0 0 12px color-mix(in oklab, var(--primary) 65%, transparent); }
+}
+
+@utility protocol-grid {
+  background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+}
+
+@utility shadow-mint { box-shadow: 0 0 36px color-mix(in oklab, var(--primary) 12%, transparent); }
+@utility shadow-proof { box-shadow: 0 0 18px color-mix(in oklab, var(--proof) 60%, transparent); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }

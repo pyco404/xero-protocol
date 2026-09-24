@@ -73,23 +73,35 @@ const policies = [
 ] as const;
 
 const securityPillars: ReadonlyArray<readonly [string, string, LucideIcon]> = [
-  ["ZERO-KNOWLEDGE", "Prove a payment is valid without revealing its details.", KeyRound],
-  ["ENCRYPTION", "Amounts and balances are encrypted, not just hidden in the UI.", LockKeyhole],
+  [
+    "ZERO-KNOWLEDGE",
+    "In development: prove a payment is valid without revealing its details.",
+    KeyRound,
+  ],
+  [
+    "ENCRYPTION",
+    "In development: amounts and balances encrypted on-chain, not just hidden in the UI.",
+    LockKeyhole,
+  ],
   [
     "ONCHAIN VERIFICATION",
-    "Solana verifies every proof. No trusted operator decides.",
+    "Solana enforces every spending rule. No trusted operator decides.",
     ShieldCheck,
   ],
-  ["PROGRAMMABLE POLICIES", "Spending rules are enforced before a payment is authorized.", Braces],
+  [
+    "PROGRAMMABLE POLICIES",
+    "Spending rules are enforced before a payment is authorized. Working today in test environments.",
+    Braces,
+  ],
 ];
 
 const layers = [
   ["USER / AGENT", "Initiates a payment request.", Bot],
-  ["XERO WALLET", "Controls private funds.", WalletCards],
+  ["XERO WALLET", "Holds funds under your spending policy.", WalletCards],
   ["POLICY ENGINE", "Defines what funds are allowed to do.", Braces],
-  ["ZK PRIVACY LAYER", "Generates cryptographic proofs.", KeyRound],
+  ["ZK PRIVACY LAYER", "Generates cryptographic proofs. In development.", KeyRound],
   ["SOLANA", "Provides settlement and verification.", Zap],
-  ["USDC", "Provides dollar-denominated value.", CircleDollarSign],
+  ["STABLECOINS", "Provide dollar-denominated value.", CircleDollarSign],
 ] as const;
 
 function LogoMark({ className = "size-7" }: { className?: string }) {
@@ -256,7 +268,7 @@ function PrivateDollar() {
         <div className="w-[82cqw] border border-primary/40 bg-card p-[0.8cqw]">
           <div className="border border-border bg-background/80 px-[8cqw] py-[8.5cqw]">
             <div className="mb-[15cqw] flex items-center justify-between font-mono text-[length:max(9px,2.9cqw)] text-muted-foreground">
-              <span>PRIVATE USD</span>
+              <span>DIGITAL USD</span>
               <LockKeyhole className="size-[4.5cqw] text-primary" />
             </div>
             <div className="flex items-end justify-between">
@@ -269,7 +281,7 @@ function PrivateDollar() {
         </div>
         <div className="flex items-center gap-[1.6cqw] border border-border bg-card px-[2.6cqw] py-[1.6cqw] font-mono text-[length:max(9px,2.1cqw)]">
           <ShieldCheck className="size-[max(14px,3cqw)] text-primary" /> ZK PROOF{" "}
-          <span className="text-primary">VALID</span>
+          <span className="text-primary">IN DEVELOPMENT</span>
         </div>
       </div>
     </div>
@@ -292,17 +304,17 @@ function Hero() {
         >
           <p className="mb-7 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
             <span className="size-1.5 bg-primary" />
-            Private programmable money
+            Programmable money for agents
           </p>
           <h1 className="font-display text-5xl font-semibold leading-[0.98] sm:text-6xl lg:text-6xl xl:text-7xl 2xl:text-[5.25rem]">
             Money that can prove what it&apos;s allowed to do.
           </h1>
           <p className="mt-6 text-lg font-medium text-foreground/85">
-            Private by design. Programmable by default. Built on Solana.
+            Programmable by default. Private by design, in development. Built on Solana.
           </p>
           <p className="mt-4 max-w-xl text-[15px] leading-7 text-muted-foreground">
-            Move digital dollars without exposing your entire financial history. Define spending
-            rules, authorize autonomous agents, and selectively prove what matters.
+            Define spending rules for digital dollars and let autonomous agents pay within them.
+            Private payments and selective disclosure are in development.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button size="lg" asChild>
@@ -315,8 +327,8 @@ function Hero() {
             </Button>
           </div>
           <p className="mt-7 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
-            Solana <span className="mx-2 text-border">·</span> USDC{" "}
-            <span className="mx-2 text-border">·</span> Zero-knowledge
+            Solana <span className="mx-2 text-border">·</span> Stablecoins{" "}
+            <span className="mx-2 text-border">·</span> ZK (in development)
           </p>
         </motion.div>
         <PrivateDollar />
@@ -329,7 +341,13 @@ function TrustStrip() {
   return (
     <section className="border-b border-border bg-surface/40">
       <div className="mx-auto grid max-w-7xl grid-cols-2 border-x border-border sm:grid-cols-3 lg:grid-cols-5">
-        {["SOLANA", "USDC", "ZERO-KNOWLEDGE", "NON-CUSTODIAL", "PROGRAMMABLE"].map((item, i) => (
+        {[
+          "SOLANA",
+          "STABLECOINS",
+          "ZK PRIVACY · IN DEVELOPMENT",
+          "NON-CUSTODIAL",
+          "PROGRAMMABLE",
+        ].map((item, i) => (
           <div
             key={item}
             className={`flex h-20 items-center justify-center gap-2 border-border px-4 font-mono text-[9px] tracking-[0.16em] text-muted-foreground ${i < 4 ? "lg:border-r" : ""}`}
@@ -424,9 +442,13 @@ function Problem() {
 
 function Solution() {
   const features = [
-    ["PRIVATE", "Sensitive financial information can remain shielded.", LockKeyhole],
-    ["VERIFIABLE", "The blockchain can verify cryptographic validity.", ShieldCheck],
-    ["PROGRAMMABLE", "Rules determine what private money is allowed to do.", Braces],
+    ["PRIVATE", "In development: sensitive payment details stay shielded.", LockKeyhole],
+    ["VERIFIABLE", "The chain enforces every spending rule, so anyone can verify it.", ShieldCheck],
+    [
+      "PROGRAMMABLE",
+      "Rules determine what money is allowed to do. Working today in test environments.",
+      Braces,
+    ],
   ] as const;
   return (
     <section id="technology" className="section-shell border-y border-border bg-surface/30">
@@ -439,7 +461,13 @@ function Solution() {
         </Reveal>
         <div className="mt-12 grid gap-12 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
           <Reveal className="flex flex-col items-center">
-            {["USDC", "XERO", "PRIVATE PAYMENT", "ZK PROOF", "SOLANA ✓"].map((item, index) => (
+            {[
+              "STABLECOINS",
+              "XERO",
+              "PRIVATE PAYMENT · IN DEVELOPMENT",
+              "ZK PROOF · IN DEVELOPMENT",
+              "SOLANA ✓",
+            ].map((item, index) => (
               <div key={item} className="contents">
                 <div
                   className={`w-full max-w-sm border px-5 py-4 text-center font-mono text-[10px] tracking-[0.14em] ${index === 1 ? "border-primary bg-primary/5 text-primary shadow-mint" : "border-border bg-card"}`}
@@ -476,13 +504,13 @@ function PrivateVerifiable() {
           <Reveal>
             <h2 className="heading-xl">Privacy doesn&apos;t mean trust.</h2>
             <p className="mt-6 max-w-xl leading-7 text-muted-foreground">
-              XERO uses cryptographic proofs so transactions can remain verifiable without exposing
-              unnecessary financial information.
+              In development: XERO will use privacy rails and cryptographic proofs so payments stay
+              verifiable without exposing unnecessary financial information.
             </p>
           </Reveal>
           <Reveal className="grid gap-px bg-border sm:grid-cols-2">
             <div className="bg-card p-6">
-              <p className="terminal-label">PUBLIC CHAIN</p>
+              <p className="terminal-label">PUBLIC CHAIN · IN DEVELOPMENT</p>
               {[
                 ["Transaction", "✓"],
                 ["Proof", "✓"],
@@ -525,9 +553,9 @@ function ProgrammableMoney() {
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <SectionLabel>Programmable money</SectionLabel>
         <Reveal>
-          <h2 className="heading-xl">Privacy is only the beginning.</h2>
+          <h2 className="heading-xl">Privacy is coming. Policy is here.</h2>
           <p className="mt-5 text-xl text-muted-foreground sm:text-2xl">
-            Private money becomes powerful when you can program it.
+            Money becomes powerful when you can program it.
           </p>
         </Reveal>
         <div className="mt-12 grid gap-8 lg:grid-cols-[.85fr_1.15fr]">
@@ -585,8 +613,8 @@ const agentNodes = [
   "AI AGENT",
   "XERO WALLET",
   "POLICY ENGINE",
-  "ZK PRIVACY",
-  "PRIVATE PAYMENT",
+  "ZK PRIVACY · IN DEVELOPMENT",
+  "PRIVATE PAYMENT · IN DEVELOPMENT",
   "SOLANA",
 ];
 const POLICY_NODE = 2;
@@ -837,7 +865,7 @@ function LiveDemo() {
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <SectionLabel>Payment simulation</SectionLabel>
         <Reveal>
-          <h2 className="heading-xl">Watch a private payment happen.</h2>
+          <h2 className="heading-xl">Watch a payment pass the policy check.</h2>
         </Reveal>
         <div className="mt-12 grid overflow-hidden border border-border bg-background lg:grid-cols-[1.25fr_.75fr]">
           <div className="border-b border-border p-5 sm:p-8 lg:border-b-0 lg:border-r">
@@ -906,7 +934,7 @@ function LiveDemo() {
                 >
                   {denied
                     ? `DENIED: ${current.reason}. No transaction created.`
-                    : "PAYMENT SETTLED. Amount and balance stayed private."}
+                    : "PAYMENT SETTLED. Private settlement is in development."}
                 </motion.p>
               )}
             </AnimatePresence>
@@ -925,7 +953,8 @@ function LiveDemo() {
               <Globe className="size-4 text-proof" /> WHAT THE CHAIN SEES
             </p>
             <p className="mt-2 text-xs text-muted-foreground">
-              The public record on Solana. Anyone can read it.
+              The public record on Solana once private payments ship (in development). Today's
+              policy vault settles publicly.
             </p>
             <div className="mt-6">
               {publicRows.map(([label, value, tone]) => (
@@ -971,22 +1000,26 @@ function LiveDemo() {
 
 type TxField = "sender" | "recipient" | "amount" | "balance";
 
-const disclosureLevels: { name: string; hides: TxField[]; research?: boolean }[] = [
+const disclosureLevels: {
+  name: string;
+  hides: TxField[];
+  status?: "IN DEVELOPMENT" | "RESEARCH";
+}[] = [
   { name: "PUBLIC", hides: [] },
-  { name: "AMOUNT PRIVATE", hides: ["amount"] },
-  { name: "BALANCE PRIVATE", hides: ["amount", "balance"] },
-  { name: "COUNTERPARTY PRIVATE", hides: ["amount", "balance", "recipient"], research: true },
+  { name: "AMOUNT PRIVATE", hides: ["amount"], status: "IN DEVELOPMENT" },
+  { name: "BALANCE PRIVATE", hides: ["amount", "balance"], status: "IN DEVELOPMENT" },
+  { name: "COUNTERPARTY PRIVATE", hides: ["amount", "balance", "recipient"], status: "RESEARCH" },
   {
     name: "FULLY SHIELDED",
     hides: ["amount", "balance", "recipient", "sender"],
-    research: true,
+    status: "RESEARCH",
   },
 ];
 
 const txPreview: [TxField, string, string][] = [
   ["sender", "Sender", "7xQm…9fKa"],
   ["recipient", "Recipient", "vendor.sol"],
-  ["amount", "Amount", "$4,250.00 USDC"],
+  ["amount", "Amount", "$4,250.00"],
   ["balance", "Balance", "$18,420.55"],
 ];
 
@@ -1001,7 +1034,7 @@ function Disclosure() {
           <Reveal>
             <h2 className="heading-lg">Privacy without losing trust.</h2>
             <p className="mt-6 text-lg text-muted-foreground">
-              Prove what matters. Reveal only what you choose.
+              Prove what matters. Reveal only what you choose. In development.
             </p>
           </Reveal>
           <Reveal className="lg:row-span-2">
@@ -1015,9 +1048,9 @@ function Disclosure() {
                 >
                   <span className="flex items-center gap-2">
                     {String(index + 1).padStart(2, "0")} / {item.name}
-                    {item.research && (
+                    {item.status && (
                       <span className="border border-border px-1.5 py-px text-[8px] tracking-[0.12em] text-muted-foreground">
-                        RESEARCH
+                        {item.status}
                       </span>
                     )}
                   </span>
@@ -1172,10 +1205,10 @@ function Architecture() {
         <SectionLabel>Architecture</SectionLabel>
         <div className="grid gap-14 lg:grid-cols-[.9fr_1.1fr]">
           <Reveal>
-            <h2 className="heading-lg">A privacy layer for programmable money.</h2>
+            <h2 className="heading-lg">A policy layer for programmable money.</h2>
             <p className="mt-6 leading-7 text-muted-foreground">
-              Each layer has one job. Together, they move dollar-denominated value with private,
-              enforceable rules.
+              Each layer has one job. Together, they move dollar-denominated value under enforceable
+              rules, with privacy in development.
             </p>
           </Reveal>
           <Reveal>
@@ -1276,10 +1309,10 @@ function Developers() {
         <SectionLabel>Developer experience</SectionLabel>
         <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
           <Reveal>
-            <h2 className="heading-xl">One API for private money.</h2>
+            <h2 className="heading-xl">One API for agent money.</h2>
             <p className="mt-6 max-w-lg leading-7 text-muted-foreground">
-              Build wallets, agents, subscriptions, payroll, and private payment applications on
-              XERO.
+              Build wallets, agents, subscriptions, and payroll on XERO, with private payments as
+              they come out of development.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild>
@@ -1363,7 +1396,7 @@ function FinalCta() {
             Your money shouldn&apos;t have to explain itself.
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
-            Build payments that are private, programmable, and verifiable.
+            Build payments that are programmable and verifiable, with privacy in development.
           </p>
           <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
             <Button size="lg" asChild>
@@ -1407,7 +1440,7 @@ function Footer() {
           <div className="col-span-2 sm:col-span-4 lg:col-span-1">
             <Logo />
             <p className="mt-5 max-w-xs text-sm text-muted-foreground">
-              Private programmable money on Solana.
+              Programmable money for agents on Solana. Privacy in development.
             </p>
           </div>
           {Object.entries(footerColumns).map(([title, items]) => (

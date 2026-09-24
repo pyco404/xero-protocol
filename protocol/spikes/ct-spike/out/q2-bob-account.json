@@ -1,0 +1,45 @@
+{
+  "data": {
+    "parsed": {
+      "info": {
+        "extensions": [
+          {
+            "extension": "confidentialTransferAccount",
+            "state": {
+              "actualPendingBalanceCreditCounter": 1,
+              "allowConfidentialCredits": true,
+              "allowNonConfidentialCredits": true,
+              "approved": true,
+              "availableBalance": "euJRiLrZDG7SzR6SUI5wom+rJpJwu1VC5SqO/T2AFywoUap2E/Dv/yPpKJiEetiOdu9IeqPqTpbic2zxOv+NFA==",
+              "decryptableAvailableBalance": "FUKsBEebHXtPAC17c/Hu76C45Lt144/g92GYGFXTHZQVh8wX",
+              "elgamalPubkey": "roL17c3jrlXCbCgegj4nohEz4TuBN/5KUux5UjB9DlY=",
+              "expectedPendingBalanceCreditCounter": 1,
+              "maximumPendingBalanceCreditCounter": 65536,
+              "pendingBalanceCreditCounter": 0,
+              "pendingBalanceHi": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "pendingBalanceLo": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+            }
+          }
+        ],
+        "isNative": false,
+        "mint": "6soGxMRniDBWHgpxTJrDDnoFda5i7B3Pws3HoFFetyyT",
+        "owner": "6kdKDNXt7jC6eyMKn9WSpCFDLjaaUtKXEXLWWrgJn8Mw",
+        "state": "initialized",
+        "tokenAmount": {
+          "amount": "420000",
+          "decimals": 6,
+          "uiAmount": 0.42,
+          "uiAmountString": "0.42"
+        }
+      },
+      "type": "account"
+    },
+    "program": "spl-token-2022",
+    "space": 465
+  },
+  "executable": false,
+  "lamports": 4127280,
+  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+  "rentEpoch": 18446744073709551615,
+  "space": 465
+}

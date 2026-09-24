@@ -1,0 +1,32 @@
+[package]
+name = "ct-spike"
+version = "0.0.0"
+edition = "2021"
+publish = false
+description = "Throwaway privacy spike: Token-2022 confidential transfers on localnet"
+
+# Standalone: not part of the protocol/ Anchor workspace.
+[workspace]
+
+[dependencies]
+bytemuck = "1.25"
+serde_json = "1"
+solana-keypair = "=3.1.2"
+solana-signer = "=3.0.1"
+solana-system-interface = { version = "=3.3.0", features = ["bincode"] }
+solana-transaction = { version = "=3.1.0", features = ["bincode"] }
+bincode = "1.3"
+base64 = "0.22"
+solana-hash = "4"
+solana-instruction = "=3.5.1"
+solana-address = "=2.8.0"
+solana-compute-budget-interface = "=3.1.0"
+solana-zk-sdk = "=7.0.1"
+solana-zk-elgamal-proof-interface = "=0.1.3"
+spl-token-2022-interface = "=3.1.2"
+spl-token-confidential-transfer-proof-extraction = "=0.6.1"
+spl-token-confidential-transfer-proof-generation = "=0.6.1"
+ct-vault = { path = "../ct-vault", features = ["no-entrypoint"] }
+spl-token-confidential-transfer-ciphertext-arithmetic = "=0.5.1"
+solana-zk-sdk-pod = "=0.1.2"
+spl-record = { version = "=0.4.0", default-features = false }

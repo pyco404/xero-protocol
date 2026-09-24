@@ -1,0 +1,168 @@
+{
+  "transactions": [
+    {
+      "bytes": 461,
+      "compute_units": 2848,
+      "fee_lamports": 10000,
+      "instructions": 3,
+      "label": "create mint (ConfidentialTransferMint+auditor)",
+      "signature": "5Z63hBFdDY8BcfRkureCbj3mYEAMG1C5GXUcVRQULft5RSHuVLKCTmYFK9PokWwWTy5aRjLbyZMLheMakWtu2Ssa"
+    },
+    {
+      "bytes": 735,
+      "compute_units": 7120,
+      "fee_lamports": 15000,
+      "instructions": 4,
+      "label": "create+configure CT account (alice)",
+      "signature": "5UaP4ZvEAMd7iuPiT1YcEHHdsZLc7ZAGm5fZLi6DUsbTqxaFZFGvFTUjjJtTWC3xoXao6m7oW8wMS6NNWD3iX5oK"
+    },
+    {
+      "bytes": 735,
+      "compute_units": 7120,
+      "fee_lamports": 15000,
+      "instructions": 4,
+      "label": "create+configure CT account (bob)",
+      "signature": "2N4W18NYtX3ZygQLLCpeaAcTeTkEoGt2KFRgJoH3GxKCqyUttCxsj9mva6YxHJAUxS433dU8iX8GZicW94jfKjbz"
+    },
+    {
+      "bytes": 245,
+      "compute_units": 1551,
+      "fee_lamports": 5000,
+      "instructions": 1,
+      "label": "mint_to alice 1000 (public)",
+      "signature": "41pqKZVPNRCrkAKqP9HHy6TSWabLwwtjwWLcqpb1MV4FSHshMznysbTCx8G8dBbmfVaa7qzvNavtTXEZr6LSnwAs"
+    },
+    {
+      "bytes": 343,
+      "compute_units": 9854,
+      "fee_lamports": 10000,
+      "instructions": 1,
+      "label": "deposit 100 (alice)",
+      "signature": "2x9HbBPQoa5wxCTuoqNtWwD6me3cfSWxS1DBTQHMWeCVi7XC19uTYi1mNxYoANT6mjrhm5sZ2ZLmYniVGTgjP6Sw"
+    },
+    {
+      "bytes": 345,
+      "compute_units": 7968,
+      "fee_lamports": 10000,
+      "instructions": 1,
+      "label": "apply pending balance (alice, +100000000)",
+      "signature": "QZA8kvMAk5iLcJZDpcZYDBXt5RkeUooPBaDYgaHT4bBnACxw6CTY71qf1JWAah1BxfiUEjT8qLPCECeQMZXCEma"
+    },
+    {
+      "bytes": 710,
+      "compute_units": 6550,
+      "fee_lamports": 10000,
+      "instructions": 2,
+      "label": "verify equality proof -> context account",
+      "signature": "3oXm4oBfK7D1PvSre42NYwmHGGUa3dgfSJQiyZQ73RcEe4N5zyKXTPV18U24oh8oCkVka8GcM7tjPpcuoR3TVhUB"
+    },
+    {
+      "bytes": 934,
+      "compute_units": 16550,
+      "fee_lamports": 10000,
+      "instructions": 2,
+      "label": "verify ciphertext-validity proof -> context",
+      "signature": "5B8FsJ3KPbZCmnvociSqYRV9yziCAb88JKQ53oUofJRkV6gU4fyFbNU9dzz23qzXkjKocndwWPRLTtab9FaG1vLv"
+    },
+    {
+      "bytes": 1232,
+      "compute_units": 1348,
+      "fee_lamports": 15000,
+      "instructions": 3,
+      "label": "record: create+init+write 760 B",
+      "signature": "51gAZmq4dH16YUvMEvm6FvWoFHvqMCYhiaPRm1NrrRHpmD2jh1C8jaa5pzymVRRUmmiH6y1YURC6Dh3EJ8jvgUnT"
+    },
+    {
+      "bytes": 553,
+      "compute_units": 651,
+      "fee_lamports": 10000,
+      "instructions": 1,
+      "label": "record: write 240 B",
+      "signature": "4T6yPGsTMUGTYKFgSfTKj1UYfTNCjtZd3Zu9xjUcJGJWVBb8BuiSR7skXF5RxUwxesBCZ6ojqa7jvNySc4J6STdZ"
+    },
+    {
+      "bytes": 426,
+      "compute_units": 200150,
+      "fee_lamports": 10000,
+      "instructions": 2,
+      "label": "verify range proof from record -> context",
+      "signature": "3L3kxYTEZvMy1xV6CWs6S9qZB3kFu8vrMe7WTvxD8SQPQFbrGuHceE6XzcTPYfj9CXzXRfsX2ZLvZgeqTa2jAwGd"
+    },
+    {
+      "bytes": 758,
+      "compute_units": 25120,
+      "fee_lamports": 10000,
+      "instructions": 5,
+      "label": "transfer (3 contexts) + close contexts + record",
+      "signature": "22eeMbXcL5ZeHH5tFoNc1VMCNL41W256gsAc4URcErgmYmQrvTukMpV7imk3L2UKjJG1hMYJCifBUco9LPQZSgKn"
+    },
+    {
+      "bytes": 345,
+      "compute_units": 7968,
+      "fee_lamports": 10000,
+      "instructions": 1,
+      "label": "apply pending balance (bob, +420000)",
+      "signature": "3bsUbLsaDHvDnFbczA3Rr9n1yWL5fL4JBEy3rbgSWS2K3vagqiwYw5PMYMmDSrbf1jVdUQjcdzMJrDDr9iLkUAjt"
+    },
+    {
+      "bytes": 710,
+      "compute_units": 6550,
+      "fee_lamports": 10000,
+      "instructions": 2,
+      "label": "verify withdraw equality -> context",
+      "signature": "4dnwxgcov5CFAN9BDby7SFSN8gaxvS8HjzveQ7CuiDDaz9N4uwjQsLBxwd2yYJjG87P84gswa4c49kvmZF3ax4FA"
+    },
+    {
+      "bytes": 1232,
+      "compute_units": 1348,
+      "fee_lamports": 15000,
+      "instructions": 3,
+      "label": "record (withdraw U64 range): create+init+write 760 B",
+      "signature": "1TqPGEL8ULeA7KTbciXUZRi6HxqXZMD6ayUmu2svJBsNDVYbJ2goHr7Z1Sctb3tPpQS5Rpv6kBHJphpS6hSXNA7"
+    },
+    {
+      "bytes": 489,
+      "compute_units": 651,
+      "fee_lamports": 10000,
+      "instructions": 1,
+      "label": "record (withdraw U64 range): write 176 B",
+      "signature": "3sbM12VnE3WGvC792oGxr4dnoRb2Kyg4TGGDiAcW7H8ddmc3bMict59me3xme6cvKZKHVrjhhS7ax2nsFTAjLBbv"
+    },
+    {
+      "bytes": 426,
+      "compute_units": 111150,
+      "fee_lamports": 10000,
+      "instructions": 2,
+      "label": "verify withdraw U64 range from record -> context",
+      "signature": "4YBqdZxCjBL2KpJ4dGVTA24888WpjVqn8Krm66LH3vBiKuRJzn65b9NfqRWn2cT6Af4upgmG2V5YoFhuKY9ZiNkr"
+    },
+    {
+      "bytes": 564,
+      "compute_units": 12941,
+      "fee_lamports": 10000,
+      "instructions": 4,
+      "label": "withdraw 0.42 (2 contexts) + close",
+      "signature": "36UzvzSTctn5KiCeiUdHfpBo7Fncazgc2XAscHr5uqry6WNHdQw7SaHeHhxZNC5vwjcenz4wxi4tirUzcpN2jdJR"
+    }
+  ],
+  "transfer": {
+    "bytes": 4613,
+    "compute_units": 250369,
+    "context_rent_lamports": 8539920,
+    "fee_lamports": 65000,
+    "inline_single_tx_bytes": 2479,
+    "proof_generation_ms": 35.563615,
+    "proof_sizes": {
+      "equality": 320,
+      "range_u128": 1000,
+      "validity_3_handles": 544
+    },
+    "transactions": 6
+  },
+  "withdraw": {
+    "compute_units": 132640,
+    "inline_single_tx_bytes": 1712,
+    "proof_generation_ms": 13.180620000000001,
+    "transactions": 5
+  }
+}

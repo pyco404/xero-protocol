@@ -1,0 +1,18 @@
+[key derivation]
+  ConfidentialKeys.fromIkm (ElGamal + AES)     7.0 ms
+  pdaWalletPublicSeed -> 128 bytes (program_id || wallet_pda || mint || token_account)
+
+[proof generation in WASM (Node)]
+  PubkeyValidityProofData                      0.9 ms
+  CiphertextCommitmentEqualityProofData        2.6 ms
+  BatchedRangeProofU128Data (64+16+32+16 bits) 111.3 ms
+  BatchedRangeProofU64Data (64 bits)           51.4 ms
+  local verify() of the U128 range proof       16.0 ms
+  sizes: equality 320 B, range U64 936 B, range U128 1000 B
+
+[ZK ElGamal proof program on localnet, via simulateTransaction]
+  on-chain pubkey validity                     err=null units=2600 (266 B)
+  on-chain ciphertext-commitment equality      err=null units=6400 (491 B)
+  on-chain equality, statement swapped         err={"InstructionError":[0,"InvalidInstructionData"]} units=6400 (491 B)
+  on-chain range U64                           err=null units=111000 (1107 B)
+  on-chain range U128                          err=null units=200000 (1171 B)

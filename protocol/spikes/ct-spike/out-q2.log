@@ -1,0 +1,106 @@
+mint 6soGxMRniDBWHgpxTJrDDnoFda5i7B3Pws3HoFFetyyT  alice Awt9nUck7XAbhH8PavDSBrKu89UcAtpMPm45QteXTay2  bob 9LWmGvrbZ4BhQ1GXwBHyq3srDLWqQJQjNqp3xMo3jHdw
+
+[setup]
+  tx create mint (ConfidentialTransferMint+auditor)   461 B     2848 CU  fee 10000 lamports  (3 ix)
+  proof: pubkey validity (alice) 77.562µs
+  tx create+configure CT account (alice)              735 B     7120 CU  fee 15000 lamports  (4 ix)
+  proof: pubkey validity (bob) 85.329µs
+  tx create+configure CT account (bob)                735 B     7120 CU  fee 15000 lamports  (4 ix)
+  tx mint_to alice 1000 (public)                      245 B     1551 CU  fee  5000 lamports  (1 ix)
+
+[deposit public -> confidential]
+  tx deposit 100 (alice)                              343 B     9854 CU  fee 10000 lamports  (1 ix)
+  tx apply pending balance (alice, +100000000)        345 B     7968 CU  fee 10000 lamports  (1 ix)
+
+[confidential transfer alice -> bob, $0.42]
+  proof: transfer (equality + 3-handle validity + U128 range) 35.563615ms
+  proof data sizes: equality 320 B, validity 544 B, range 1000 B
+  option A (all proofs inline, 1 tx): 2479 B vs limit 1232 B -> DOES NOT FIT
+  tx verify equality proof -> context account         710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify ciphertext-validity proof -> context      934 B    16550 CU  fee 10000 lamports  (2 ix)
+  tx record: create+init+write 760 B                 1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record: write 240 B                              553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify range proof from record -> context        426 B   200150 CU  fee 10000 lamports  (2 ix)
+  tx transfer (3 contexts) + close contexts + record   758 B    25120 CU  fee 10000 lamports  (5 ix)
+  => one confidential transfer = 6 transactions, 250369 CU, 4613 B on the wire, 65000 lamports fees, 8539920 lamports rent locked until the contexts are closed
+  tx apply pending balance (bob, +420000)             345 B     7968 CU  fee 10000 lamports  (1 ix)
+
+[withdraw confidential -> public, bob $0.42]
+  proof: withdraw (equality + U64 range) 13.18062ms
+  option A (withdraw with inline proofs, 1 tx): 1712 B -> DOES NOT FIT
+  tx verify withdraw equality -> context              710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx record (withdraw U64 range): create+init+write 760 B  1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (withdraw U64 range): write 176 B         489 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify withdraw U64 range from record -> context   426 B   111150 CU  fee 10000 lamports  (2 ix)
+  tx withdraw 0.42 (2 contexts) + close               564 B    12941 CU  fee 10000 lamports  (4 ix)
+  => one withdraw = 5 transactions, 132640 CU
+
+[observer view]
+  transfer instruction as parsed by RPC:
+{
+  "parsed": {
+    "info": {
+      "ciphertextValidityProofContextStateAccount": "AqZBFsS4jjPRAEwwhBboRGiQC7AdKuUWE1W6WCYbZgj3",
+      "ciphertextValidityProofInstructionOffset": 0,
+      "destination": "9LWmGvrbZ4BhQ1GXwBHyq3srDLWqQJQjNqp3xMo3jHdw",
+      "equalityProofContextStateAccount": "HQm9KTrpyDjxwMpJ3DZcm8ywbiQ48wrSuD9FrUjLGSVz",
+      "equalityProofInstructionOffset": 0,
+      "mint": "6soGxMRniDBWHgpxTJrDDnoFda5i7B3Pws3HoFFetyyT",
+      "newSourceDecryptableAvailableBalance": "svAFEuIHsDU3FO2Grrkabp9t3kQquS6bFzzAU7Nei91KqYtj",
+      "owner": "AiRQcU8H1BMvAQZXpgiAqYWM1pnoUV1Hb9PKHifWN8t8",
+      "rangeProofContextStateAccount": "7x5w1v18QEcm8JxywXf6WMAMMhbFyohfKuFKFHjwvgdo",
+      "rangeProofInstructionOffset": 0,
+      "source": "Awt9nUck7XAbhH8PavDSBrKu89UcAtpMPm45QteXTay2"
+    },
+    "type": "confidentialTransfer"
+  },
+  "program": "spl-token",
+  "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+  "stackHeight": 1
+}
+  deposit instruction as parsed by RPC:
+{
+  "parsed": {
+    "info": {
+      "account": "Awt9nUck7XAbhH8PavDSBrKu89UcAtpMPm45QteXTay2",
+      "amount": 100000000,
+      "decimals": 6,
+      "mint": "6soGxMRniDBWHgpxTJrDDnoFda5i7B3Pws3HoFFetyyT",
+      "owner": "AiRQcU8H1BMvAQZXpgiAqYWM1pnoUV1Hb9PKHifWN8t8"
+    },
+    "type": "depositConfidentialTransfer"
+  },
+  "program": "spl-token",
+  "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+  "stackHeight": 1
+}
+  withdraw instruction as parsed by RPC:
+{
+  "parsed": {
+    "info": {
+      "account": "9LWmGvrbZ4BhQ1GXwBHyq3srDLWqQJQjNqp3xMo3jHdw",
+      "amount": 420000,
+      "decimals": 6,
+      "equalityProofContextStateAccount": "EdgM24RXuYwtzmmo2E7x6vq5o7d7HZizfD7NwQZ5BcKx",
+      "equalityProofInstructionOffset": 0,
+      "mint": "6soGxMRniDBWHgpxTJrDDnoFda5i7B3Pws3HoFFetyyT",
+      "newDecryptableAvailableBalance": "FUKsBEebHXtPAC17c/Hu76C45Lt144/g92GYGFXTHZQVh8wX",
+      "owner": "6kdKDNXt7jC6eyMKn9WSpCFDLjaaUtKXEXLWWrgJn8Mw",
+      "rangeProofContextStateAccount": "HNVZvD8CpbRqxGn4VN5nc63RQgCqoPR9uevP3LxPG446",
+      "rangeProofInstructionOffset": 0
+    },
+    "type": "withdrawConfidentialTransfer"
+  },
+  "program": "spl-token",
+  "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+  "stackHeight": 1
+}
+  token balance changes in the transfer tx: pre=[{"accountIndex":3,"mint":"6soGxMRniDBWHgpxTJrDDnoFda5i7B3Pws3HoFFetyyT","owner":"6kdKDNXt7jC6eyMKn9WSpCFDLjaaUtKXEXLWWrgJn8Mw","programId":"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb","uiTokenAmount":{"amount":"0","decimals":6,"uiAmount":null,"uiAmountString":"0"}},{"accountIndex":5,"mint":"6soGxMRniDBWHgpxTJrDDnoFda5i7B3Pws3HoFFetyyT","owner":"AiRQcU8H1BMvAQZXpgiAqYWM1pnoUV1Hb9PKHifWN8t8","programId":"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb","uiTokenAmount":{"amount":"900000000","decimals":6,"uiAmount":900.0,"uiAmountString":"900"}}] post=[{"accountIndex":3,"mint":"6soGxMRniDBWHgpxTJrDDnoFda5i7B3Pws3HoFFetyyT","owner":"6kdKDNXt7jC6eyMKn9WSpCFDLjaaUtKXEXLWWrgJn8Mw","programId":"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb","uiTokenAmount":{"amount":"0","decimals":6,"uiAmount":null,"uiAmountString":"0"}},{"accountIndex":5,"mint":"6soGxMRniDBWHgpxTJrDDnoFda5i7B3Pws3HoFFetyyT","owner":"AiRQcU8H1BMvAQZXpgiAqYWM1pnoUV1Hb9PKHifWN8t8","programId":"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb","uiTokenAmount":{"amount":"900000000","decimals":6,"uiAmount":900.0,"uiAmountString":"900"}}]
+  alice public amount now 900000000 (base units); bob public amount now 420000
+
+[auditor view]
+  auditor decrypts transfer amount: lo=26784 hi=6 -> 420000
+  auditor decrypting bob's available balance with its key: None
+  bob decrypting his own available balance: Some(0)
+
+wrote out/q2-*.json

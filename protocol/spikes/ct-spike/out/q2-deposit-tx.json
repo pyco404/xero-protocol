@@ -1,0 +1,123 @@
+{
+  "blockTime": 1790238797,
+  "meta": {
+    "computeUnitsConsumed": 9854,
+    "costUnits": 12240,
+    "err": null,
+    "fee": 10000,
+    "innerInstructions": [],
+    "logMessages": [
+      "Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb invoke [1]",
+      "Program log: ConfidentialTransferInstruction::Deposit",
+      "Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 9854 of 200000 compute units",
+      "Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success"
+    ],
+    "postBalances": [
+      99989163960,
+      0,
+      4127280,
+      1141440,
+      2526480
+    ],
+    "postTokenBalances": [
+      {
+        "accountIndex": 2,
+        "mint": "6soGxMRniDBWHgpxTJrDDnoFda5i7B3Pws3HoFFetyyT",
+        "owner": "AiRQcU8H1BMvAQZXpgiAqYWM1pnoUV1Hb9PKHifWN8t8",
+        "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "uiTokenAmount": {
+          "amount": "900000000",
+          "decimals": 6,
+          "uiAmount": 900.0,
+          "uiAmountString": "900"
+        }
+      }
+    ],
+    "preBalances": [
+      99989173960,
+      0,
+      4127280,
+      1141440,
+      2526480
+    ],
+    "preTokenBalances": [
+      {
+        "accountIndex": 2,
+        "mint": "6soGxMRniDBWHgpxTJrDDnoFda5i7B3Pws3HoFFetyyT",
+        "owner": "AiRQcU8H1BMvAQZXpgiAqYWM1pnoUV1Hb9PKHifWN8t8",
+        "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "uiTokenAmount": {
+          "amount": "1000000000",
+          "decimals": 6,
+          "uiAmount": 1000.0,
+          "uiAmountString": "1000"
+        }
+      }
+    ],
+    "rewards": [],
+    "status": {
+      "Ok": null
+    }
+  },
+  "slot": 89,
+  "transaction": {
+    "message": {
+      "accountKeys": [
+        {
+          "pubkey": "2cEwLuojwZRkyPDJP3ta6KTesf7wDrsdFLJYsXiCtgWi",
+          "signer": true,
+          "source": "transaction",
+          "writable": true
+        },
+        {
+          "pubkey": "AiRQcU8H1BMvAQZXpgiAqYWM1pnoUV1Hb9PKHifWN8t8",
+          "signer": true,
+          "source": "transaction",
+          "writable": false
+        },
+        {
+          "pubkey": "Awt9nUck7XAbhH8PavDSBrKu89UcAtpMPm45QteXTay2",
+          "signer": false,
+          "source": "transaction",
+          "writable": true
+        },
+        {
+          "pubkey": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "signer": false,
+          "source": "transaction",
+          "writable": false
+        },
+        {
+          "pubkey": "6soGxMRniDBWHgpxTJrDDnoFda5i7B3Pws3HoFFetyyT",
+          "signer": false,
+          "source": "transaction",
+          "writable": false
+        }
+      ],
+      "instructions": [
+        {
+          "parsed": {
+            "info": {
+              "account": "Awt9nUck7XAbhH8PavDSBrKu89UcAtpMPm45QteXTay2",
+              "amount": 100000000,
+              "decimals": 6,
+              "mint": "6soGxMRniDBWHgpxTJrDDnoFda5i7B3Pws3HoFFetyyT",
+              "owner": "AiRQcU8H1BMvAQZXpgiAqYWM1pnoUV1Hb9PKHifWN8t8"
+            },
+            "type": "depositConfidentialTransfer"
+          },
+          "program": "spl-token",
+          "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "stackHeight": 1
+        }
+      ],
+      "recentBlockhash": "6G5PU67RjkHQVxgHKaSm8wpz5CA32ZxhjSF4yeVTi9dx"
+    },
+    "signatures": [
+      "2x9HbBPQoa5wxCTuoqNtWwD6me3cfSWxS1DBTQHMWeCVi7XC19uTYi1mNxYoANT6mjrhm5sZ2ZLmYniVGTgjP6Sw",
+      "hcj3V6rdnWbS1jzecrCnTjLBKw46CDZHSYD7LfVv8J9jCM8qY7EeD9vX39RcFX4KbE4bA3tSQApia4TXNDAjSH8"
+    ]
+  },
+  "transactionIndex": 1,
+  "version": "legacy"
+}

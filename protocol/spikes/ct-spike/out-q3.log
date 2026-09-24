@@ -1,0 +1,143 @@
+program AYDFEPAC4vyXZW4MpTxLA5DA1zwKdqqEX19UJoiEVTHa  policy PDA 95CH261sBsby6kxzWq5fqsG9WtPpyDAPderV8c73YMU9  vault token DwicUBHySJQtafF6U242wh987GF8TthdztQABAs9jSf3
+
+[setup]
+  tx create CT mint with auditor                      461 B     2848 CU  fee 10000 lamports  (3 ix)
+  tx create+configure data.api CT account             735 B     7120 CU  fee 15000 lamports  (4 ix)
+  tx create+configure unknown.api CT account          735 B     7120 CU  fee 15000 lamports  (4 ix)
+  tx init policy (max $5, daily $6, allowlist)        496 B     5019 CU  fee 10000 lamports  (2 ix)
+  tx create vault token account (owner = policy PDA)   421 B     2113 CU  fee 10000 lamports  (2 ix)
+  tx verify vault pubkey validity -> context          485 B     2750 CU  fee 10000 lamports  (2 ix)
+  tx program CPI: configure vault for CT (PDA signs)   515 B     9052 CU  fee 10000 lamports  (2 ix)
+  tx mint $100 public to vault                        245 B     1551 CU  fee  5000 lamports  (1 ix)
+  tx program CPI: deposit $100 -> pending             408 B    12920 CU  fee 10000 lamports  (1 ix)
+  tx program CPI: apply pending                       410 B    10728 CU  fee 10000 lamports  (1 ix)
+
+[Q3: the program pays confidentially via CPI; limits enforced on encrypted amounts]
+  tx verify transfer equality -> context              710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify transfer validity -> context              934 B    16550 CU  fee 10000 lamports  (2 ix)
+  tx record (transfer range): create+init+write 760 B  1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (transfer range): write 240 B             553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify transfer range from record -> context     426 B   200150 CU  fee 10000 lamports  (2 ix)
+  tx verify policy max equality -> context            710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify policy daily equality -> context          710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx record (policy range (2 x 64 bit)): create+init+write 760 B  1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (policy range (2 x 64 bit)): write 240 B   553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify policy range (2 x 64 bit) from record -> context   426 B   200150 CU  fee 10000 lamports  (2 ix)
+  tx Pay $0.42 via program CPI                        796 B    42776 CU  fee 10000 lamports  (1 ix)
+  tx close contexts/records                           418 B    13200 CU  fee 10000 lamports  (4 ix)
+  tx close contexts/records                           450 B     8162 CU  fee 10000 lamports  (4 ix)
+  OK       pay $0.42 -> data.api: 11 txs before cleanup (483274 CU total; Pay itself 42776 CU, 796 B), 4.61s wall clock sent sequentially, proof gen transfer 24.222236ms + policy 24.124082ms; auditor reads amount 420000
+  tx verify transfer equality -> context              710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify transfer validity -> context              934 B    16550 CU  fee 10000 lamports  (2 ix)
+  tx record (transfer range): create+init+write 760 B  1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (transfer range): write 240 B             553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify transfer range from record -> context     426 B   200150 CU  fee 10000 lamports  (2 ix)
+  tx verify policy max equality -> context            710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify policy daily equality -> context          710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx record (policy range (2 x 64 bit)): create+init+write 760 B  1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (policy range (2 x 64 bit)): write 240 B   553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify policy range (2 x 64 bit) from record -> context   426 B   200150 CU  fee 10000 lamports  (2 ix)
+  tx Pay $5 via program CPI                           796 B    42766 CU  fee 10000 lamports  (1 ix)
+  tx close contexts/records                           418 B    13200 CU  fee 10000 lamports  (4 ix)
+  tx close contexts/records                           450 B     8162 CU  fee 10000 lamports  (4 ix)
+  OK       pay $5.00 -> data.api: 11 txs before cleanup (483264 CU total; Pay itself 42766 CU, 796 B), 4.35s wall clock sent sequentially, proof gen transfer 26.048293ms + policy 24.660389ms; auditor reads amount 5000000
+
+[Q4: violations]
+  REJECTED pay $1.00 (total would be $6.42 > $6 daily), honest client: refused locally before sending: max-amount=4000000 daily-(total+amount)=-420000 (no 64-bit range proof exists for a negative value)
+  tx verify transfer equality -> context              710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify transfer validity -> context              934 B    16550 CU  fee 10000 lamports  (2 ix)
+  tx record (transfer range): create+init+write 760 B  1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (transfer range): write 240 B             553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify transfer range from record -> context     426 B   200150 CU  fee 10000 lamports  (2 ix)
+
+thread 'main' (28721) panicked at src/lib.rs:126:36:
+verify policy max equality -> context failed:
+Program 11111111111111111111111111111111 invoke [1]
+Program 11111111111111111111111111111111 success
+Program ZkE1Gama1Proof11111111111111111111111111111 invoke [1]
+VerifyCiphertextCommitmentEquality
+proof verification failed: SigmaProof(Equality, AlgebraicRelation)
+Program ZkE1Gama1Proof11111111111111111111111111111 failed: invalid instruction data
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+  tx close contexts/records                           450 B    10681 CU  fee 10000 lamports  (4 ix)
+  REJECTED pay $1.00 with a forged 'remaining >= 0' proof: the ZK ElGamal proof program rejected the forged policy equality proof: 'proof verification failed: SigmaProof(Equality, AlgebraicRelation)'
+  REJECTED pay $6.00 (> $5 max), honest client: refused locally before sending: max-amount=-1000000 daily-(total+amount)=-5420000 (no 64-bit range proof exists for a negative value)
+  tx verify transfer equality -> context              710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify transfer validity -> context              934 B    16550 CU  fee 10000 lamports  (2 ix)
+  tx record (transfer range): create+init+write 760 B  1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (transfer range): write 240 B             553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify transfer range from record -> context     426 B   200150 CU  fee 10000 lamports  (2 ix)
+  tx verify policy max equality -> context            710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify policy daily equality -> context          710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx record (policy range (2 x 64 bit)): create+init+write 760 B  1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (policy range (2 x 64 bit)): write 240 B   553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify policy range (2 x 64 bit) from record -> context   426 B   200150 CU  fee 10000 lamports  (2 ix)
+  tx close contexts/records                           418 B    13200 CU  fee 10000 lamports  (4 ix)
+  tx close contexts/records                           450 B     8162 CU  fee 10000 lamports  (4 ix)
+  REJECTED pay $6.00 with policy proofs made for $0.10: Program log: ct-vault: max_per_payment proof is for a different amount | Program AYDFEPAC4vyXZW4MpTxLA5DA1zwKdqqEX19UJoiEVTHa failed: custom program error: 0x1
+  tx verify transfer equality -> context              710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify transfer validity -> context              934 B    16550 CU  fee 10000 lamports  (2 ix)
+  tx record (transfer range): create+init+write 760 B  1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (transfer range): write 240 B             553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify transfer range from record -> context     426 B   200150 CU  fee 10000 lamports  (2 ix)
+  tx verify policy max equality -> context            710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify policy daily equality -> context          710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx record (policy range (2 x 64 bit)): create+init+write 760 B  1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (policy range (2 x 64 bit)): write 240 B   553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify policy range (2 x 64 bit) from record -> context   426 B   200150 CU  fee 10000 lamports  (2 ix)
+  tx close contexts/records                           418 B    13200 CU  fee 10000 lamports  (4 ix)
+  tx close contexts/records                           450 B     8162 CU  fee 10000 lamports  (4 ix)
+  REJECTED pay $0.10 -> unknown.api (not allowlisted): Program log: ct-vault: recipient not allowed | Program AYDFEPAC4vyXZW4MpTxLA5DA1zwKdqqEX19UJoiEVTHa failed: custom program error: 0x1
+  tx verify equality -> context                       710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify validity -> context                       934 B    16550 CU  fee 10000 lamports  (2 ix)
+  tx record (range): create+init+write 760 B         1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (range): write 240 B                      553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify range from record -> context              426 B   200150 CU  fee 10000 lamports  (2 ix)
+  tx close contexts/records                           450 B    10681 CU  fee 10000 lamports  (4 ix)
+  REJECTED spender calls Token-2022 transfer directly (bypassing program): as spender: Program log: Error: owner does not match | Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb failed: custom program error: 0x4 || as PDA: Program log: Error: MissingRequiredSignature | Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb failed: missing required signature for instruction
+
+[concurrency: two payments built from the same vault state]
+  tx verify transfer equality -> context              710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify transfer validity -> context              934 B    16550 CU  fee 10000 lamports  (2 ix)
+  tx record (transfer range): create+init+write 760 B  1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (transfer range): write 240 B             553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify transfer range from record -> context     426 B   200150 CU  fee 10000 lamports  (2 ix)
+  tx verify policy max equality -> context            710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify policy daily equality -> context          710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx record (policy range (2 x 64 bit)): create+init+write 760 B  1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (policy range (2 x 64 bit)): write 240 B   553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify policy range (2 x 64 bit) from record -> context   426 B   200150 CU  fee 10000 lamports  (2 ix)
+  tx Pay $0.1 via program CPI                         796 B    42766 CU  fee 10000 lamports  (1 ix)
+  tx close contexts/records                           418 B    13200 CU  fee 10000 lamports  (4 ix)
+  tx close contexts/records                           450 B     8162 CU  fee 10000 lamports  (4 ix)
+  OK       pay $0.10 (first): 11 txs before cleanup (483264 CU total; Pay itself 42766 CU, 796 B), 4.63s wall clock sent sequentially, proof gen transfer 27.734776ms + policy 40.623761ms; auditor reads amount 100000
+  tx verify transfer equality -> context              710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify transfer validity -> context              934 B    16550 CU  fee 10000 lamports  (2 ix)
+  tx record (transfer range): create+init+write 760 B  1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (transfer range): write 240 B             553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify transfer range from record -> context     426 B   200150 CU  fee 10000 lamports  (2 ix)
+  tx verify policy max equality -> context            710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify policy daily equality -> context          710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx record (policy range (2 x 64 bit)): create+init+write 760 B  1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (policy range (2 x 64 bit)): write 240 B   553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify policy range (2 x 64 bit) from record -> context   426 B   200150 CU  fee 10000 lamports  (2 ix)
+  tx close contexts/records                           418 B    13200 CU  fee 10000 lamports  (4 ix)
+  tx close contexts/records                           450 B     8162 CU  fee 10000 lamports  (4 ix)
+  REJECTED pay $0.10 (second, proofs built from the state before the first payment): Program log: Error: Balance mismatch | Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb failed: custom program error: 0x1b | Program AYDFEPAC4vyXZW4MpTxLA5DA1zwKdqqEX19UJoiEVTHa failed: custom program error: 0x1b
+
+[what the key holder could do without Q4 proofs]
+  tx verify transfer equality -> context              710 B     6550 CU  fee 10000 lamports  (2 ix)
+  tx verify transfer validity -> context              934 B    16550 CU  fee 10000 lamports  (2 ix)
+  tx record (transfer range): create+init+write 760 B  1232 B     1348 CU  fee 15000 lamports  (3 ix)
+  tx record (transfer range): write 240 B             553 B      651 CU  fee 10000 lamports  (1 ix)
+  tx verify transfer range from record -> context     426 B   200150 CU  fee 10000 lamports  (2 ix)
+  tx Pay $6 via program CPI                           700 B    19948 CU  fee 10000 lamports  (1 ix)
+  tx close contexts/records                           450 B    10681 CU  fee 10000 lamports  (4 ix)
+  OK       pay $6.00 with enforce_limits = 0: 6 txs before cleanup (245197 CU total; Pay itself 19948 CU, 700 B), 2.56s wall clock sent sequentially, proof gen transfer 23.817374ms + policy 0ns; auditor reads amount 6000000
+
+[who can decrypt what]
+  vault balance, decrypted by the vault key holder (spender): Some(88480000) (AES fast path: 88480000)
+  vault balance, decrypted with the auditor key: None
+  policy's encrypted daily total, decrypted by the vault key holder: Some(5520000)
+  policy's encrypted daily total, decrypted with the auditor key: None
+  public (plaintext) policy fields: max=5000000 daily=6000000 window_start=1790239396 allowlist[0]=6UctVfM3jQZUovvjogVP8ZGNvi7LKQQeY4JLjSyVAhN4

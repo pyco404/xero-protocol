@@ -249,7 +249,7 @@ function PrivateDollar() {
           animate={{ rotate: i % 2 ? -360 : 360 }}
           transition={{ duration: 22 + i * 8, repeat: Infinity, ease: "linear" }}
         >
-          <span className="absolute left-1/2 top-0 size-[max(6px,1.1cqw)] -translate-y-1/2 rounded-full bg-proof shadow-proof" />
+          <span className="absolute left-1/2 top-0 size-[max(6px,1.1cqw)] -translate-y-1/2 rounded-full bg-proof" />
         </motion.div>
       ))}
       <div className="relative z-10 flex flex-col items-center gap-[4cqw]">
@@ -291,7 +291,7 @@ function Hero() {
           className="max-w-3xl"
         >
           <p className="mb-7 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
-            <span className="size-1.5 bg-primary shadow-mint" />
+            <span className="size-1.5 bg-primary" />
             Private programmable money
           </p>
           <h1 className="font-display text-5xl font-semibold leading-[0.98] sm:text-6xl lg:text-6xl xl:text-7xl 2xl:text-[5.25rem]">

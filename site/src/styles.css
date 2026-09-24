@@ -215,7 +215,6 @@
 }
 
 @utility shadow-mint { box-shadow: 0 0 36px color-mix(in oklab, var(--primary) 12%, transparent); }
-@utility shadow-proof { box-shadow: 0 0 18px color-mix(in oklab, var(--proof) 60%, transparent); }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

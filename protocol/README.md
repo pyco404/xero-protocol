@@ -29,7 +29,24 @@ Program ID (localnet): `EK8aHDV1rgmoi7aygKCptretPMwQ9b6U293dioDLGZYW`
 | `close_policy()`                                                    | owner   | Sweeps the vault to a token account, closes vault + policy, refunds rent |
 
 `pay` checks, in order: not paused, recipient owner allowlisted, `0 < amount <= max_per_payment`,
-reset the rolling 24h window if it has expired, `spent_in_window + amount <= daily_limit`.
+then the daily limit over a **rolling 24-hour window of hourly buckets**:
+
+- Each payment is added to the bucket for its hour (`unix_timestamp / 3600`). The policy keeps the
+  last 24 buckets (`buckets[hour % 24]`, plus `last_hour`); buckets that fall out of the window are
+  cleared on the next payment.
+- A payment is allowed only if the sum of the current hour's bucket and the 23 before it, plus the
+  amount, is at most `daily_limit`. So an amount counts against the limit until the 24th hour
+  boundary after it was paid: for at least 23 and at most 24 hours.
+- There is no reset moment, so spending can never exceed `daily_limit` within any 23-hour span
+  (the old fixed window allowed up to 2× across a window boundary).
+
+Every instruction emits an Anchor event: `PolicyCreated`, `Deposited`, `PaymentSettled` (policy,
+spender, mint, recipient wallet and token account, amount, `spent_in_window`, `daily_limit`,
+`timestamp`), `Withdrawn`, `LimitsUpdated`, `ProviderAdded`, `ProviderRemoved`, `PauseChanged` and
+`PolicyClosed`.
+
+`Policy` starts with a `version` byte (currently 1) and ends with 64 reserved bytes for future
+fields.
 
 Limits must satisfy `0 < max_per_payment <= daily_limit`, otherwise `InvalidLimits`.
 

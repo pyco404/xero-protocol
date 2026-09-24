@@ -8,7 +8,6 @@ import {
   PROGRAM_ERRORS,
   PolicyViolation,
   type PolicyState,
-  WINDOW_SECONDS,
   XeroProgramError,
   XeroTransactionError,
   errorFromLogs,
@@ -16,7 +15,7 @@ import {
   formatAmount,
   parseAmount,
 } from "../src/index.js";
-import { remainingToday, windowResetsAt } from "../src/policy.js";
+import { bucketsAt, hourOf, nextReleaseAt, remainingToday, spentInWindow } from "../src/policy.js";
 
 describe("parseAmount", () => {
   it("converts decimal strings using the mint's decimals", () => {
@@ -99,7 +98,8 @@ describe("formatAmount", () => {
 describe("evaluatePayment", () => {
   const data = Keypair.generate().publicKey;
   const unknown = Keypair.generate().publicKey;
-  const T0 = 1_790_000_000n;
+  const H = 3600n;
+  const T0 = 497_223n * H; // an hour boundary, so offsets are exact
   const fmt = (raw: bigint) => formatAmount(raw, 6);
   const state = (overrides: Partial<PolicyState> = {}): PolicyState => ({
     owner: Keypair.generate().publicKey,
@@ -107,47 +107,75 @@ describe("evaluatePayment", () => {
     mint: Keypair.generate().publicKey,
     maxPerPayment: parseAmount("5", 6),
     dailyLimit: parseAmount("20", 6),
-    spentInWindow: 0n,
-    windowStart: 0n,
+    version: 1,
+    buckets: Array(24).fill(0n),
+    lastHour: 0n,
     allowlist: [data],
     paused: false,
     ...overrides,
   });
+  /** What the program's `record_spend` does to the state after a successful payment. */
+  const paid = (s: PolicyState, now: bigint, amount: string): PolicyState => {
+    const buckets = bucketsAt(s, now);
+    const hour = hourOf(now);
+    buckets[Number(hour % 24n)] += parseAmount(amount, 6);
+    return { ...s, buckets, lastHour: hour > s.lastHour ? hour : s.lastHour };
+  };
   const code = (s: PolicyState, who: typeof data, amount: string, now = T0, vault?: bigint) => {
     const r = evaluatePayment(s, who, parseAmount(amount, 6), now, fmt, vault);
     return r.allowed ? "allowed" : r.code;
   };
 
   it("applies the program's order: paused → allowlist → zero → max → daily → balance", () => {
-    const spent = { spentInWindow: parseAmount("19", 6), windowStart: T0 };
-    assert.equal(code(state({ paused: true, ...spent }), unknown, "40", T0, 0n), "Paused");
-    assert.equal(code(state(spent), unknown, "40", T0, 0n), "RecipientNotAllowed");
-    assert.equal(code(state(spent), data, "0", T0, 0n), "ZeroAmount");
-    assert.equal(code(state(spent), data, "40", T0, 0n), "AmountExceedsMaxPayment");
-    assert.equal(code(state(spent), data, "2", T0, 0n), "DailyLimitExceeded");
-    assert.equal(code(state(spent), data, "1", T0, 0n), "InsufficientFunds");
-    assert.equal(code(state(spent), data, "1", T0), "allowed");
-    assert.equal(code(state(spent), data, "1", T0, parseAmount("1", 6)), "allowed");
+    const spent = paid(paid(paid(paid(state(), T0, "5"), T0, "5"), T0, "5"), T0, "4"); // 19
+    assert.equal(code({ ...spent, paused: true }, unknown, "40", T0, 0n), "Paused");
+    assert.equal(code(spent, unknown, "40", T0, 0n), "RecipientNotAllowed");
+    assert.equal(code(spent, data, "0", T0, 0n), "ZeroAmount");
+    assert.equal(code(spent, data, "40", T0, 0n), "AmountExceedsMaxPayment");
+    assert.equal(code(spent, data, "2", T0, 0n), "DailyLimitExceeded");
+    assert.equal(code(spent, data, "1", T0, 0n), "InsufficientFunds");
+    assert.equal(code(spent, data, "1", T0), "allowed");
+    assert.equal(code(spent, data, "1", T0, parseAmount("1", 6)), "allowed");
   });
 
-  it("resets the window exactly WINDOW_SECONDS after its first payment", () => {
-    const s = state({ spentInWindow: parseAmount("20", 6), windowStart: T0 });
-    assert.equal(code(s, data, "0.01", T0 + WINDOW_SECONDS - 1n), "DailyLimitExceeded");
-    assert.equal(code(s, data, "5", T0 + WINDOW_SECONDS), "allowed");
-    assert.equal(remainingToday(s, T0 + WINDOW_SECONDS - 1n), 0n);
-    assert.equal(remainingToday(s, T0 + WINDOW_SECONDS), parseAmount("20", 6));
-    assert.deepEqual(windowResetsAt(s, T0), new Date(Number(T0 + WINDOW_SECONDS) * 1000));
-    assert.equal(windowResetsAt(s, T0 + WINDOW_SECONDS), null);
-    assert.equal(windowResetsAt(state(), T0), null);
+  it("rolling window: a payment counts until the 24th hour boundary after it", () => {
+    let s = paid(state(), T0 + 1800n, "5"); // half past hour 0
+    for (const hour of [1n, 2n, 3n]) s = paid(s, T0 + hour * H, "5"); // $20 in total
+    assert.equal(spentInWindow(s, T0 + 24n * H - 1n), parseAmount("20", 6));
+    assert.equal(code(s, data, "0.01", T0 + 24n * H - 1n), "DailyLimitExceeded");
+    assert.deepEqual(nextReleaseAt(s, T0 + 3n * H), new Date(Number(T0 + 24n * H) * 1000));
+    // Hour 24 frees exactly hour 0's $5.
+    assert.equal(remainingToday(s, T0 + 24n * H), parseAmount("5", 6));
+    assert.equal(code(s, data, "5", T0 + 24n * H), "allowed");
+    assert.equal(code(s, data, "5.01", T0 + 24n * H), "AmountExceedsMaxPayment");
+    assert.deepEqual(nextReleaseAt(s, T0 + 24n * H), new Date(Number(T0 + 25n * H) * 1000));
+    // A day after the last payment everything is free and nothing is pending release.
+    assert.equal(remainingToday(s, T0 + 27n * H), parseAmount("20", 6));
+    assert.equal(nextReleaseAt(s, T0 + 27n * H), null);
+    assert.equal(nextReleaseAt(state(), T0), null);
+  });
+
+  it("rolling window: rejects the 2x burst the old fixed window allowed", () => {
+    let s = paid(state(), T0, "1");
+    for (const amount of ["5", "5", "5", "4"]) s = paid(s, T0 + 24n * H - 60n, amount);
+    assert.equal(code(s, data, "5", T0 + 24n * H), "DailyLimitExceeded");
+    assert.equal(code(s, data, "1", T0 + 24n * H), "allowed");
+    s = paid(s, T0 + 24n * H, "1");
+    assert.equal(code(s, data, "0.01", T0 + 24n * H + 60n), "DailyLimitExceeded");
+  });
+
+  it("mirrors the program when the clock is behind the last payment", () => {
+    const s = paid(state(), T0 + 5n * H, "5");
+    assert.equal(spentInWindow(s, T0 + 4n * H), parseAmount("5", 6));
+    assert.equal(code(s, data, "5", T0 + 4n * H), "allowed");
   });
 
   it("treats a daily limit lowered below what was spent as zero remaining", () => {
-    const s = state({
-      spentInWindow: parseAmount("5", 6),
-      windowStart: T0,
+    const s = {
+      ...paid(state(), T0, "5"),
       dailyLimit: parseAmount("4", 6),
       maxPerPayment: parseAmount("4", 6),
-    });
+    };
     assert.equal(remainingToday(s, T0), 0n);
     assert.equal(code(s, data, "0.01"), "DailyLimitExceeded");
   });

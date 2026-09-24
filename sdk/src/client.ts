@@ -163,13 +163,14 @@ export class XeroClient {
   decodePolicy(data: Buffer): PolicyState {
     const raw = this.program.coder.accounts.decode("policy", data);
     return {
+      version: raw.version,
       owner: raw.owner,
       spender: raw.spender,
       mint: raw.mint,
       maxPerPayment: BigInt(raw.maxPerPayment.toString()),
       dailyLimit: BigInt(raw.dailyLimit.toString()),
-      spentInWindow: BigInt(raw.spentInWindow.toString()),
-      windowStart: BigInt(raw.windowStart.toString()),
+      buckets: raw.buckets.map((b: { toString(): string }) => BigInt(b.toString())),
+      lastHour: BigInt(raw.lastHour.toString()),
       allowlist: raw.allowlist.slice(0, raw.allowlistCount),
       paused: raw.paused,
     };

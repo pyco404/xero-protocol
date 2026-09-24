@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked};
 
-use crate::{constants::*, error::XeroError, state::Policy};
+use crate::{constants::*, error::XeroError, events::Withdrawn, state::Policy};
 
 /// Owner withdrawal. Deliberately ignores `paused` so funds are always recoverable.
 #[derive(Accounts)]
@@ -37,5 +37,12 @@ pub fn handle_withdraw(ctx: Context<Withdraw>, amount: u64) -> Result<()> {
         CpiContext::new_with_signer(ctx.accounts.token_program.key(), accounts, signer_seeds),
         amount,
         ctx.accounts.mint.decimals,
-    )
+    )?;
+    emit!(Withdrawn {
+        policy: ctx.accounts.policy.key(),
+        owner: ctx.accounts.owner.key(),
+        destination: ctx.accounts.destination.key(),
+        amount,
+    });
+    Ok(())
 }

@@ -31,21 +31,10 @@ pub fn handle_pay(ctx: Context<Pay>, amount: u64) -> Result<()> {
         XeroError::AmountExceedsMaxPayment
     );
 
-    // Rolling 24h window that starts at the first payment after the previous window ends.
+    // Rolling window: the last 24 hourly buckets plus this payment must fit the daily limit.
     let now = Clock::get()?.unix_timestamp;
-    let elapsed = now
-        .checked_sub(policy.window_start)
-        .ok_or(XeroError::MathOverflow)?;
-    if elapsed >= WINDOW_SECONDS {
-        policy.window_start = now;
-        policy.spent_in_window = 0;
-    }
-    let spent = policy
-        .spent_in_window
-        .checked_add(amount)
-        .ok_or(XeroError::MathOverflow)?;
-    require!(spent <= policy.daily_limit, XeroError::DailyLimitExceeded);
-    policy.spent_in_window = spent;
+    let spent = policy.record_spend(now, amount)?;
+    let daily_limit = policy.daily_limit;
 
     let (owner, spender, bump) = (policy.owner, policy.spender, policy.bump);
     let signer_seeds: &[&[&[u8]]] = &[&[POLICY_SEED, owner.as_ref(), spender.as_ref(), &[bump]]];
@@ -64,9 +53,13 @@ pub fn handle_pay(ctx: Context<Pay>, amount: u64) -> Result<()> {
     emit!(PaymentSettled {
         policy: ctx.accounts.policy.key(),
         spender,
+        mint: ctx.accounts.mint.key(),
         recipient: provider,
+        recipient_token_account: ctx.accounts.recipient.key(),
         amount,
         spent_in_window: spent,
+        daily_limit,
+        timestamp: now,
     });
     Ok(())
 }

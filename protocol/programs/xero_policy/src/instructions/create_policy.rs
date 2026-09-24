@@ -7,7 +7,7 @@ use anchor_spl::{
     token_interface::{Mint, TokenAccount, TokenInterface},
 };
 
-use crate::{constants::*, error::XeroError, state::Policy};
+use crate::{constants::*, error::XeroError, events::PolicyCreated, state::Policy};
 
 #[derive(Accounts)]
 #[instruction(spender: Pubkey)]
@@ -52,20 +52,32 @@ pub fn handle_create_policy(
     require!(allowlist.len() <= MAX_PROVIDERS, XeroError::AllowlistFull);
 
     let policy = &mut ctx.accounts.policy;
+    policy.version = POLICY_VERSION;
     policy.owner = ctx.accounts.owner.key();
     policy.spender = spender;
     policy.mint = ctx.accounts.mint.key();
     policy.set_limits(max_per_payment, daily_limit)?;
-    policy.spent_in_window = 0;
-    policy.window_start = 0;
+    policy.buckets = [0; WINDOW_BUCKETS as usize];
+    policy.last_hour = 0;
     policy.allowlist = [Pubkey::default(); MAX_PROVIDERS];
     policy.allowlist_count = 0;
     policy.paused = false;
     policy.bump = ctx.bumps.policy;
+    policy._reserved = [0; POLICY_RESERVED_BYTES];
 
-    for provider in allowlist {
-        policy.add_provider(provider)?;
+    for provider in &allowlist {
+        policy.add_provider(*provider)?;
     }
+
+    emit!(PolicyCreated {
+        policy: policy.key(),
+        owner: policy.owner,
+        spender,
+        mint: policy.mint,
+        max_per_payment,
+        daily_limit,
+        allowlist,
+    });
     Ok(())
 }
 

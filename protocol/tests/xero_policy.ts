@@ -7,7 +7,7 @@ import {
 } from "@solana/spl-token";
 import { expect } from "chai";
 import {
-  DAY,
+  START_TIME,
   Harness,
   TOKEN_2022_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
@@ -184,6 +184,13 @@ async function funded(tokenProgram: PublicKey = TOKEN_PROGRAM_ID) {
   return t;
 }
 
+/** Total of the policy's 24 hourly buckets: what the daily limit is checked against. */
+const windowTotal = (policy: { buckets: BN[] }) =>
+  policy.buckets.reduce((sum, b) => sum.add(b), new BN(0));
+/** First hour boundary after the harness's start time, so hour offsets in tests are exact. */
+const HOUR = 3600;
+const HOUR0 = Math.ceil(START_TIME / HOUR) * HOUR;
+
 const bnEq = (actual: BN, expected: BN) =>
   expect(actual.toString()).to.equal(expected.toString());
 
@@ -200,7 +207,8 @@ describe("xero_policy", () => {
       expect(policy.mint.toBase58()).to.equal(t.mint.toBase58());
       bnEq(policy.maxPerPayment, MAX_PAYMENT);
       bnEq(policy.dailyLimit, DAILY_LIMIT);
-      bnEq(policy.spentInWindow, new BN(0));
+      bnEq(windowTotal(policy), new BN(0));
+      expect(policy.version).to.equal(1);
       expect(policy.allowlistCount).to.equal(2);
       expect(policy.paused).to.equal(false);
       bnEq(t.h.tokenBalance(t.vault), BUDGET);
@@ -270,8 +278,8 @@ describe("xero_policy", () => {
       bnEq(t.h.tokenBalance(t.dataApiTokens), usd(0.42));
       bnEq(t.h.tokenBalance(t.vault), usd(99.58));
       const policy = t.h.fetchPolicy(t.policy);
-      bnEq(policy.spentInWindow, usd(0.42));
-      expect(policy.windowStart.toNumber()).to.equal(t.h.now());
+      bnEq(windowTotal(policy), usd(0.42));
+      expect(policy.lastHour.toNumber()).to.equal(Math.floor(t.h.now() / HOUR));
 
       // Anchor 1.2's EventParser keeps the IDL's snake_case field names (accounts are camelCased).
       const [event] = parseEvents(result);
@@ -285,6 +293,12 @@ describe("xero_policy", () => {
       );
       bnEq(event.data.amount, usd(0.42));
       bnEq(event.data.spent_in_window, usd(0.42));
+      expect(event.data.mint.toBase58()).to.equal(t.mint.toBase58());
+      expect(event.data.recipient_token_account.toBase58()).to.equal(
+        t.dataApiTokens.toBase58()
+      );
+      bnEq(event.data.daily_limit, DAILY_LIMIT);
+      expect(event.data.timestamp.toNumber()).to.equal(t.h.now());
     });
 
     it("allows a payment of exactly max_per_payment", async () => {
@@ -324,7 +338,7 @@ describe("xero_policy", () => {
         );
         t.h.advance(60);
       }
-      bnEq(t.h.fetchPolicy(t.policy).spentInWindow, DAILY_LIMIT);
+      bnEq(windowTotal(t.h.fetchPolicy(t.policy)), DAILY_LIMIT);
 
       expectError(
         await t.h.sendIx(t.ix.pay(usd(0.01), t.computeApiTokens), [t.spender]),
@@ -354,41 +368,83 @@ describe("xero_policy", () => {
       );
     });
 
-    it("resets the rolling window 24h after the window's first payment", async () => {
+    it("rolling window: each payment is released 24 hourly buckets after it was made", async () => {
       const t = await funded();
-      const windowStart = t.h.now();
-      for (let i = 0; i < 4; i++) {
+      // $5 at the start of hours 0, 1, 2 and 3: the $20 limit is reached.
+      for (let hour = 0; hour < 4; hour++) {
+        t.h.setTime(HOUR0 + hour * HOUR);
         expectOk(
           await t.h.sendIx(t.ix.pay(usd(5), t.dataApiTokens), [t.spender])
         );
-        t.h.advance(3600);
       }
 
-      // One second before the window ends, the limit still applies.
-      t.h.setTime(windowStart + DAY - 1);
-      expectError(
-        await t.h.sendIx(t.ix.pay(usd(1), t.dataApiTokens), [t.spender]),
-        "DailyLimitExceeded"
-      );
-
-      t.h.setTime(windowStart + DAY);
-      expectOk(
-        await t.h.sendIx(t.ix.pay(usd(1), t.dataApiTokens), [t.spender])
-      );
-      const policy = t.h.fetchPolicy(t.policy);
-      bnEq(policy.spentInWindow, usd(1));
-      expect(policy.windowStart.toNumber()).to.equal(windowStart + DAY);
-
-      // The new window is a full $20 again: $1 + $5 x 3 + $4 = $20, then nothing more.
-      for (const amount of [5, 5, 5, 4]) {
-        expectOk(
-          await t.h.sendIx(t.ix.pay(usd(amount), t.dataApiTokens), [t.spender])
-        );
-      }
+      // Last second of hour 23: all four payments still count.
+      t.h.setTime(HOUR0 + 24 * HOUR - 1);
       expectError(
         await t.h.sendIx(t.ix.pay(usd(0.01), t.dataApiTokens), [t.spender]),
         "DailyLimitExceeded"
       );
+
+      // Hour 24: only hour 0's $5 has left the window.
+      t.h.setTime(HOUR0 + 24 * HOUR);
+      expectError(
+        await t.h.sendIx(t.ix.pay(usd(5.01), t.dataApiTokens), [t.spender]),
+        "AmountExceedsMaxPayment"
+      );
+      expectOk(
+        await t.h.sendIx(t.ix.pay(usd(5), t.dataApiTokens), [t.spender])
+      );
+      expectError(
+        await t.h.sendIx(t.ix.pay(usd(0.01), t.dataApiTokens), [t.spender]),
+        "DailyLimitExceeded"
+      );
+      bnEq(windowTotal(t.h.fetchPolicy(t.policy)), DAILY_LIMIT);
+
+      // Hour 25 frees hour 1's $5, and so on.
+      t.h.setTime(HOUR0 + 25 * HOUR);
+      expectOk(
+        await t.h.sendIx(t.ix.pay(usd(5), t.dataApiTokens), [t.spender])
+      );
+    });
+
+    it("rolling window: rejects the 2x burst the old fixed window allowed", async () => {
+      const t = await funded();
+      // $1 opens the window, then $15 + $4 in its last minute: $20 in total.
+      t.h.setTime(HOUR0);
+      expectOk(
+        await t.h.sendIx(t.ix.pay(usd(1), t.dataApiTokens), [t.spender])
+      );
+      t.h.setTime(HOUR0 + 24 * HOUR - 60);
+      expectOk(
+        await t.h.sendIx(t.ix.pay(usd(5), t.dataApiTokens), [t.spender])
+      );
+      expectOk(
+        await t.h.sendIx(t.ix.pay(usd(5), t.dataApiTokens), [t.spender])
+      );
+      expectOk(
+        await t.h.sendIx(t.ix.pay(usd(5), t.dataApiTokens), [t.spender])
+      );
+      expectOk(
+        await t.h.sendIx(t.ix.pay(usd(4), t.dataApiTokens), [t.spender])
+      );
+
+      // One minute later the old window reset and allowed another $20 ($40 in two minutes).
+      // Now only the $1 from hour 0 has expired.
+      t.h.setTime(HOUR0 + 24 * HOUR);
+      for (const amount of [5, 2]) {
+        expectError(
+          await t.h.sendIx(t.ix.pay(usd(amount), t.dataApiTokens), [t.spender]),
+          "DailyLimitExceeded"
+        );
+      }
+      expectOk(
+        await t.h.sendIx(t.ix.pay(usd(1), t.dataApiTokens), [t.spender])
+      );
+      expectError(
+        await t.h.sendIx(t.ix.pay(usd(0.01), t.dataApiTokens), [t.spender]),
+        "DailyLimitExceeded"
+      );
+      bnEq(t.h.tokenBalance(t.dataApiTokens), usd(21));
     });
 
     it("rejects a recipient whose owner is not allowlisted", async () => {
@@ -625,7 +681,7 @@ describe("xero_policy", () => {
       );
       const policy = t.h.fetchPolicy(t.policy);
       expect(policy.paused).to.equal(false);
-      bnEq(policy.spentInWindow, new BN(0));
+      bnEq(windowTotal(policy), new BN(0));
     });
 
     it("rejects close from the spender or a stranger", async () => {
@@ -646,6 +702,50 @@ describe("xero_policy", () => {
         await t.h.sendIx(t.ix.pay(usd(0.42), t.dataApiTokens), [t.spender]),
         "AccountNotInitialized"
       );
+    });
+  });
+
+  describe("events", () => {
+    it("emits an event for create, deposit, limits, providers, pause, withdraw and close", async () => {
+      const t = setup();
+      const names = async (ix: Promise<web3.TransactionInstruction>) =>
+        parseEvents(expectOk(await t.h.sendIx(ix, [t.owner])));
+
+      const [created] = await names(t.ix.createPolicy([t.dataApi.publicKey]));
+      expect(created.name).to.equal("PolicyCreated");
+      expect(created.data.spender.toBase58()).to.equal(
+        t.spender.publicKey.toBase58()
+      );
+      expect(
+        created.data.allowlist.map((p: PublicKey) => p.toBase58())
+      ).to.deep.equal([t.dataApi.publicKey.toBase58()]);
+
+      const [deposited] = await names(t.ix.deposit(BUDGET));
+      expect(deposited.name).to.equal("Deposited");
+      bnEq(deposited.data.amount, BUDGET);
+
+      const [limits] = await names(t.ix.updateLimits(usd(4), usd(10)));
+      expect(limits.name).to.equal("LimitsUpdated");
+      bnEq(limits.data.daily_limit, usd(10));
+
+      const [added] = await names(t.ix.addProvider(t.computeApi.publicKey));
+      expect(added.name).to.equal("ProviderAdded");
+      const [removed] = await names(
+        t.ix.removeProvider(t.computeApi.publicKey)
+      );
+      expect(removed.name).to.equal("ProviderRemoved");
+
+      const [paused] = await names(t.ix.setPaused(true));
+      expect(paused.name).to.equal("PauseChanged");
+      expect(paused.data.paused).to.equal(true);
+
+      const [withdrawn] = await names(t.ix.withdraw(usd(30)));
+      expect(withdrawn.name).to.equal("Withdrawn");
+      bnEq(withdrawn.data.amount, usd(30));
+
+      const [closed] = await names(t.ix.closePolicy());
+      expect(closed.name).to.equal("PolicyClosed");
+      bnEq(closed.data.swept, usd(70));
     });
   });
 

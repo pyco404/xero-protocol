@@ -227,6 +227,7 @@ export class Harness {
   private tokenAccountSize(mint: PublicKey, tokenProgram: PublicKey): number {
     if (!tokenProgram.equals(TOKEN_2022_PROGRAM_ID)) return ACCOUNT_SIZE;
     const info = this.svm.getAccount(mint.toBase58() as never);
+    if (!info.exists) throw new Error(`mint ${mint.toBase58()} does not exist`);
     const decoded = unpackMint(
       mint,
       { ...info, data: Buffer.from(info.data), owner: tokenProgram } as never,

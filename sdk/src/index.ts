@@ -16,7 +16,15 @@ export {
 export type { PolicyViolationCode, ProgramErrorName } from "./errors.js";
 export { parsePaymentSettled } from "./events.js";
 export type { PaymentSettledEvent } from "./events.js";
-export { evaluatePayment, WINDOW_SECONDS, MAX_PROVIDERS } from "./policy.js";
+export {
+  evaluatePayment,
+  spentInWindow,
+  remainingToday,
+  nextReleaseAt,
+  BUCKET_SECONDS,
+  WINDOW_BUCKETS,
+  MAX_PROVIDERS,
+} from "./policy.js";
 export type { CheckResult, PolicyState } from "./policy.js";
 export { keypairWallet } from "./wallet.js";
 export type { XeroWallet } from "./wallet.js";

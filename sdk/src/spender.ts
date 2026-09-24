@@ -20,11 +20,11 @@ import {
   type CheckResult,
   type Evaluation,
   type PolicyState,
-  effectiveSpent,
   evaluatePayment,
   remainingToday,
   validateLimits,
-  windowResetsAt,
+  nextReleaseAt,
+  spentInWindow,
 } from "./policy.js";
 import type { XeroWallet } from "./wallet.js";
 
@@ -47,7 +47,7 @@ export interface PaymentResult {
   status: "settled";
   signature: string;
   amount: TokenAmount;
-  /** Spent in the current 24h window, including this payment. */
+  /** Paid across the last 24 hourly buckets, including this payment. */
   spentInWindow: TokenAmount;
   /** What the daily limit still allows in this window. Does not account for the vault balance. */
   remainingToday: TokenAmount;
@@ -64,11 +64,15 @@ export interface SpenderStatus {
   limits: { maxPerPayment: TokenAmount; dailyLimit: TokenAmount };
   allowlist: PublicKey[];
   paused: boolean;
-  /** Spent in the current window; zero once the window has expired. */
+  /** Paid across the last 24 hourly buckets (what the daily limit is checked against). */
   spentInWindow: TokenAmount;
+  /** What the daily limit still allows right now. Does not account for the vault balance. */
   remainingToday: TokenAmount;
-  /** When the current window ends; null if no window is running. */
-  windowResetsAt: Date | null;
+  /**
+   * When the oldest counted payment leaves the window and frees budget (the start of the 24th
+   * hour after it was paid); null if nothing is counted.
+   */
+  nextReleaseAt: Date | null;
 }
 
 interface Snapshot {
@@ -127,15 +131,15 @@ export class Spender {
       },
       allowlist: state.allowlist,
       paused: state.paused,
-      spentInWindow: amount(effectiveSpent(state, now)),
+      spentInWindow: amount(spentInWindow(state, now)),
       remainingToday: amount(remainingToday(state, now)),
-      windowResetsAt: windowResetsAt(state, now),
+      nextReleaseAt: nextReleaseAt(state, now),
     };
   }
 
   /**
    * Local pre-flight check of a payment against the current on-chain state, in the program's
-   * order (paused → allowlist → amount → window → daily limit), then the vault balance. Reads
+   * order (paused → allowlist → amount → daily limit over the last 24 hourly buckets), then the vault balance. Reads
    * accounts but never sends a transaction. Throws InvalidAmountError for a malformed amount.
    */
   async check(request: PaymentRequest): Promise<CheckResult> {

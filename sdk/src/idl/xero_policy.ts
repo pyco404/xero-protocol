@@ -529,6 +529,45 @@ export type XeroPolicy = {
   ],
   "events": [
     {
+      "name": "deposited",
+      "discriminator": [
+        111,
+        141,
+        26,
+        45,
+        161,
+        35,
+        100,
+        57
+      ]
+    },
+    {
+      "name": "limitsUpdated",
+      "discriminator": [
+        160,
+        131,
+        108,
+        76,
+        91,
+        80,
+        118,
+        137
+      ]
+    },
+    {
+      "name": "pauseChanged",
+      "discriminator": [
+        238,
+        188,
+        213,
+        78,
+        134,
+        209,
+        178,
+        218
+      ]
+    },
+    {
       "name": "paymentSettled",
       "discriminator": [
         158,
@@ -539,6 +578,71 @@ export type XeroPolicy = {
         23,
         232,
         135
+      ]
+    },
+    {
+      "name": "policyClosed",
+      "discriminator": [
+        19,
+        126,
+        82,
+        173,
+        79,
+        86,
+        50,
+        51
+      ]
+    },
+    {
+      "name": "policyCreated",
+      "discriminator": [
+        59,
+        189,
+        65,
+        121,
+        86,
+        157,
+        108,
+        10
+      ]
+    },
+    {
+      "name": "providerAdded",
+      "discriminator": [
+        206,
+        144,
+        232,
+        247,
+        30,
+        115,
+        117,
+        45
+      ]
+    },
+    {
+      "name": "providerRemoved",
+      "discriminator": [
+        192,
+        1,
+        155,
+        196,
+        113,
+        29,
+        126,
+        25
+      ]
+    },
+    {
+      "name": "withdrawn",
+      "discriminator": [
+        20,
+        89,
+        223,
+        198,
+        194,
+        124,
+        219,
+        13
       ]
     }
   ],
@@ -606,6 +710,69 @@ export type XeroPolicy = {
   ],
   "types": [
     {
+      "name": "deposited",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "policy",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "source",
+            "docs": [
+              "Owner token account the tokens came from."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "limitsUpdated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "policy",
+            "type": "pubkey"
+          },
+          {
+            "name": "maxPerPayment",
+            "type": "u64"
+          },
+          {
+            "name": "dailyLimit",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "pauseChanged",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "policy",
+            "type": "pubkey"
+          },
+          {
+            "name": "paused",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
       "name": "paymentSettled",
       "type": {
         "kind": "struct",
@@ -619,9 +786,20 @@ export type XeroPolicy = {
             "type": "pubkey"
           },
           {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
             "name": "recipient",
             "docs": [
               "Provider wallet (owner of the recipient token account)."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "recipientTokenAccount",
+            "docs": [
+              "Token account that received the payment."
             ],
             "type": "pubkey"
           },
@@ -631,7 +809,21 @@ export type XeroPolicy = {
           },
           {
             "name": "spentInWindow",
+            "docs": [
+              "Total paid across the last 24 hourly buckets, including this payment."
+            ],
             "type": "u64"
+          },
+          {
+            "name": "dailyLimit",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "docs": [
+              "Cluster unix time of the payment."
+            ],
+            "type": "i64"
           }
         ]
       }
@@ -641,6 +833,13 @@ export type XeroPolicy = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "version",
+            "docs": [
+              "Layout version (`POLICY_VERSION`)."
+            ],
+            "type": "u8"
+          },
           {
             "name": "owner",
             "docs": [
@@ -669,18 +868,28 @@ export type XeroPolicy = {
           {
             "name": "dailyLimit",
             "docs": [
-              "Most that can be spent within one rolling 24h window, in base units."
+              "Most that can be spent across the last `WINDOW_BUCKETS` hourly buckets, in base units."
             ],
             "type": "u64"
           },
           {
-            "name": "spentInWindow",
-            "type": "u64"
+            "name": "buckets",
+            "docs": [
+              "Amount paid in each hour, indexed by `hour % WINDOW_BUCKETS`, where",
+              "`hour = unix_timestamp / BUCKET_SECONDS`. Only buckets for the 24 hours up to and",
+              "including `last_hour` are meaningful; older ones are cleared lazily on the next payment."
+            ],
+            "type": {
+              "array": [
+                "u64",
+                24
+              ]
+            }
           },
           {
-            "name": "windowStart",
+            "name": "lastHour",
             "docs": [
-              "Unix timestamp of the first payment in the current window."
+              "Hour (`unix_timestamp / BUCKET_SECONDS`) of the most recent payment; 0 before the first."
             ],
             "type": "i64"
           },
@@ -707,6 +916,142 @@ export type XeroPolicy = {
           {
             "name": "bump",
             "type": "u8"
+          },
+          {
+            "name": "reserved",
+            "docs": [
+              "Reserved for future fields; always zero in version 1."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                64
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "policyClosed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "policy",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "destination",
+            "docs": [
+              "Token account that received the swept vault balance."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "swept",
+            "docs": [
+              "Vault balance swept to `destination` (may be 0)."
+            ],
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "policyCreated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "policy",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "spender",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "maxPerPayment",
+            "type": "u64"
+          },
+          {
+            "name": "dailyLimit",
+            "type": "u64"
+          },
+          {
+            "name": "allowlist",
+            "type": {
+              "vec": "pubkey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "providerAdded",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "policy",
+            "type": "pubkey"
+          },
+          {
+            "name": "provider",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "providerRemoved",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "policy",
+            "type": "pubkey"
+          },
+          {
+            "name": "provider",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "withdrawn",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "policy",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "destination",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
           }
         ]
       }
@@ -714,9 +1059,25 @@ export type XeroPolicy = {
   ],
   "constants": [
     {
+      "name": "bucketSeconds",
+      "docs": [
+        "Width of one spending bucket, in seconds (one hour)."
+      ],
+      "type": "i64",
+      "value": "3600"
+    },
+    {
       "name": "policySeed",
       "type": "bytes",
       "value": "[112, 111, 108, 105, 99, 121]"
+    },
+    {
+      "name": "policyVersion",
+      "docs": [
+        "Layout version of the `Policy` account."
+      ],
+      "type": "u8",
+      "value": "1"
     },
     {
       "name": "vaultSeed",
@@ -724,12 +1085,14 @@ export type XeroPolicy = {
       "value": "[118, 97, 117, 108, 116]"
     },
     {
-      "name": "windowSeconds",
+      "name": "windowBuckets",
       "docs": [
-        "Length of the rolling spending window, in seconds."
+        "Number of hourly buckets in the spending window. The daily limit applies to the sum of the",
+        "current hour's bucket and the 23 before it, so a payment counts against the limit until the",
+        "24th hour boundary after it: for at least 23 and at most 24 hours."
       ],
-      "type": "i64",
-      "value": "86400"
+      "type": "u8",
+      "value": "24"
     }
   ]
 };

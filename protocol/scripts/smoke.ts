@@ -147,7 +147,10 @@ async function main() {
   const providerBalance = (await getAccount(connection, dataApiTokens)).amount;
   const state = await program.account.policy.fetch(policy);
   console.log(
-    `vault ${vaultBalance} · data.api ${providerBalance} · spent_in_window ${state.spentInWindow}`
+    `vault ${vaultBalance} · data.api ${providerBalance} · spent in last 24h ${state.buckets.reduce(
+      (sum, b) => sum.add(b),
+      new BN(0)
+    )}`
   );
   if (vaultBalance !== 99_580_000n || providerBalance !== 420_000n) {
     throw new Error("unexpected balances");

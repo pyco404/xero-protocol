@@ -101,14 +101,25 @@ missing. `close` sweeps whatever is left in the vault, then closes the vault and
 and refunds their rent to the owner.
 
 `status()` returns `balance`, `limits`, `allowlist`, `paused`, `spentInWindow`,
-`remainingToday` and `windowResetsAt` (a `Date`, or `null` when no window is running).
-`remainingToday` counts the daily limit only, not the vault balance.
+`remainingToday` and `nextReleaseAt` (when the oldest counted payment stops counting and frees
+budget, or `null` if nothing is counted). `remainingToday` counts the daily limit only, not the
+vault balance.
+
+### The daily limit: a rolling 24-hour window
+
+The program keeps 24 hourly buckets. Each payment is added to the bucket for its hour
+(`unix time / 3600`), and a payment is allowed only if the current hour's bucket plus the 23
+before it, plus the amount, stay within `dailyLimit`. A payment therefore counts against the limit
+until the 24th hour boundary after it was made: for at least 23 and at most 24 hours. There is no
+reset moment, so the limit can't be doubled by spending on both sides of one.
+`spentInWindow`, `remainingToday` and `nextReleaseAt` are computed with the same bucket logic as
+the program, using the cluster clock.
 
 ### `check()` and `pay()`
 
 `check()` reads the policy, vault, recipient account and the cluster clock in one RPC call and
 runs the program's checks in the program's order: paused → allowlist → amount (zero, max per
-payment) → window reset → daily limit. It then checks the vault balance, which on chain is the
+payment) → daily limit over the last 24 hourly buckets. It then checks the vault balance, which on chain is the
 token program's job. It never sends a transaction. The program remains the source of truth.
 `check()` exists for fast feedback and UI.
 
@@ -117,14 +128,14 @@ anything if it fails. If the chain still rejects the payment (state changed in b
 passed `{ skipCheck: true }`), the program error is mapped to the same `PolicyViolation`
 (`source: "chain"`, with the transaction `logs`).
 
-| `PolicyViolation.code`    | Meaning                                               |
-| ------------------------- | ----------------------------------------------------- |
-| `Paused`                  | The owner paused the policy                           |
-| `RecipientNotAllowed`     | The recipient account's owner is not on the allowlist |
-| `ZeroAmount`              | Amount is zero                                        |
-| `AmountExceedsMaxPayment` | Amount is over `maxPerPayment`                        |
-| `DailyLimitExceeded`      | Amount would take the 24h window over `dailyLimit`    |
-| `InsufficientFunds`       | The vault holds less than the amount                  |
+| `PolicyViolation.code`    | Meaning                                                        |
+| ------------------------- | -------------------------------------------------------------- |
+| `Paused`                  | The owner paused the policy                                    |
+| `RecipientNotAllowed`     | The recipient account's owner is not on the allowlist          |
+| `ZeroAmount`              | Amount is zero                                                 |
+| `AmountExceedsMaxPayment` | Amount is over `maxPerPayment`                                 |
+| `DailyLimitExceeded`      | Amount would take the last 24 hourly buckets over `dailyLimit` |
+| `InsufficientFunds`       | The vault holds less than the amount                           |
 
 ### Errors
 
@@ -155,7 +166,8 @@ rounds, so digits past the second are kept (`"4.205"`).
 ### Events
 
 `parsePaymentSettled(logs, programId?)` extracts the `PaymentSettled` events (`policy`,
-`spender`, `recipient`, `amount`, `spentInWindow`, amounts in base units) from a transaction's
+`spender`, `mint`, `recipient`, `recipientTokenAccount`, `amount`, `spentInWindow`, `dailyLimit`,
+`timestamp`; amounts in base units) from a transaction's
 log messages. `pay()` uses it to build its result.
 
 ## Development

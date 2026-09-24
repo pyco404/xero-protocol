@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked};
 
-use crate::{constants::*, error::XeroError, state::Policy};
+use crate::{constants::*, error::XeroError, events::Deposited, state::Policy};
 
 #[derive(Accounts)]
 pub struct Deposit<'info> {
@@ -34,5 +34,12 @@ pub fn handle_deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
         CpiContext::new(ctx.accounts.token_program.key(), accounts),
         amount,
         ctx.accounts.mint.decimals,
-    )
+    )?;
+    emit!(Deposited {
+        policy: ctx.accounts.policy.key(),
+        owner: ctx.accounts.owner.key(),
+        source: ctx.accounts.owner_token_account.key(),
+        amount,
+    });
+    Ok(())
 }

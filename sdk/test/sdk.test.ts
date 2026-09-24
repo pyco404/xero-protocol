@@ -61,7 +61,7 @@ describe("website flow", () => {
     assert.deepEqual(status.allowlist.map(String), [w.dataApi, w.computeApi].map(String));
     assert.equal(status.paused, false);
     assert.equal(status.remainingToday.decimal, "20");
-    assert.equal(status.windowResetsAt, null);
+    assert.equal(status.nextReleaseAt, null);
 
     const payments = [
       { to: w.dataApi, amount: "0.42", spent: "0.42", remaining: "19.58" },
@@ -92,7 +92,7 @@ describe("website flow", () => {
     assert.equal(after.balance.decimal, "94.58");
     assert.equal(after.spentInWindow.decimal, "5.42");
     assert.equal(after.remainingToday.decimal, "14.58");
-    assert.ok(after.windowResetsAt instanceof Date);
+    assert.ok(after.nextReleaseAt instanceof Date);
     assert.equal(await w.balance(w.dataApiTokens), usd("1.22"));
     assert.equal(await w.balance(w.computeApiTokens), usd("4.2"));
     assert.equal(await w.balance(w.unknownApiTokens), 0n);
@@ -112,6 +112,10 @@ describe("website flow", () => {
     assert.ok(event.recipient.equals(w.dataApi));
     assert.equal(event.amount, 420_000n);
     assert.equal(event.spentInWindow, 420_000n);
+    assert.ok(event.mint.equals(w.mint));
+    assert.ok(event.recipientTokenAccount.equals(w.dataApiTokens));
+    assert.equal(event.dailyLimit, 20_000_000n);
+    assert.ok(event.timestamp > 1_700_000_000n);
   });
 
   it("getSpender loads an existing policy for the owner and for the agent", async () => {

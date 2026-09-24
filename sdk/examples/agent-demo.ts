@@ -148,7 +148,7 @@ async function main() {
     `   data.api ${await balance(dataApi)} · compute.api ${await balance(computeApi)} · ` +
       `unknown.api ${await balance(unknownApi)}`,
   );
-  console.log(`   window resets at ${status.windowResetsAt?.toISOString()}`);
+  console.log(`   oldest payment stops counting at ${status.nextReleaseAt?.toISOString()}`);
 }
 
 main().catch((err) => {

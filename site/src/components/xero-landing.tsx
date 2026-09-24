@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { motion, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
@@ -12,7 +13,6 @@ import {
   Eye,
   Github,
   Globe,
-  Hexagon,
   KeyRound,
   LockKeyhole,
   Menu,
@@ -29,11 +29,11 @@ import {
 import { Button } from "@/components/ui/button";
 
 const navItems = [
-  ["Product", "#product"],
-  ["Technology", "#technology"],
-  ["Use Cases", "#use-cases"],
-  ["Developers", "#developers"],
-  ["Docs", "#developers"],
+  ["Product", "/product"],
+  ["Technology", "/technology"],
+  ["Use Cases", "/use-cases"],
+  ["Developers", "/developers"],
+  ["Docs", "/developers"],
 ] as const;
 
 // Example numbers used across the page: budget $100, daily limit $20, max payment $5, 8 providers.
@@ -121,8 +121,10 @@ function LogoMark({ className = "size-7" }: { className?: string }) {
 function Logo() {
   return (
     <a href="#top" className="flex items-center gap-2.5" aria-label="XERO home">
-      <LogoMark />
-      <span className="font-display text-[15px] font-semibold tracking-[0.22em]">XERO</span>
+      <LogoMark className="size-5 sm:size-7" />
+      <span className="font-display text-[13px] font-semibold tracking-[0.22em] sm:text-[15px]">
+        XERO
+      </span>
     </a>
   );
 }
@@ -165,7 +167,7 @@ function Reveal({ children, className = "" }: { children: React.ReactNode; class
   );
 }
 
-function Navbar() {
+export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   useEffect(() => {
@@ -183,13 +185,13 @@ function Navbar() {
         <Logo />
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary navigation">
           {navItems.map(([label, href]) => (
-            <a
+            <Link
               key={label}
-              href={href}
+              to={href}
               className="text-xs text-muted-foreground transition-colors hover:text-foreground"
             >
               {label}
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="hidden items-center gap-2 lg:flex">
@@ -200,9 +202,9 @@ function Navbar() {
             </a>
           </Button>
           <Button size="sm" asChild>
-            <a href="#demo">
+            <Link to="/product">
               Launch App <ArrowRight />
-            </a>
+            </Link>
           </Button>
         </div>
         <Button
@@ -225,19 +227,19 @@ function Navbar() {
           >
             <div className="flex flex-col gap-1 px-5 py-5">
               {navItems.map(([label, href]) => (
-                <a
+                <Link
                   key={label}
-                  href={href}
+                  to={href}
                   onClick={() => setOpen(false)}
                   className="py-3 text-sm text-muted-foreground"
                 >
                   {label}
-                </a>
+                </Link>
               ))}
               <Button className="mt-3" asChild>
-                <a href="#demo" onClick={() => setOpen(false)}>
+                <Link to="/product" onClick={() => setOpen(false)}>
                   Launch App <ArrowRight />
-                </a>
+                </Link>
               </Button>
             </div>
           </motion.nav>
@@ -294,7 +296,7 @@ function PrivateDollar() {
   );
 }
 
-function Hero() {
+export function Hero() {
   return (
     <section
       id="top"
@@ -344,21 +346,23 @@ function Hero() {
 }
 
 function TrustStrip() {
+  const trustItems = [
+    ["SOLANA", Zap],
+    ["STABLECOINS", CircleDollarSign],
+    ["ZK PRIVACY", KeyRound],
+    ["NON-CUSTODIAL", WalletCards],
+    ["PROGRAMMABLE", Braces],
+  ] as const;
+
   return (
     <section className="border-b border-border bg-surface/40">
       <div className="mx-auto grid max-w-7xl grid-cols-2 border-x border-border sm:grid-cols-3 lg:grid-cols-5">
-        {[
-          "SOLANA",
-          "STABLECOINS",
-          "ZK PRIVACY · IN DEVELOPMENT",
-          "NON-CUSTODIAL",
-          "PROGRAMMABLE",
-        ].map((item, i) => (
+        {trustItems.map(([item, Icon], i) => (
           <div
             key={item}
             className={`flex h-20 items-center justify-center gap-2 border-border px-4 font-mono text-[9px] tracking-[0.16em] text-muted-foreground ${i < 4 ? "lg:border-r" : ""}`}
           >
-            <Hexagon className="size-3.5 text-foreground/60" />
+            <Icon className="size-4 text-foreground/60" strokeWidth={1.7} />
             {item}
           </div>
         ))}
@@ -367,7 +371,7 @@ function TrustStrip() {
   );
 }
 
-function Problem() {
+export function Problem() {
   const exposed = ["Amount", "Balance", "Payment history", "Counterparties", "Spending patterns"];
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-120px" });
@@ -446,7 +450,7 @@ function Problem() {
   );
 }
 
-function Solution() {
+export function Solution() {
   const features = [
     ["PRIVATE", "In development: sensitive payment details stay shielded.", LockKeyhole],
     ["VERIFIABLE", "The chain enforces every spending rule, so anyone can verify it.", ShieldCheck],
@@ -501,7 +505,7 @@ function Solution() {
   );
 }
 
-function PrivateVerifiable() {
+export function PrivateVerifiable() {
   return (
     <section className="section-shell">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
@@ -551,7 +555,7 @@ function PrivateVerifiable() {
   );
 }
 
-function ProgrammableMoney() {
+export function ProgrammableMoney() {
   const [active, setActive] = useState(0);
   const activePolicy = policies[active] ?? policies[0];
   return (
@@ -752,7 +756,7 @@ function AgentFlow() {
   );
 }
 
-function Agents() {
+export function Agents() {
   return (
     <section className="section-shell overflow-hidden">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
@@ -818,7 +822,7 @@ const scenarios: Record<
   },
 };
 
-function LiveDemo() {
+export function LiveDemo() {
   const reduce = useReducedMotion();
   const [scenario, setScenario] = useState<Scenario>("valid");
   const [running, setRunning] = useState(false);
@@ -1029,7 +1033,7 @@ const txPreview: [TxField, string, string][] = [
   ["balance", "Balance", "$18,420.55"],
 ];
 
-function Disclosure() {
+export function Disclosure() {
   const [level, setLevel] = useState(2);
   const hidden = disclosureLevels[level]?.hides ?? [];
   return (
@@ -1130,7 +1134,7 @@ function Disclosure() {
   );
 }
 
-function UseCases() {
+export function UseCases() {
   const cases = [
     [
       "AI AGENTS",
@@ -1203,7 +1207,7 @@ function UseCases() {
   );
 }
 
-function Architecture() {
+export function Architecture() {
   const [active, setActive] = useState(0);
   return (
     <section className="section-shell">
@@ -1308,7 +1312,7 @@ function highlight(source: string) {
   return out;
 }
 
-function Developers() {
+export function Developers() {
   return (
     <section id="developers" className="section-shell border-y border-border bg-surface/40">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
@@ -1353,7 +1357,7 @@ function Developers() {
   );
 }
 
-function Security() {
+export function Security() {
   return (
     <section className="section-shell">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
@@ -1391,7 +1395,7 @@ function Security() {
   );
 }
 
-function FinalCta() {
+export function FinalCta() {
   return (
     <section className="relative overflow-hidden border-y border-border py-20 sm:py-28">
       <div className="protocol-grid absolute inset-0 opacity-30" />
@@ -1405,14 +1409,14 @@ function FinalCta() {
           </p>
           <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
             <Button size="lg" asChild>
-              <a href="#demo">
+              <Link to="/product">
                 Launch XERO <ArrowRight />
-              </a>
+              </Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <a href="#developers">
+              <Link to="/developers">
                 Read the Docs <ArrowRight />
-              </a>
+              </Link>
             </Button>
           </div>
           <p className="mt-10 font-mono text-[9px] tracking-[0.18em] text-muted-foreground">
@@ -1428,8 +1432,8 @@ function FinalCta() {
 const footerColumns: Record<string, { label: string; href?: string }[]> = {
   PRODUCT: [
     { label: "App" },
-    { label: "Technology", href: "#technology" },
-    { label: "Use Cases", href: "#use-cases" },
+    { label: "Technology", href: "/technology" },
+    { label: "Use Cases", href: "/use-cases" },
     { label: "Roadmap" },
   ],
   DEVELOPERS: [{ label: "Docs" }, { label: "SDK" }, { label: "API" }, { label: "GitHub" }],
@@ -1437,7 +1441,7 @@ const footerColumns: Record<string, { label: string; href?: string }[]> = {
   LEGAL: [{ label: "Privacy" }, { label: "Terms" }],
 };
 
-function Footer() {
+export function Footer() {
   return (
     <footer className="px-5 py-14 lg:px-8">
       <div className="mx-auto max-w-7xl">
@@ -1454,13 +1458,13 @@ function Footer() {
               <div className="mt-5 space-y-3">
                 {items.map(({ label, href }) =>
                   href ? (
-                    <a
+                    <Link
                       key={label}
-                      href={href}
+                      to={href}
                       className="block text-xs text-muted-foreground transition-colors hover:text-foreground"
                     >
                       {label}
-                    </a>
+                    </Link>
                   ) : (
                     <span
                       key={label}
@@ -1492,18 +1496,32 @@ export function XeroLanding() {
       <Navbar />
       <Hero />
       <TrustStrip />
-      <Problem />
-      <Solution />
-      <PrivateVerifiable />
-      <ProgrammableMoney />
-      <Agents />
-      <LiveDemo />
-      <Disclosure />
-      <UseCases />
-      <Architecture />
-      <Developers />
-      <Security />
-      <FinalCta />
+      <section className="section-shell border-b border-border">
+        <div className="mx-auto max-w-7xl px-5 lg:px-8">
+          <SectionLabel>Explore the protocol</SectionLabel>
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            {[
+              ["Product", "/product", "Why payment privacy and policy matter."],
+              ["Technology", "/technology", "Verify more while revealing less."],
+              ["Use Cases", "/use-cases", "Where programmable money fits real workflows."],
+              ["Developers", "/developers", "One API for agent-controlled spending."],
+            ].map(([title, href, copy]) => (
+              <Link
+                key={title}
+                to={href}
+                className="group block border border-border bg-card p-6 transition-colors hover:border-primary/60 hover:bg-elevated"
+              >
+                <p className="font-mono text-[9px] tracking-[0.16em] text-primary">{title}</p>
+                <h3 className="mt-5 text-xl font-semibold">{title}</h3>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">{copy}</p>
+                <span className="mt-6 inline-flex items-center gap-2 text-xs font-medium text-foreground">
+                  Open page <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
       <Footer />
     </main>
   );

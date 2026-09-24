@@ -10,33 +10,74 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DevelopersRouteImport } from './routes/developers'
+import { Route as ProductRouteImport } from './routes/product'
+import { Route as TechnologyRouteImport } from './routes/technology'
+import { Route as UseCasesRouteImport } from './routes/use-cases'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevelopersRoute = DevelopersRouteImport.update({
+  id: '/developers',
+  path: '/developers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductRoute = ProductRouteImport.update({
+  id: '/product',
+  path: '/product',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TechnologyRoute = TechnologyRouteImport.update({
+  id: '/technology',
+  path: '/technology',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UseCasesRoute = UseCasesRouteImport.update({
+  id: '/use-cases',
+  path: '/use-cases',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/developers': typeof DevelopersRoute
+  '/product': typeof ProductRoute
+  '/technology': typeof TechnologyRoute
+  '/use-cases': typeof UseCasesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/developers': typeof DevelopersRoute
+  '/product': typeof ProductRoute
+  '/technology': typeof TechnologyRoute
+  '/use-cases': typeof UseCasesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/developers': typeof DevelopersRoute
+  '/product': typeof ProductRoute
+  '/technology': typeof TechnologyRoute
+  '/use-cases': typeof UseCasesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/developers' | '/product' | '/technology' | '/use-cases'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/developers' | '/product' | '/technology' | '/use-cases'
+  id:
+    '__root__' | '/' | '/developers' | '/product' | '/technology' | '/use-cases'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DevelopersRoute: typeof DevelopersRoute
+  ProductRoute: typeof ProductRoute
+  TechnologyRoute: typeof TechnologyRoute
+  UseCasesRoute: typeof UseCasesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +89,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/developers': {
+      id: '/developers'
+      path: '/developers'
+      fullPath: '/developers'
+      preLoaderRoute: typeof DevelopersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/product': {
+      id: '/product'
+      path: '/product'
+      fullPath: '/product'
+      preLoaderRoute: typeof ProductRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/technology': {
+      id: '/technology'
+      path: '/technology'
+      fullPath: '/technology'
+      preLoaderRoute: typeof TechnologyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/use-cases': {
+      id: '/use-cases'
+      path: '/use-cases'
+      fullPath: '/use-cases'
+      preLoaderRoute: typeof UseCasesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DevelopersRoute: DevelopersRoute,
+  ProductRoute: ProductRoute,
+  TechnologyRoute: TechnologyRoute,
+  UseCasesRoute: UseCasesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

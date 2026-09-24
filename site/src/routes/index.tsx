@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { XeroLanding } from "@/components/xero-landing";
+import { Footer, LiveDemo, Navbar, Problem } from "@/components/xero-landing";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,5 +20,18 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: XeroLanding,
+  component: MainPage,
 });
+
+function MainPage() {
+  return (
+    <main className="min-h-screen overflow-x-hidden bg-background text-foreground">
+      <Navbar />
+      <div className="pt-16">
+        <Problem />
+        <LiveDemo />
+      </div>
+      <Footer />
+    </main>
+  );
+}

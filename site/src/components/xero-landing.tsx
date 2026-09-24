@@ -265,7 +265,7 @@ export function Navbar() {
         </nav>
         <div className="hidden items-center gap-2 lg:flex">
           <Button variant="ghost" size="sm" asChild>
-            <a href="https://github.com" target="_blank" rel="noreferrer">
+            <a href="https://github.com/pyco404/xero-protocol" target="_blank" rel="noreferrer">
               <Github />
               GitHub
             </a>
@@ -576,7 +576,7 @@ export function PrivateVerifiable() {
     <section className="section-shell">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <SectionLabel>Private + verifiable</SectionLabel>
-        <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
+        <div className="grid min-w-0 gap-14 lg:grid-cols-2 lg:items-center">
           <Reveal>
             <h2 className="heading-xl">Privacy doesn&apos;t mean trust.</h2>
             <p className="mt-6 max-w-xl leading-7 text-muted-foreground">
@@ -1383,7 +1383,7 @@ export function Developers() {
     <section id="developers" className="section-shell border-y border-border bg-surface/40">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <SectionLabel>Developer experience</SectionLabel>
-        <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
+        <div className="grid min-w-0 gap-14 lg:grid-cols-2 lg:items-center">
           <Reveal>
             <h2 className="heading-xl">One API for agent money.</h2>
             <p className="mt-6 max-w-lg leading-7 text-muted-foreground">
@@ -1397,19 +1397,19 @@ export function Developers() {
                 </a>
               </Button>
               <Button variant="outline" asChild>
-                <a href="https://github.com" target="_blank" rel="noreferrer">
+                <a href="https://github.com/pyco404/xero-protocol" target="_blank" rel="noreferrer">
                   <Github /> View GitHub
                 </a>
               </Button>
             </div>
           </Reveal>
-          <Reveal>
-            <div className="overflow-hidden border border-border bg-background">
+          <Reveal className="min-w-0">
+            <div className="min-w-0 max-w-full overflow-hidden border border-border bg-background">
               <div className="flex items-center justify-between border-b border-border px-5 py-3">
                 <span className="font-mono text-[9px] text-muted-foreground">agent.ts</span>
                 <Code2 className="size-3 text-primary" />
               </div>
-              <pre className="overflow-x-auto p-5 font-mono text-[11px] leading-6 text-foreground/80 sm:p-7">
+              <pre className="max-w-full overflow-x-auto p-5 font-mono text-[11px] leading-6 text-foreground/80 sm:p-7">
                 <code>{highlight(codeSample)}</code>
               </pre>
             </div>
@@ -1500,8 +1500,13 @@ const footerColumns: Record<string, { label: string; href?: string }[]> = {
     { label: "Use Cases", href: "/use-cases" },
     { label: "Roadmap" },
   ],
-  DEVELOPERS: [{ label: "Docs" }, { label: "SDK" }, { label: "API" }, { label: "GitHub" }],
-  COMMUNITY: [{ label: "X", href: "https://x.com/xero_protocol" }, { label: "Discord" }, { label: "Telegram" }],
+  DEVELOPERS: [
+    { label: "Docs" },
+    { label: "SDK" },
+    { label: "API" },
+    { label: "GitHub", href: "https://github.com/pyco404/xero-protocol" },
+  ],
+  COMMUNITY: [{ label: "X", href: "https://x.com/xero_protocol" }, { label: "Discord" }],
   LEGAL: [{ label: "Privacy" }, { label: "Terms" }],
 };
 

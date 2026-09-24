@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ComponentProps, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
 import {
@@ -35,6 +35,72 @@ const navItems = [
   ["Developers", "/developers"],
   ["Docs", "/developers"],
 ] as const;
+
+type LaunchActionProps = Omit<ComponentProps<typeof Button>, "asChild" | "children"> & {
+  children: ReactNode;
+  onLaunch?: () => void;
+};
+
+function LaunchAction({ children, onLaunch, ...buttonProps }: LaunchActionProps) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (!visible) return;
+    const timer = window.setTimeout(() => setVisible(false), 4200);
+    return () => window.clearTimeout(timer);
+  }, [visible]);
+
+  return (
+    <>
+      <Button
+        {...buttonProps}
+        onClick={() => {
+          setVisible(true);
+          onLaunch?.();
+        }}
+      >
+        {children}
+      </Button>
+      <AnimatePresence>
+        {visible && (
+          <motion.div
+            initial={{ opacity: 0, y: -12, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center px-4 pointer-events-none"
+          >
+            <div
+              className="pointer-events-auto flex w-full max-w-lg items-start gap-4 border border-primary/50 bg-card p-6 sm:p-8"
+              role="status"
+            >
+              <div className="mt-0.5 grid size-10 shrink-0 place-items-center border border-primary/50 bg-primary/10 text-primary sm:size-12">
+                <Clock3 className="size-5 sm:size-6" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="font-mono text-[10px] tracking-[0.16em] text-primary sm:text-xs">
+                  XERO / STATUS
+                </p>
+                <p className="mt-2 text-base text-foreground sm:text-lg">under-development</p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  It&apos;s being built at the moment, check back later.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setVisible(false)}
+                className="text-muted-foreground transition-colors hover:text-foreground"
+                aria-label="Dismiss notification"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
 
 // Example numbers used across the page: budget $100, daily limit $20, max payment $5, 8 providers.
 const policies = [
@@ -120,12 +186,12 @@ function LogoMark({ className = "size-7" }: { className?: string }) {
 
 function Logo() {
   return (
-    <a href="#top" className="flex items-center gap-2.5" aria-label="XERO home">
+    <Link to="/" className="flex items-center gap-2.5" aria-label="XERO home">
       <LogoMark className="size-5 sm:size-7" />
       <span className="font-display text-[13px] font-semibold tracking-[0.22em] sm:text-[15px]">
         XERO
       </span>
-    </a>
+    </Link>
   );
 }
 
@@ -189,6 +255,9 @@ export function Navbar() {
               key={label}
               to={href}
               className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+              activeProps={{
+                className: "text-foreground underline decoration-primary underline-offset-8",
+              }}
             >
               {label}
             </Link>
@@ -201,11 +270,9 @@ export function Navbar() {
               GitHub
             </a>
           </Button>
-          <Button size="sm" asChild>
-            <Link to="/product">
-              Launch App <ArrowRight />
-            </Link>
-          </Button>
+          <LaunchAction size="sm">
+            Launch App <ArrowRight />
+          </LaunchAction>
         </div>
         <Button
           variant="ghost"
@@ -232,15 +299,16 @@ export function Navbar() {
                   to={href}
                   onClick={() => setOpen(false)}
                   className="py-3 text-sm text-muted-foreground"
+                  activeProps={{
+                    className: "border-l-2 border-primary pl-3 text-foreground",
+                  }}
                 >
                   {label}
                 </Link>
               ))}
-              <Button className="mt-3" asChild>
-                <Link to="/product" onClick={() => setOpen(false)}>
-                  Launch App <ArrowRight />
-                </Link>
-              </Button>
+              <LaunchAction className="mt-3" onLaunch={() => setOpen(false)}>
+                Launch App <ArrowRight />
+              </LaunchAction>
             </div>
           </motion.nav>
         )}
@@ -325,11 +393,9 @@ export function Hero() {
             Private payments and selective disclosure are in development.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Button size="lg" asChild>
-              <a href="#demo">
-                Launch XERO <ArrowRight />
-              </a>
-            </Button>
+            <LaunchAction size="lg">
+              Launch XERO <ArrowRight />
+            </LaunchAction>
             <Button variant="outline" size="lg" asChild>
               <a href="#technology">Explore the Protocol</a>
             </Button>
@@ -1408,11 +1474,9 @@ export function FinalCta() {
             Build payments that are programmable and verifiable, with privacy in development.
           </p>
           <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button size="lg" asChild>
-              <Link to="/product">
-                Launch XERO <ArrowRight />
-              </Link>
-            </Button>
+            <LaunchAction size="lg">
+              Launch XERO <ArrowRight />
+            </LaunchAction>
             <Button size="lg" variant="outline" asChild>
               <Link to="/developers">
                 Read the Docs <ArrowRight />
@@ -1437,7 +1501,7 @@ const footerColumns: Record<string, { label: string; href?: string }[]> = {
     { label: "Roadmap" },
   ],
   DEVELOPERS: [{ label: "Docs" }, { label: "SDK" }, { label: "API" }, { label: "GitHub" }],
-  COMMUNITY: [{ label: "X" }, { label: "Discord" }, { label: "Telegram" }],
+  COMMUNITY: [{ label: "X", href: "https://x.com/xero_protocol" }, { label: "Discord" }, { label: "Telegram" }],
   LEGAL: [{ label: "Privacy" }, { label: "Terms" }],
 };
 
@@ -1457,7 +1521,17 @@ export function Footer() {
               <p className="terminal-label">{title}</p>
               <div className="mt-5 space-y-3">
                 {items.map(({ label, href }) =>
-                  href ? (
+                  href?.startsWith("http") ? (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="block text-xs text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      {label}
+                    </a>
+                  ) : href ? (
                     <Link
                       key={label}
                       to={href}

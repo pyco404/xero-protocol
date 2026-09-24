@@ -715,7 +715,7 @@ function AgentFlow() {
         >
           <span className="text-error">✕ DENIED</span>
           <p className="mt-2 text-muted-foreground">
-            {denyLit ? "Amount exceeds max payment" : "POLICY VIOLATION"}
+            {denyLit ? "Recipient not allowed" : "POLICY VIOLATION"}
           </p>
         </div>
       </div>
@@ -771,7 +771,7 @@ type Scenario = "valid" | "violation";
 
 const scenarios: Record<
   Scenario,
-  { provider: string; amount: string; results: StepResult[]; lastStep: number }
+  { provider: string; amount: string; results: StepResult[]; lastStep: number; reason?: string }
 > = {
   valid: {
     provider: "data.api",
@@ -782,8 +782,10 @@ const scenarios: Record<
   violation: {
     provider: "unknown.api",
     amount: "$40.00",
-    results: ["fail", "fail", "skip", "skip", "skip", "skip"],
-    lastStep: 1,
+    // The program checks the allowlist before the amount, so the first failure ends the run.
+    results: ["fail", "skip", "skip", "skip", "skip", "skip"],
+    lastStep: 0,
+    reason: "Recipient not allowed",
   },
 };
 
@@ -908,7 +910,7 @@ function LiveDemo() {
                   className={`mt-4 border px-4 py-3 font-mono text-[10px] ${denied ? "border-error/60 bg-error/10 text-error" : "border-primary/40 bg-primary/5 text-primary"}`}
                 >
                   {denied
-                    ? "DENIED BEFORE PAYMENT. No transaction created."
+                    ? `DENIED: ${current.reason}. No transaction created.`
                     : "PAYMENT SETTLED. Amount and balance stayed private."}
                 </motion.p>
               )}
@@ -1217,23 +1219,25 @@ function Architecture() {
   );
 }
 
-const codeSample = `const agent = await xero.wallet.createAgent({
-  budget: 100,
-  dailyLimit: 20,
-  maxPayment: 5,
-  allowedProviders: ["data.api", "compute.api"],
-  privacy: "confidential"
+const codeSample = `const spender = await xero.createSpender({
+  spender: agentWallet.publicKey,
+  mint: usdc,
+  deposit: "100",
+  maxPerPayment: "5",
+  dailyLimit: "20",
+  allowedProviders: [dataApi, computeApi]
 })
 
+const agent = spender.as(agentWallet)
 const result = await agent.pay({
-  recipient: "data.api",
-  amount: 0.42
+  recipient: dataApi,
+  amount: "0.42"
 })
 // result.status === "settled"
-// public view: amount and balance hidden
+// result.remainingToday.decimal === "19.58"
 
-await agent.pay({ recipient: "unknown.api", amount: 40 })
-// throws PolicyViolation: "amount exceeds maxPayment"`;
+await agent.pay({ recipient: unknownApi, amount: "40" })
+// throws PolicyViolation: RecipientNotAllowed`;
 
 const codeTokens: [RegExp, string][] = [
   [/^\/\/.*/, "text-muted-foreground/70"],

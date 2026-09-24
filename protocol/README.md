@@ -10,7 +10,17 @@ The TypeScript client lives in [`../sdk`](../sdk).
 
 ## Program: `xero_policy`
 
-Program ID (localnet): `EK8aHDV1rgmoi7aygKCptretPMwQ9b6U293dioDLGZYW`
+Program ID (localnet and devnet): `EK8aHDV1rgmoi7aygKCptretPMwQ9b6U293dioDLGZYW`
+
+### Deployments
+
+| Cluster | Program | Upgrade authority | Deployed | Binary sha256 |
+| --- | --- | --- | --- | --- |
+| devnet | [`EK8aHDV1…DLGZYW`](https://explorer.solana.com/address/EK8aHDV1rgmoi7aygKCptretPMwQ9b6U293dioDLGZYW?cluster=devnet) | `3J58VF4HmCTXcbbqc47BHZxotR3fd6mA2PazXjD3egYv` (`~/.config/solana/id.json`, a single key) | 2026-09-24, slot 503,542,382, commit `ebf8258` | `0802aaae5d8f40c59e24f11e1b6c8b862f614b9e9e56aefc542cdeb7bf314559` |
+
+Devnet only; not audited. Verify the deployed binary with
+`solana program dump EK8aHDV1rgmoi7aygKCptretPMwQ9b6U293dioDLGZYW out.so -u devnet && sha256sum out.so`.
+For anything beyond devnet, move the upgrade authority to a multisig.
 
 | Account  | Seeds                        | Purpose                                                |
 | -------- | ---------------------------- | ------------------------------------------------------ |
@@ -70,6 +80,17 @@ npm test                 # build, then the LiteSVM test suite (no validator need
 npm run test:ts          # tests only, against the existing target/deploy/xero_policy.so
 npm run deploy:localnet  # deploy with ~/.config/solana/id.json as payer and upgrade authority
 npm run smoke            # website example against a live cluster (default http://127.0.0.1:8899)
+```
+
+Deploy to devnet (upgrade authority = `~/.config/solana/id.json`; needs about 3 SOL at peak, 1.41 SOL
+kept as program rent; the public RPC can drop buffer writes, so this sends them to validators
+directly with a small priority fee):
+
+```sh
+npm run build
+solana program deploy target/deploy/xero_policy.so --program-id ~/.config/xero/xero_policy-keypair.json \
+  --keypair ~/.config/solana/id.json --upgrade-authority ~/.config/solana/id.json \
+  --max-len 276592 --with-compute-unit-price 10000 --max-sign-attempts 100 -u devnet
 ```
 
 Deploy to a fresh local validator:

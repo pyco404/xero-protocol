@@ -1,0 +1,42 @@
+{
+  "name": "@xero/sdk",
+  "version": "0.1.0",
+  "description": "TypeScript client for the xero_policy Solana program (localnet)",
+  "private": true,
+  "license": "ISC",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "npm run check-idl && rm -rf dist && tsc -p tsconfig.build.json",
+    "typecheck": "npm run build && tsc --noEmit",
+    "sync-idl": "node scripts/sync-idl.mjs",
+    "test": "node --import tsx --test --test-concurrency=1 --test-force-exit --test-timeout=120000 test/*.test.ts",
+    "test:unit": "node --import tsx --test test/unit.test.ts",
+    "demo": "npm run build && tsx examples/agent-demo.ts",
+    "format": "prettier --write .",
+    "lint": "prettier --check .",
+    "check-idl": "node scripts/sync-idl.mjs --check"
+  },
+  "dependencies": {
+    "@anchor-lang/core": "^1.2.0",
+    "@solana/spl-token": "^0.4.15",
+    "@solana/web3.js": "^1.99.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.6",
+    "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  }
+}

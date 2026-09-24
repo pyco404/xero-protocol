@@ -10,6 +10,7 @@ import {
 } from "@solana/web3.js";
 import { type AmountInput, parseAmount } from "./amount.js";
 import { InvalidAmountError, XeroError } from "./errors.js";
+import { CLUSTERS, type XeroCluster } from "./clusters.js";
 import { IDL } from "./idl/idl.js";
 import type { XeroPolicy } from "./idl/xero_policy.js";
 import { MAX_PROVIDERS, type PolicyState, validateLimits } from "./policy.js";
@@ -24,7 +25,9 @@ export interface XeroClientConfig {
   connection: Connection;
   /** Signs and pays for every transaction this client sends. */
   wallet: XeroWallet;
-  /** Defaults to XERO_POLICY_PROGRAM_ID. */
+  /** Cluster whose deployment to use; sets the default `programId`. Default "localnet". */
+  cluster?: XeroCluster;
+  /** Overrides the cluster's program ID. */
   programId?: PublicKey;
   /** Commitment for reads and confirmations. Default "confirmed". */
   commitment?: Commitment;
@@ -57,6 +60,7 @@ export interface MintInfo {
 export class XeroClient {
   readonly connection: Connection;
   readonly wallet: XeroWallet;
+  readonly cluster: XeroCluster;
   readonly programId: PublicKey;
   readonly commitment: Commitment;
   /** @internal Anchor client used to build instructions and decode accounts. */
@@ -65,7 +69,8 @@ export class XeroClient {
   constructor(config: XeroClientConfig) {
     this.connection = config.connection;
     this.wallet = config.wallet;
-    this.programId = config.programId ?? XERO_POLICY_PROGRAM_ID;
+    this.cluster = config.cluster ?? "localnet";
+    this.programId = config.programId ?? CLUSTERS[this.cluster].programId;
     this.commitment = config.commitment ?? "confirmed";
     const provider = new anchor.AnchorProvider(this.connection, this.wallet, {
       commitment: this.commitment,

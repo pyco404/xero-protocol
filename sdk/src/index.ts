@@ -1,4 +1,6 @@
 export { XeroClient, XERO_POLICY_PROGRAM_ID } from "./client.js";
+export { CLUSTERS, explorerUrl } from "./clusters.js";
+export type { ClusterConfig, XeroCluster } from "./clusters.js";
 export type { XeroClientConfig, CreateSpenderOptions, MintInfo } from "./client.js";
 export { Spender } from "./spender.js";
 export type { PaymentRequest, PayOptions, PaymentResult, SpenderStatus } from "./spender.js";

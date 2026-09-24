@@ -1,15 +1,17 @@
 /**
- * The xero.dev website demo, for real, against a local validator:
+ * The xero.dev website demo, for real, on localnet or devnet:
  *
  *   an owner gives an AI agent $100 with a $5 max payment and a $20 daily limit,
  *   the agent pays data.api and compute.api four times,
  *   then tries to send $40 to unknown.api, which the SDK refuses before anything is sent.
  *
- * Needs a local validator with xero_policy deployed (see protocol/README.md), and a funded
- * wallet at ~/.config/solana/id.json. Uses a fresh 6-decimal test mint every run.
+ * Needs xero_policy deployed on the chosen cluster (see protocol/README.md) and a funded owner
+ * wallet at ~/.config/solana/id.json (override with WALLET). Uses a fresh 6-decimal test mint
+ * every run, never a real stablecoin.
  *
- *   npm run demo                               # http://127.0.0.1:8899
+ *   npm run demo                               # localnet, http://127.0.0.1:8899
  *   RPC_URL=http://127.0.0.1:8999 npm run demo # any other local validator
+ *   XERO_CLUSTER=devnet npm run demo           # devnet (owner wallet needs ~0.1 devnet SOL)
  */
 import {
   createAssociatedTokenAccount,
@@ -28,8 +30,11 @@ import {
 import { readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import {
+  CLUSTERS,
   PolicyViolation,
   type SpenderStatus,
+  type XeroCluster,
+  explorerUrl,
   type TokenAmount,
   XeroClient,
   formatAmount,
@@ -37,12 +42,21 @@ import {
   parseAmount,
 } from "@xero/sdk";
 
-const RPC_URL = process.env.RPC_URL ?? "http://127.0.0.1:8899";
+const CLUSTER = (process.env.XERO_CLUSTER ?? "localnet") as XeroCluster;
+if (!(CLUSTER in CLUSTERS))
+  throw new Error(`XERO_CLUSTER must be localnet or devnet, got ${CLUSTER}`);
+const RPC_URL = process.env.RPC_URL ?? CLUSTERS[CLUSTER].rpcUrl;
 const WALLET = process.env.WALLET ?? `${homedir()}/.config/solana/id.json`;
 
-if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?\/?$/.test(RPC_URL)) {
-  throw new Error(`agent-demo is localnet only; refusing to run against ${RPC_URL}`);
+// Test clusters only: localhost for localnet, a devnet endpoint for devnet. Never mainnet.
+const allowed =
+  CLUSTER === "localnet"
+    ? /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?\/?$/.test(RPC_URL)
+    : /devnet/i.test(RPC_URL);
+if (!allowed) {
+  throw new Error(`agent-demo runs on localnet or devnet only; refusing ${RPC_URL} for ${CLUSTER}`);
 }
+const link = (target: string) => (CLUSTER === "devnet" ? `  ${explorerUrl(target, CLUSTER)}` : "");
 
 const step = (n: number, text: string) => console.log(`\n${n}. ${text}`);
 /** Dollars for display: always two decimals, exact beyond that (the test mint has 6). */
@@ -68,7 +82,10 @@ async function main() {
   const unknownApi = providers["unknown.api"].publicKey;
   const name = new Map(Object.entries(providers).map(([k, v]) => [v.publicKey.toBase58(), k]));
 
-  console.log(`cluster ${RPC_URL}`);
+  console.log(`cluster ${CLUSTER} (${RPC_URL})`);
+  console.log(
+    `program ${CLUSTERS[CLUSTER].programId.toBase58()}${link(CLUSTERS[CLUSTER].programId.toBase58())}`,
+  );
   console.log(`owner   ${owner.publicKey.toBase58()}`);
   console.log(`agent   ${agent.publicKey.toBase58()}`);
 
@@ -94,7 +111,7 @@ async function main() {
   console.log(`   mint ${mint.toBase58()}; owner holds $1000`);
 
   step(2, "Owner creates a spender: $100 budget, $5 max payment, $20/day, data.api + compute.api");
-  const xero = new XeroClient({ connection, wallet: keypairWallet(owner) });
+  const xero = new XeroClient({ connection, wallet: keypairWallet(owner), cluster: CLUSTER });
   const spender = await xero.createSpender({
     spender: agent.publicKey,
     mint,
@@ -103,7 +120,7 @@ async function main() {
     dailyLimit: "20",
     allowedProviders: [dataApi, computeApi],
   });
-  console.log(`   policy ${spender.policy.toBase58()}`);
+  console.log(`   policy ${spender.policy.toBase58()}${link(spender.policy.toBase58())}`);
   show(await spender.status());
 
   step(3, "Agent pays for API calls");
@@ -118,7 +135,7 @@ async function main() {
     console.log(
       `   ${usd(result.amount)} → ${name.get(recipient.toBase58())}: ${result.status} · ` +
         `spent ${usd(result.spentInWindow)} · left today ${usd(result.remainingToday)} · ` +
-        `${result.signature.slice(0, 16)}…`,
+        `${result.signature.slice(0, 16)}…${link(result.signature)}`,
     );
   }
 

@@ -48,19 +48,39 @@ const xero = new XeroClient({ connection, wallet: keypairWallet(agentKeypair) })
 const agent = await xero.getSpender(ownerPublicKey, agentKeypair.publicKey);
 ```
 
+## Clusters
+
+`xero_policy` is **live on devnet** at
+[`EK8aHDV1rgmoi7aygKCptretPMwQ9b6U293dioDLGZYW`](https://explorer.solana.com/address/EK8aHDV1rgmoi7aygKCptretPMwQ9b6U293dioDLGZYW?cluster=devnet)
+(not audited; devnet and localnet only, no mainnet deployment).
+
+```ts
+import { CLUSTERS, XeroClient, explorerUrl } from "@xero/sdk";
+
+const connection = new Connection(CLUSTERS.devnet.rpcUrl, "confirmed");
+const xero = new XeroClient({ connection, wallet, cluster: "devnet" });
+// ...
+console.log(explorerUrl(result.signature, "devnet"));
+```
+
+`cluster` selects the program ID (`"localnet"` by default; both clusters use the same ID).
+`CLUSTERS.devnet.rpcUrl` is Solana's public devnet endpoint, which rate-limits (HTTP 429); web3.js
+retries automatically, but use your own RPC provider for anything beyond trying it out.
+
 ## Run the demo
 
-The website demo, run for real against a local validator, printing each step:
+The website demo, run for real, printing each step:
 
 ```sh
-# in ../protocol: start a validator and deploy the program (see protocol/README.md)
 npm install
-npm run demo                               # RPC_URL defaults to http://127.0.0.1:8899
+XERO_CLUSTER=devnet npm run demo           # devnet; prints explorer links
+npm run demo                               # localnet, http://127.0.0.1:8899
 RPC_URL=http://127.0.0.1:8999 npm run demo # another local validator
 ```
 
-The demo uses `~/.config/solana/id.json` (override with `WALLET`) as the owner, and refuses to
-run against anything other than `localhost`/`127.0.0.1`.
+The demo uses `~/.config/solana/id.json` (override with `WALLET`) as the owner; on devnet it needs
+about 0.1 devnet SOL. It creates a fresh 6-decimal test token every run, never a real stablecoin,
+and refuses any RPC URL that isn't localhost (localnet) or a devnet endpoint (devnet).
 
 ## API
 

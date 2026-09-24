@@ -1397,7 +1397,6 @@ function FinalCta() {
       <div className="protocol-grid absolute inset-0 opacity-30" />
       <div className="relative mx-auto max-w-4xl px-5 text-center">
         <Reveal>
-          <LogoMark className="mx-auto mb-8 size-10" />
           <h2 className="font-display text-4xl font-semibold leading-tight text-balance sm:text-6xl">
             Your money shouldn&apos;t have to explain itself.
           </h2>

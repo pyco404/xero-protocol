@@ -104,11 +104,17 @@ const layers = [
   ["STABLECOINS", "Provide dollar-denominated value.", CircleDollarSign],
 ] as const;
 
+// The XERO mark (white on transparent). A 128px copy of public/xero-tbg.png keeps it sharp at
+// 3x without shipping the 500px original to every visitor.
 function LogoMark({ className = "size-7" }: { className?: string }) {
   return (
-    <span className={`grid place-items-center border border-primary/60 bg-primary/5 ${className}`}>
-      <span className="size-[36%] rotate-45 border border-primary" />
-    </span>
+    <img
+      src="/xero-logo-128.png"
+      alt=""
+      width={128}
+      height={128}
+      className={`block shrink-0 object-contain ${className}`}
+    />
   );
 }
 

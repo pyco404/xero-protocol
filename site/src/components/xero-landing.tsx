@@ -252,13 +252,8 @@ function PrivateDollar() {
           <span className="absolute left-1/2 top-0 size-[max(6px,1.1cqw)] -translate-y-1/2 rounded-full bg-proof shadow-proof" />
         </motion.div>
       ))}
-      <motion.div
-        className="absolute size-[68cqw] rounded-full bg-primary/10 blur-3xl"
-        animate={{ scale: [0.9, 1.12, 0.9], opacity: [0.45, 0.85, 0.45] }}
-        transition={{ duration: 5, repeat: Infinity }}
-      />
       <div className="relative z-10 flex flex-col items-center gap-[4cqw]">
-        <div className="w-[82cqw] border border-primary/40 bg-card p-[0.8cqw] shadow-[0_0_7cqw_color-mix(in_oklab,var(--primary)_16%,transparent)]">
+        <div className="w-[82cqw] border border-primary/40 bg-card p-[0.8cqw]">
           <div className="border border-border bg-background/80 px-[8cqw] py-[8.5cqw]">
             <div className="mb-[15cqw] flex items-center justify-between font-mono text-[length:max(9px,2.9cqw)] text-muted-foreground">
               <span>PRIVATE USD</span>

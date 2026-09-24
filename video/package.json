@@ -1,0 +1,26 @@
+{
+  "name": "xero-video",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio",
+    "vo": "node scripts/generate-vo.mjs",
+    "music": "bash scripts/generate-music.sh",
+    "stills": "node scripts/render-stills.mjs",
+    "render": "remotion render XeroIntro out/xero-intro-1920x1080.mp4 && remotion render XeroIntroSquare out/xero-intro-1080x1080.mp4",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.528",
+    "@remotion/google-fonts": "^4.0.528",
+    "@remotion/media-utils": "^4.0.528",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "remotion": "^4.0.528"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}

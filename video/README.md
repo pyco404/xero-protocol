@@ -16,7 +16,10 @@ npm run render   # out/xero-intro-1920x1080.mp4 + out/xero-intro-1080x1080.mp4
 
 - `ELEVENLABS_API_KEY` set: uses ElevenLabs. Override the voice with `ELEVENLABS_VOICE_ID`.
 - Otherwise, `OPENAI_API_KEY` set: uses OpenAI `tts-1-hd`, voice `onyx`.
-- Neither key set: clears the manifest, and each scene falls back to the `fallbackSeconds` in `src/script.ts`.
+- Neither key set: uses [Kokoro](https://huggingface.co/hexgrad/Kokoro-82M), a free open-source voice that runs locally. The model is about 90MB and downloads on the first run. The default voice is `am_michael`; set `KOKORO_VOICE` to change it, e.g. `bm_george`.
+- `VO_PROVIDER=none`: removes the voiceover. Each scene then falls back to the `fallbackSeconds` in `src/script.ts`.
+
+Every clip is normalized to -16 LUFS. In the audio only, "XERO" is spelled "Zero" so the voice doesn't read it letter by letter.
 
 To use your own recording instead, put `public/vo/<scene-id>.mp3` files in place and fill `src/vo-manifest.json` by hand. The format is `{ "scenes": { "hook": { "file": "vo/hook.mp3", "seconds": 3.1 } } }`.
 

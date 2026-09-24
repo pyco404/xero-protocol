@@ -1,4 +1,33 @@
 {
-  "provider": null,
-  "scenes": {}
+  "provider": "kokoro",
+  "scenes": {
+    "hook": {
+      "file": "vo/hook.mp3",
+      "seconds": 3.657
+    },
+    "problem": {
+      "file": "vo/problem.mp3",
+      "seconds": 9.639
+    },
+    "intro": {
+      "file": "vo/intro.mp3",
+      "seconds": 5.355
+    },
+    "how": {
+      "file": "vo/how.mp3",
+      "seconds": 14.655
+    },
+    "developers": {
+      "file": "vo/developers.mp3",
+      "seconds": 4.728
+    },
+    "status": {
+      "file": "vo/status.mp3",
+      "seconds": 5.642
+    },
+    "outro": {
+      "file": "vo/outro.mp3",
+      "seconds": 3.579
+    }
+  }
 }

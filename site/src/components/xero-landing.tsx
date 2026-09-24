@@ -411,7 +411,7 @@ export function Hero() {
   );
 }
 
-function TrustStrip() {
+export function TrustStrip() {
   const trustItems = [
     ["SOLANA", Zap],
     ["STABLECOINS", CircleDollarSign],

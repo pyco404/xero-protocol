@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Footer, LiveDemo, Navbar, Problem } from "@/components/xero-landing";
+import { Footer, Hero, Navbar, TrustStrip } from "@/components/xero-landing";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,8 +28,8 @@ function MainPage() {
     <main className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <Navbar />
       <div className="pt-16">
-        <Problem />
-        <LiveDemo />
+        <Hero />
+        <TrustStrip />
       </div>
       <Footer />
     </main>

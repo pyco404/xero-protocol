@@ -6,6 +6,7 @@ export type SceneId =
   | "problem"
   | "intro"
   | "how"
+  | "safety"
   | "developers"
   | "status"
   | "outro";
@@ -40,8 +41,8 @@ export const SCRIPT: SceneScript[] = [
   {
     id: "intro",
     fallbackSeconds: 7,
-    vo: "ZERO fixes that. Programmable money for agents, on Solana.",
-    captions: ["ZERO fixes that.", "Programmable money for agents,", "on Solana."],
+    vo: "Zero Network fixes that. Programmable money for agents, on Solana.",
+    captions: ["Zero Network fixes that.", "Programmable money for agents,", "on Solana."],
   },
   {
     id: "how",
@@ -57,10 +58,16 @@ export const SCRIPT: SceneScript[] = [
     ],
   },
   {
+    id: "safety",
+    fallbackSeconds: 7,
+    vo: "If an agent is buggy or hijacked, the damage is capped. And you can pause it instantly.",
+    captions: ["If an agent is buggy or hijacked,", "the damage is capped.", "And you can pause it instantly."],
+  },
+  {
     id: "developers",
     fallbackSeconds: 9,
-    vo: "Developers add it in a few lines with the ZERO SDK.",
-    captions: ["Developers add it in a few lines", "with the ZERO SDK."],
+    vo: "Developers add it in a few lines with the Zero SDK.",
+    captions: ["Developers add it in a few lines", "with the Zero SDK."],
   },
   {
     id: "status",
@@ -71,10 +78,10 @@ export const SCRIPT: SceneScript[] = [
   {
     id: "outro",
     fallbackSeconds: 5.5,
-    vo: "ZERO. Programmable money for agents.",
-    captions: ["ZERO.", "Programmable money for agents."],
+    vo: "Zero Network. Programmable money for agents.",
+    captions: ["Zero Network.", "Programmable money for agents."],
   },
 ];
 
-/** Placeholder shown in the outro. Replace with the real URL before publishing. */
-export const OUTRO_URL = "zero.example";
+/** URL shown in the outro. */
+export const OUTRO_URL = "zero.xyred.xyz";

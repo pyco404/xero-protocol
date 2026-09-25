@@ -7,7 +7,7 @@ import { SCRIPT } from "../src/script.ts";
 const FPS = 30;
 const manifest = JSON.parse(readFileSync(new URL("../src/vo-manifest.json", import.meta.url)));
 // Where in each scene to grab the still (fraction of scene length) — after the key motion lands.
-const AT = { hook: 0.6, problem: 0.75, intro: 0.9, how: 0.83, developers: 0.93, status: 0.8, outro: 0.8 };
+const AT = { hook: 0.6, problem: 0.75, intro: 0.9, how: 0.83, safety: 0.5, developers: 0.93, status: 0.8, outro: 0.8 };
 
 let from = 0;
 const frames = SCRIPT.map((s) => {

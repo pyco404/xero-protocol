@@ -9,7 +9,7 @@ import { COLORS, EASE_IN, SNAP } from "../theme";
 const RULES = [
   { title: "Max per payment", value: "5.00" },
   { title: "Daily limit", value: "20.00" },
-  { title: "Approved recipients", value: "dataApi" },
+  { title: "Approved recipients", value: "api" },
   { title: "Pause", value: "off" },
 ];
 
@@ -101,7 +101,7 @@ export const How: React.FC<{ captions: string[]; speechFrames: number }> = ({ ca
 
           {/* Recipients */}
           {[
-            { p: okDst, label: "dataApi", sub: "approved", on: okArrived },
+            { p: okDst, label: "api", sub: "approved", on: okArrived },
             { p: badDst, label: "unknown", sub: "not approved", on: 0 },
           ].map(({ p, label, sub, on }) => (
             <g key={label} opacity={vaultIn}>

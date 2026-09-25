@@ -55,7 +55,7 @@ const kokoro = async (text) => {
 };
 
 // Spelled for the voice only; captions keep the brand spelling.
-const spoken = (text) => text.replace(/\bZERO\b/g, "Zero").replace(/\bdevnet\b/g, "dev-net");
+const spoken = (text) => text.replace(/\bdevnet\b/g, "dev-net");
 
 const provider =
   process.env.VO_PROVIDER ??

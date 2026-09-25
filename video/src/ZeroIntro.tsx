@@ -7,6 +7,7 @@ import { How } from "./scenes/How";
 import { Intro } from "./scenes/Intro";
 import { Outro } from "./scenes/Outro";
 import { Problem } from "./scenes/Problem";
+import { Safety } from "./scenes/Safety";
 import { Status } from "./scenes/Status";
 import type { SceneId } from "./script";
 import { COLORS } from "./theme";
@@ -23,6 +24,8 @@ const renderScene = (id: SceneId, captions: string[], speechFrames: number) => {
       return <Intro />;
     case "how":
       return <How captions={captions} speechFrames={speechFrames} />;
+    case "safety":
+      return <Safety captions={captions} speechFrames={speechFrames} />;
     case "developers":
       return <Developers />;
     case "status":

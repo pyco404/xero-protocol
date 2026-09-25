@@ -5,7 +5,7 @@ import { useLayout } from "../layout";
 import { SceneShell } from "../SceneShell";
 import { COLORS, EASE_IN, SNAP } from "../theme";
 
-const WORD = "ZERO";
+const WORD = "ZERO NETWORK";
 
 export const Intro: React.FC = () => {
   const frame = useCurrentFrame();
@@ -17,11 +17,11 @@ export const Intro: React.FC = () => {
   const slash = interpolate(frame, [26, 38], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   // Logo slides aside to make room for the wordmark.
   const shift = spring({ frame: frame - 44, fps, config: EASE_IN });
-  const typed = Math.max(0, Math.min(WORD.length, Math.floor((frame - 56) / 5)));
+  const typed = Math.max(0, Math.min(WORD.length, Math.floor((frame - 54) / 3)));
   const cursorOn = Math.floor(frame / 15) % 2 === 0 || (typed > 0 && typed < WORD.length);
 
   const logoSize = square ? 300 : 340;
-  const wordSize = square ? 150 : 190;
+  const wordSize = square ? 74 : 104;
 
   const logo = (
     <Logo
@@ -35,7 +35,7 @@ export const Intro: React.FC = () => {
   );
   // The invisible full word fixes the layout; typed text and cursor overlay it.
   const word = (
-    <div style={{ position: "relative", fontSize: wordSize, fontWeight: 700, letterSpacing: 8, lineHeight: 1 }}>
+    <div style={{ position: "relative", fontSize: wordSize, fontWeight: 700, letterSpacing: 6, lineHeight: 1 }}>
       <span style={{ visibility: "hidden" }}>{WORD}</span>
       <span style={{ position: "absolute", left: 0, top: 0, whiteSpace: "pre" }}>
         {WORD.slice(0, typed)}
@@ -58,7 +58,7 @@ export const Intro: React.FC = () => {
           <div style={{ transform: square ? `translateY(${(1 - shift) * 120}px)` : `translateX(${(1 - shift) * 300}px)` }}>
             {logo}
           </div>
-          <div style={{ opacity: shift, width: square ? undefined : 520 }}>
+          <div style={{ opacity: shift }}>
             {word}
           </div>
         </div>

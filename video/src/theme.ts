@@ -6,6 +6,8 @@ export const COLORS = {
   bg: "#1A1A1A",
   fg: "#FFFFFF",
   gray: "#8A8A8A",
+  /** Used only for the compromised-agent glitch in the Safety scene. */
+  alert: "#E5484D",
 } as const;
 
 export const FONT = fontFamily;

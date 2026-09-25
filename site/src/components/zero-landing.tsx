@@ -33,7 +33,6 @@ const navItems = [
   ["Technology", "/technology"],
   ["Use Cases", "/use-cases"],
   ["Developers", "/developers"],
-  ["Docs", "/developers"],
 ] as const;
 
 type LaunchActionProps = Omit<ComponentProps<typeof Button>, "asChild" | "children"> & {
@@ -1506,7 +1505,7 @@ const footerColumns: Record<string, { label: string; href?: string }[]> = {
     { label: "API" },
     { label: "GitHub", href: "https://github.com/pyco404/xero-protocol" },
   ],
-  COMMUNITY: [{ label: "X", href: "https://x.com/xero_protocol" }, { label: "Discord" }],
+  COMMUNITY: [{ label: "X", href: "https://x.com/zero_protocol" }, { label: "Discord" }],
   LEGAL: [{ label: "Privacy" }, { label: "Terms" }],
 };
 

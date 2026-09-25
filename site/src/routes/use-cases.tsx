@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Agents, Footer, Navbar, UseCases } from "@/components/xero-landing";
+import { Agents, Footer, Navbar, UseCases } from "@/components/zero-landing";
 
 export const Route = createFileRoute("/use-cases")({
   head: () => ({
     meta: [
-      { title: "XERO — Use Cases" },
+      { title: "ZERO — Use Cases" },
       {
         name: "description",
         content: "Explore the real-world use cases for programmable agent money and private payments.",

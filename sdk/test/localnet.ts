@@ -1,9 +1,9 @@
 /**
- * Test fixture: a throwaway solana-test-validator with the real xero_policy program loaded from
+ * Test fixture: a throwaway solana-test-validator with the real zero_policy program loaded from
  * ../protocol/target/deploy (run `npm run build` in protocol/ first), plus helpers to fund
  * wallets, create a 6-decimal test mint and count the transactions a client sends.
  *
- * Set XERO_TEST_RPC to reuse a running validator that already has the program deployed.
+ * Set ZERO_TEST_RPC to reuse a running validator that already has the program deployed.
  */
 import {
   TOKEN_PROGRAM_ID,
@@ -17,9 +17,9 @@ import { type ChildProcess, spawn } from "node:child_process";
 import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { XERO_POLICY_PROGRAM_ID, XeroClient, keypairWallet, parseAmount } from "../src/index.js";
+import { ZERO_POLICY_PROGRAM_ID, ZeroClient, keypairWallet, parseAmount } from "../src/index.js";
 
-const PROGRAM_SO = new URL("../../protocol/target/deploy/xero_policy.so", import.meta.url).pathname;
+const PROGRAM_SO = new URL("../../protocol/target/deploy/zero_policy.so", import.meta.url).pathname;
 export const DECIMALS = 6;
 
 export interface Localnet {
@@ -28,14 +28,14 @@ export interface Localnet {
 }
 
 export async function startLocalnet(): Promise<Localnet> {
-  if (process.env.XERO_TEST_RPC) {
-    return { rpcUrl: process.env.XERO_TEST_RPC, stop: async () => {} };
+  if (process.env.ZERO_TEST_RPC) {
+    return { rpcUrl: process.env.ZERO_TEST_RPC, stop: async () => {} };
   }
   if (!existsSync(PROGRAM_SO)) {
     throw new Error(`${PROGRAM_SO} not found; run \`npm run build\` in protocol/ first`);
   }
-  const base = Number(process.env.XERO_TEST_PORT ?? 28899);
-  const ledger = mkdtempSync(join(tmpdir(), "xero-sdk-ledger-"));
+  const base = Number(process.env.ZERO_TEST_PORT ?? 28899);
+  const ledger = mkdtempSync(join(tmpdir(), "zero-sdk-ledger-"));
   const validator: ChildProcess = spawn(
     "solana-test-validator",
     [
@@ -44,7 +44,7 @@ export async function startLocalnet(): Promise<Localnet> {
       "--reset",
       "--quiet",
       "--bpf-program",
-      XERO_POLICY_PROGRAM_ID.toBase58(),
+      ZERO_POLICY_PROGRAM_ID.toBase58(),
       PROGRAM_SO,
       "--rpc-port",
       String(base),
@@ -65,7 +65,7 @@ export async function startLocalnet(): Promise<Localnet> {
     try {
       if (
         (await connection.getSlot()) > 0 &&
-        (await connection.getAccountInfo(XERO_POLICY_PROGRAM_ID))
+        (await connection.getAccountInfo(ZERO_POLICY_PROGRAM_ID))
       ) {
         break;
       }
@@ -146,14 +146,14 @@ export async function world(rpcUrl: string, tokenProgram: PublicKey = TOKEN_PROG
     [dataApi, computeApi, unknownApi].map(ata),
   );
 
-  const xero = new XeroClient({ connection, wallet: keypairWallet(owner) });
+  const zero = new ZeroClient({ connection, wallet: keypairWallet(owner) });
   const balance = async (account: PublicKey) =>
     (await getAccount(connection, account, "confirmed", tokenProgram)).amount;
 
   connection.sent = 0;
   return {
     connection,
-    xero,
+    zero,
     owner,
     agent,
     agentWallet: keypairWallet(agent),

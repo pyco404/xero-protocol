@@ -271,7 +271,7 @@ fn pay_from(
     let account = snapshot.unwrap_or_else(|| w.ctx.ct_account(&w.vault.pubkey()));
     let available = decrypt_available(&account, vault_aes);
 
-    // --- policy statements (computed before any transaction, like xero's check()) ------------
+    // --- policy statements (computed before any transaction, like zero's check()) ------------
     // Window: the program resets when now - window_start >= 1 day; this run stays inside a day,
     // except for the very first payment (window_start = 0).
     let state: Policy = bytemuck::pod_read_unaligned(&w.ctx.account_data(&w.policy));

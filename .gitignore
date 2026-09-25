@@ -19,8 +19,8 @@ protocol/target/
 # SDK build output
 sdk/dist/
 
-# Keypairs: never commit wallets, buffer keys or program keys. The xero_policy program keypair
-# lives in ~/.config/xero/ and is symlinked into protocol/target/deploy/ at build time.
+# Keypairs: never commit wallets, buffer keys or program keys. The zero_policy program keypair
+# lives in ~/.config/zero/ and is symlinked into protocol/target/deploy/ at build time.
 *keypair*.json
 *-buffer.json
 id.json

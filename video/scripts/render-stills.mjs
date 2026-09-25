@@ -19,7 +19,7 @@ const frames = SCRIPT.map((s) => {
 });
 
 mkdirSync("out/stills", { recursive: true });
-const comps = process.argv.slice(2).length ? process.argv.slice(2) : ["XeroIntro", "XeroIntroSquare"];
+const comps = process.argv.slice(2).length ? process.argv.slice(2) : ["ZeroIntro", "ZeroIntroSquare"];
 for (const comp of comps) {
   frames.forEach(({ id, frame }, i) => {
     const out = `out/stills/${comp}-${i + 1}-${id}.png`;

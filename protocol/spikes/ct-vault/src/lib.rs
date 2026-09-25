@@ -294,7 +294,7 @@ fn enforce_encrypted_limits(
     let amount_lo = validity.grouped_ciphertext_lo.try_extract_ciphertext(0).map_err(|_| err("lo"))?;
     let amount_hi = validity.grouped_ciphertext_hi.try_extract_ciphertext(0).map_err(|_| err("hi"))?;
 
-    // Rolling window, as in xero_policy: reset the encrypted total to Enc(0) = all-zero bytes.
+    // Rolling window, as in zero_policy: reset the encrypted total to Enc(0) = all-zero bytes.
     let now = Clock::get()?.unix_timestamp;
     if now - state.window_start >= WINDOW_SECONDS {
         state.window_start = now;

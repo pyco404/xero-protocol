@@ -9,24 +9,24 @@ import {
   type TransactionInstruction,
 } from "@solana/web3.js";
 import { type AmountInput, parseAmount } from "./amount.js";
-import { InvalidAmountError, XeroError } from "./errors.js";
-import { CLUSTERS, type XeroCluster } from "./clusters.js";
+import { InvalidAmountError, ZeroError } from "./errors.js";
+import { CLUSTERS, type ZeroCluster } from "./clusters.js";
 import { IDL } from "./idl/idl.js";
-import type { XeroPolicy } from "./idl/xero_policy.js";
+import type { ZeroPolicy } from "./idl/zero_policy.js";
 import { MAX_PROVIDERS, type PolicyState, validateLimits } from "./policy.js";
 import { type SendOptions, type Sent, sendInstructions } from "./send.js";
 import { Spender } from "./spender.js";
-import type { XeroWallet } from "./wallet.js";
+import type { ZeroWallet } from "./wallet.js";
 
 /** The program ID the bundled IDL was built for (localnet). */
-export const XERO_POLICY_PROGRAM_ID = new PublicKey(IDL.address);
+export const ZERO_POLICY_PROGRAM_ID = new PublicKey(IDL.address);
 
-export interface XeroClientConfig {
+export interface ZeroClientConfig {
   connection: Connection;
   /** Signs and pays for every transaction this client sends. */
-  wallet: XeroWallet;
+  wallet: ZeroWallet;
   /** Cluster whose deployment to use; sets the default `programId`. Default "localnet". */
-  cluster?: XeroCluster;
+  cluster?: ZeroCluster;
   /** Overrides the cluster's program ID. */
   programId?: PublicKey;
   /** Commitment for reads and confirmations. Default "confirmed". */
@@ -57,16 +57,16 @@ export interface MintInfo {
  * Entry point of the SDK. The wallet acts as the policy owner for createSpender() and as the
  * signer for everything done through the Spender handles it returns.
  */
-export class XeroClient {
+export class ZeroClient {
   readonly connection: Connection;
-  readonly wallet: XeroWallet;
-  readonly cluster: XeroCluster;
+  readonly wallet: ZeroWallet;
+  readonly cluster: ZeroCluster;
   readonly programId: PublicKey;
   readonly commitment: Commitment;
   /** @internal Anchor client used to build instructions and decode accounts. */
-  readonly program: Program<XeroPolicy>;
+  readonly program: Program<ZeroPolicy>;
 
-  constructor(config: XeroClientConfig) {
+  constructor(config: ZeroClientConfig) {
     this.connection = config.connection;
     this.wallet = config.wallet;
     this.cluster = config.cluster ?? "localnet";
@@ -75,8 +75,8 @@ export class XeroClient {
     const provider = new anchor.AnchorProvider(this.connection, this.wallet, {
       commitment: this.commitment,
     });
-    const idl = { ...IDL, address: this.programId.toBase58() } as unknown as XeroPolicy;
-    this.program = new anchor.Program<XeroPolicy>(idl, provider);
+    const idl = { ...IDL, address: this.programId.toBase58() } as unknown as ZeroPolicy;
+    this.program = new anchor.Program<ZeroPolicy>(idl, provider);
   }
 
   /** The policy PDA for an (owner, spender) pair. */
@@ -138,11 +138,11 @@ export class XeroClient {
     return spender;
   }
 
-  /** Loads an existing policy. Throws XeroError "PolicyNotFound" if there is none. */
+  /** Loads an existing policy. Throws ZeroError "PolicyNotFound" if there is none. */
   async getSpender(owner: PublicKey, spender: PublicKey): Promise<Spender> {
     const state = await this.fetchPolicy(this.policyAddress(owner, spender));
     if (!state) {
-      throw new XeroError(
+      throw new ZeroError(
         "PolicyNotFound",
         `no policy for owner ${owner.toBase58()} and spender ${spender.toBase58()}`,
       );
@@ -153,7 +153,7 @@ export class XeroClient {
   /** @internal */
   async fetchMint(address: PublicKey): Promise<MintInfo> {
     const info = await this.connection.getAccountInfo(address, this.commitment);
-    if (!info) throw new XeroError("MintNotFound", `mint ${address.toBase58()} does not exist`);
+    if (!info) throw new ZeroError("MintNotFound", `mint ${address.toBase58()} does not exist`);
     const mint = await getMint(this.connection, address, this.commitment, info.owner);
     return { address, decimals: mint.decimals, tokenProgram: info.owner };
   }
@@ -194,10 +194,10 @@ export class XeroClient {
 
 function validateAllowlist(providers: PublicKey[]) {
   if (providers.length > MAX_PROVIDERS) {
-    throw new XeroError("AllowlistFull", `at most ${MAX_PROVIDERS} providers are allowed`);
+    throw new ZeroError("AllowlistFull", `at most ${MAX_PROVIDERS} providers are allowed`);
   }
   const seen = new Set(providers.map((p) => p.toBase58()));
   if (seen.size !== providers.length) {
-    throw new XeroError("DuplicateProvider", "allowedProviders contains a duplicate");
+    throw new ZeroError("DuplicateProvider", "allowedProviders contains a duplicate");
   }
 }

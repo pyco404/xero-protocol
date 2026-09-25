@@ -1,12 +1,12 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked};
 
-use crate::{constants::*, error::XeroError, events::PaymentSettled, state::Policy};
+use crate::{constants::*, error::ZeroError, events::PaymentSettled, state::Policy};
 
 #[derive(Accounts)]
 pub struct Pay<'info> {
     pub spender: Signer<'info>,
-    #[account(mut, has_one = spender @ XeroError::Unauthorized, has_one = mint)]
+    #[account(mut, has_one = spender @ ZeroError::Unauthorized, has_one = mint)]
     pub policy: Account<'info, Policy>,
     #[account(mint::token_program = token_program)]
     pub mint: InterfaceAccount<'info, Mint>,
@@ -23,12 +23,12 @@ pub fn handle_pay(ctx: Context<Pay>, amount: u64) -> Result<()> {
     let policy = &mut ctx.accounts.policy;
 
     // Checks run in a fixed order so callers get the most relevant error first.
-    require!(!policy.paused, XeroError::Paused);
-    require!(policy.is_allowed(&provider), XeroError::RecipientNotAllowed);
-    require!(amount > 0, XeroError::ZeroAmount);
+    require!(!policy.paused, ZeroError::Paused);
+    require!(policy.is_allowed(&provider), ZeroError::RecipientNotAllowed);
+    require!(amount > 0, ZeroError::ZeroAmount);
     require!(
         amount <= policy.max_per_payment,
-        XeroError::AmountExceedsMaxPayment
+        ZeroError::AmountExceedsMaxPayment
     );
 
     // Rolling window: the last 24 hourly buckets plus this payment must fit the daily limit.

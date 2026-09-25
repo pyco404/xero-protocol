@@ -7,8 +7,8 @@ import {
   PolicyViolation,
   type PolicyViolationCode,
   type Spender,
-  XeroError,
-  XeroProgramError,
+  ZeroError,
+  ZeroProgramError,
   parsePaymentSettled,
 } from "../src/index.js";
 import { type Localnet, startLocalnet, usd, world } from "./localnet.js";
@@ -24,7 +24,7 @@ after(async () => {
 /** The website's policy: $100 budget, $5 max payment, $20/day, data.api + compute.api. */
 async function websitePolicy(tokenProgram?: typeof TOKEN_2022_PROGRAM_ID) {
   const w = await world(localnet.rpcUrl, tokenProgram);
-  const spender = await w.xero.createSpender({
+  const spender = await w.zero.createSpender({
     spender: w.agent.publicKey,
     mint: w.mint,
     deposit: "100",
@@ -120,20 +120,20 @@ describe("website flow", () => {
 
   it("getSpender loads an existing policy for the owner and for the agent", async () => {
     const w = await websitePolicy();
-    const loaded = await w.xero.getSpender(w.owner.publicKey, w.agent.spender);
+    const loaded = await w.zero.getSpender(w.owner.publicKey, w.agent.spender);
     assert.ok(loaded.policy.equals(w.spender.policy));
     assert.equal(loaded.mint.decimals, 6);
     assert.equal((await loaded.status()).balance.decimal, "100");
 
-    const { XeroClient } = await import("../src/index.js");
-    const agentClient = new XeroClient({ connection: w.connection, wallet: w.agentWallet });
+    const { ZeroClient } = await import("../src/index.js");
+    const agentClient = new ZeroClient({ connection: w.connection, wallet: w.agentWallet });
     const asAgent = await agentClient.getSpender(w.owner.publicKey, w.agent.spender);
     const result = await asAgent.pay({ recipient: w.computeApi, amount: "2.5" });
     assert.equal(result.remainingToday.decimal, "17.5");
 
     await assert.rejects(
-      w.xero.getSpender(w.owner.publicKey, Keypair.generate().publicKey),
-      (err: unknown) => err instanceof XeroError && err.code === "PolicyNotFound",
+      w.zero.getSpender(w.owner.publicKey, Keypair.generate().publicKey),
+      (err: unknown) => err instanceof ZeroError && err.code === "PolicyNotFound",
     );
   });
 });
@@ -211,17 +211,17 @@ describe("check() matches the program", () => {
     assert.equal((await w.spender.status()).balance.decimal, "100");
   });
 
-  it("maps non-payment program errors to XeroProgramError", async () => {
+  it("maps non-payment program errors to ZeroProgramError", async () => {
     const w = await websitePolicy();
     await assert.rejects(w.spender.addProvider(w.dataApi), (err: unknown) => {
-      assert.ok(err instanceof XeroProgramError);
+      assert.ok(err instanceof ZeroProgramError);
       assert.equal(err.code, "DuplicateProvider");
       assert.equal(err.errorNumber, 6006);
       return true;
     });
     await assert.rejects(
       w.spender.removeProvider(w.unknownApi),
-      (err: unknown) => err instanceof XeroProgramError && err.code === "ProviderNotFound",
+      (err: unknown) => err instanceof ZeroProgramError && err.code === "ProviderNotFound",
     );
   });
 });
@@ -244,7 +244,7 @@ describe("local validation", () => {
   it("refuses invalid limits, wrong signers and a missing recipient account without sending", async () => {
     const w = await websitePolicy();
     const before = w.connection.sent;
-    const code = (c: string) => (err: unknown) => err instanceof XeroError && err.code === c;
+    const code = (c: string) => (err: unknown) => err instanceof ZeroError && err.code === c;
 
     await assert.rejects(
       w.spender.updateLimits({ maxPerPayment: "21", dailyLimit: "20" }),
@@ -260,7 +260,7 @@ describe("local validation", () => {
       code("RecipientAccountMissing"),
     );
     await assert.rejects(
-      w.xero.createSpender({
+      w.zero.createSpender({
         spender: Keypair.generate().publicKey,
         mint: w.mint,
         maxPerPayment: "5",
@@ -321,8 +321,8 @@ describe("owner controls", () => {
     assert.equal(await w.connection.getAccountInfo(w.spender.vault), null);
     assert.ok((await w.connection.getBalance(w.owner.publicKey)) > lamportsBefore, "rent refunded");
 
-    const notFound = (err: unknown) => err instanceof XeroError && err.code === "PolicyNotFound";
-    await assert.rejects(w.xero.getSpender(w.owner.publicKey, w.agent.spender), notFound);
+    const notFound = (err: unknown) => err instanceof ZeroError && err.code === "PolicyNotFound";
+    await assert.rejects(w.zero.getSpender(w.owner.publicKey, w.agent.spender), notFound);
     await assert.rejects(w.spender.status(), notFound);
   });
 });

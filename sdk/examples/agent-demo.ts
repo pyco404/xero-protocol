@@ -1,17 +1,17 @@
 /**
- * The xero.dev website demo, for real, on localnet or devnet:
+ * The zero.dev website demo, for real, on localnet or devnet:
  *
  *   an owner gives an AI agent $100 with a $5 max payment and a $20 daily limit,
  *   the agent pays data.api and compute.api four times,
  *   then tries to send $40 to unknown.api, which the SDK refuses before anything is sent.
  *
- * Needs xero_policy deployed on the chosen cluster (see protocol/README.md) and a funded owner
+ * Needs zero_policy deployed on the chosen cluster (see protocol/README.md) and a funded owner
  * wallet at ~/.config/solana/id.json (override with WALLET). Uses a fresh 6-decimal test mint
  * every run, never a real stablecoin.
  *
  *   npm run demo                               # localnet, http://127.0.0.1:8899
  *   RPC_URL=http://127.0.0.1:8999 npm run demo # any other local validator
- *   XERO_CLUSTER=devnet npm run demo           # devnet (owner wallet needs ~0.1 devnet SOL)
+ *   ZERO_CLUSTER=devnet npm run demo           # devnet (owner wallet needs ~0.1 devnet SOL)
  */
 import {
   createAssociatedTokenAccount,
@@ -33,18 +33,18 @@ import {
   CLUSTERS,
   PolicyViolation,
   type SpenderStatus,
-  type XeroCluster,
+  type ZeroCluster,
   explorerUrl,
   type TokenAmount,
-  XeroClient,
+  ZeroClient,
   formatAmount,
   keypairWallet,
   parseAmount,
-} from "@xero/sdk";
+} from "@zero/sdk";
 
-const CLUSTER = (process.env.XERO_CLUSTER ?? "localnet") as XeroCluster;
+const CLUSTER = (process.env.ZERO_CLUSTER ?? "localnet") as ZeroCluster;
 if (!(CLUSTER in CLUSTERS))
-  throw new Error(`XERO_CLUSTER must be localnet or devnet, got ${CLUSTER}`);
+  throw new Error(`ZERO_CLUSTER must be localnet or devnet, got ${CLUSTER}`);
 const RPC_URL = process.env.RPC_URL ?? CLUSTERS[CLUSTER].rpcUrl;
 const WALLET = process.env.WALLET ?? `${homedir()}/.config/solana/id.json`;
 
@@ -111,8 +111,8 @@ async function main() {
   console.log(`   mint ${mint.toBase58()}; owner holds $1000`);
 
   step(2, "Owner creates a spender: $100 budget, $5 max payment, $20/day, data.api + compute.api");
-  const xero = new XeroClient({ connection, wallet: keypairWallet(owner), cluster: CLUSTER });
-  const spender = await xero.createSpender({
+  const zero = new ZeroClient({ connection, wallet: keypairWallet(owner), cluster: CLUSTER });
+  const spender = await zero.createSpender({
     spender: agent.publicKey,
     mint,
     deposit: "100",

@@ -1,6 +1,6 @@
-# @xero/sdk
+# @zero/sdk
 
-TypeScript client for the [`xero_policy`](../protocol) Solana program: give an AI agent a
+TypeScript client for the [`zero_policy`](../protocol) Solana program: give an AI agent a
 token budget it can spend only within the limits you set.
 
 **Localnet only, test tokens only.**
@@ -9,13 +9,13 @@ token budget it can spend only within the limits you set.
 
 ```ts
 import { Connection } from "@solana/web3.js";
-import { PolicyViolation, XeroClient, keypairWallet } from "@xero/sdk";
+import { PolicyViolation, ZeroClient, keypairWallet } from "@zero/sdk";
 
 const connection = new Connection("http://127.0.0.1:8899", "confirmed");
-const xero = new XeroClient({ connection, wallet: keypairWallet(owner), programId });
+const zero = new ZeroClient({ connection, wallet: keypairWallet(owner), programId });
 
 // The owner creates and funds a spender for the agent's key, in one transaction.
-const spender = await xero.createSpender({
+const spender = await zero.createSpender({
   spender: agentPublicKey,
   mint,
   deposit: "100", // human units, as strings
@@ -44,21 +44,21 @@ provider's **wallet**. The SDK pays into that wallet's associated token account 
 An agent that only has its own key loads the policy directly:
 
 ```ts
-const xero = new XeroClient({ connection, wallet: keypairWallet(agentKeypair) });
-const agent = await xero.getSpender(ownerPublicKey, agentKeypair.publicKey);
+const zero = new ZeroClient({ connection, wallet: keypairWallet(agentKeypair) });
+const agent = await zero.getSpender(ownerPublicKey, agentKeypair.publicKey);
 ```
 
 ## Clusters
 
-`xero_policy` is **live on devnet** at
+`zero_policy` is **live on devnet** at
 [`EK8aHDV1rgmoi7aygKCptretPMwQ9b6U293dioDLGZYW`](https://explorer.solana.com/address/EK8aHDV1rgmoi7aygKCptretPMwQ9b6U293dioDLGZYW?cluster=devnet)
 (not audited; devnet and localnet only, no mainnet deployment).
 
 ```ts
-import { CLUSTERS, XeroClient, explorerUrl } from "@xero/sdk";
+import { CLUSTERS, ZeroClient, explorerUrl } from "@zero/sdk";
 
 const connection = new Connection(CLUSTERS.devnet.rpcUrl, "confirmed");
-const xero = new XeroClient({ connection, wallet, cluster: "devnet" });
+const zero = new ZeroClient({ connection, wallet, cluster: "devnet" });
 // ...
 console.log(explorerUrl(result.signature, "devnet"));
 ```
@@ -73,7 +73,7 @@ The website demo, run for real, printing each step:
 
 ```sh
 npm install
-XERO_CLUSTER=devnet npm run demo           # devnet; prints explorer links
+ZERO_CLUSTER=devnet npm run demo           # devnet; prints explorer links
 npm run demo                               # localnet, http://127.0.0.1:8899
 RPC_URL=http://127.0.0.1:8999 npm run demo # another local validator
 ```
@@ -84,7 +84,7 @@ and refuses any RPC URL that isn't localhost (localnet) or a devnet endpoint (de
 
 ## API
 
-### `new XeroClient({ connection, wallet, programId?, commitment? })`
+### `new ZeroClient({ connection, wallet, programId?, commitment? })`
 
 `wallet` is anything with `publicKey`, `signTransaction` and `signAllTransactions`, such as
 Anchor's `Wallet`, a wallet adapter or `keypairWallet(keypair)`. It signs and pays fees for
@@ -93,7 +93,7 @@ everything the client sends. `commitment` defaults to `"confirmed"`.
 | Method                          | Does                                                                            |
 | ------------------------------- | ------------------------------------------------------------------------------- |
 | `createSpender(options)`        | Creates the policy (and deposits, if `deposit` is set) with the wallet as owner |
-| `getSpender(owner, spender)`    | Loads an existing policy; throws `XeroError` `PolicyNotFound`                   |
+| `getSpender(owner, spender)`    | Loads an existing policy; throws `ZeroError` `PolicyNotFound`                   |
 | `policyAddress(owner, spender)` | The policy PDA                                                                  |
 | `vaultAddress(policy)`          | The vault PDA                                                                   |
 
@@ -159,14 +159,14 @@ passed `{ skipCheck: true }`), the program error is mapped to the same `PolicyVi
 
 ### Errors
 
-All SDK errors extend `XeroError`, which has a string `code`:
+All SDK errors extend `ZeroError`, which has a string `code`:
 
 - `PolicyViolation`: a payment the policy refuses (above).
 - `InvalidAmountError` (`InvalidAmount`): a malformed amount.
-- `XeroProgramError`: any other program or Anchor error, e.g. `Unauthorized`,
+- `ZeroProgramError`: any other program or Anchor error, e.g. `Unauthorized`,
   `InvalidLimits`, `UnsupportedMint`, `DuplicateProvider`, with `errorNumber` and `logs`.
-- `XeroTransactionError`: a failure the SDK can't attribute to the program.
-- `XeroError` with codes `PolicyNotFound`, `MintNotFound`, `RecipientAccountMissing`,
+- `ZeroTransactionError`: a failure the SDK can't attribute to the program.
+- `ZeroError` with codes `PolicyNotFound`, `MintNotFound`, `RecipientAccountMissing`,
   `RecipientMintMismatch`, `Unauthorized` (wrong wallet for the action), `InvalidLimits`,
   `AllowlistFull`, `DuplicateProvider`. All of these are raised locally, before anything is
   sent.
@@ -215,9 +215,9 @@ cd ../sdk && npm run sync-idl     # copies them into src/idl
 `npm run build` and `npm test` both fail if `src/idl/` is out of sync with a built
 `protocol/target/`. The check is skipped when `protocol/` hasn't been built.
 
-The integration tests load the real program from `../protocol/target/deploy/xero_policy.so`
+The integration tests load the real program from `../protocol/target/deploy/zero_policy.so`
 (run `npm run build` in `protocol/` first) into a validator of their own on port 28899
-(`XERO_TEST_PORT` to change it). Set `XERO_TEST_RPC` to use an already running validator that
+(`ZERO_TEST_PORT` to change it). Set `ZERO_TEST_RPC` to use an already running validator that
 has the program deployed instead.
 
 The SDK uses `@solana/web3.js` v1, the library the Anchor TypeScript client is built on, so

@@ -1,12 +1,12 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked};
 
-use crate::{constants::*, error::XeroError, events::Deposited, state::Policy};
+use crate::{constants::*, error::ZeroError, events::Deposited, state::Policy};
 
 #[derive(Accounts)]
 pub struct Deposit<'info> {
     pub owner: Signer<'info>,
-    #[account(has_one = owner @ XeroError::Unauthorized, has_one = mint)]
+    #[account(has_one = owner @ ZeroError::Unauthorized, has_one = mint)]
     pub policy: Account<'info, Policy>,
     #[account(mint::token_program = token_program)]
     pub mint: InterfaceAccount<'info, Mint>,
@@ -23,7 +23,7 @@ pub struct Deposit<'info> {
 }
 
 pub fn handle_deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
-    require!(amount > 0, XeroError::ZeroAmount);
+    require!(amount > 0, ZeroError::ZeroAmount);
     let accounts = TransferChecked {
         from: ctx.accounts.owner_token_account.to_account_info(),
         mint: ctx.accounts.mint.to_account_info(),

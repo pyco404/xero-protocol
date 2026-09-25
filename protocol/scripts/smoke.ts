@@ -16,7 +16,7 @@ import {
 } from "@solana/spl-token";
 import { readFileSync } from "fs";
 import { homedir } from "os";
-import type { XeroPolicy } from "../target/types/xero_policy";
+import type { ZeroPolicy } from "../target/types/zero_policy";
 
 const RPC_URL = process.env.RPC_URL ?? "http://127.0.0.1:8899";
 const WALLET = process.env.WALLET ?? `${homedir()}/.config/solana/id.json`;
@@ -30,10 +30,10 @@ async function main() {
   const provider = new AnchorProvider(connection, new Wallet(owner), {
     commitment: "confirmed",
   });
-  const idl: XeroPolicy = JSON.parse(
-    readFileSync(`${__dirname}/../target/idl/xero_policy.json`, "utf8")
+  const idl: ZeroPolicy = JSON.parse(
+    readFileSync(`${__dirname}/../target/idl/zero_policy.json`, "utf8")
   );
-  const program = new Program<XeroPolicy>(idl, provider);
+  const program = new Program<ZeroPolicy>(idl, provider);
   console.log(`cluster ${RPC_URL}\nprogram ${program.programId.toBase58()}`);
 
   const spender = web3.Keypair.generate();

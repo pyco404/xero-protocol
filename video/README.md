@@ -1,4 +1,4 @@
-# XERO intro video
+# ZERO intro video
 
 A ~60s explainer built with [Remotion](https://remotion.dev). It renders at 1920x1080 and at 1080x1080 for X.
 
@@ -7,7 +7,7 @@ npm install
 npm run studio   # preview and scrub in the browser
 npm run vo       # generate the voiceover (see below)
 npm run stills   # one still per scene -> out/stills/
-npm run render   # out/xero-intro-1920x1080.mp4 + out/xero-intro-1080x1080.mp4
+npm run render   # out/zero-intro-1920x1080.mp4 + out/zero-intro-1080x1080.mp4
 ```
 
 ## Voiceover
@@ -19,7 +19,7 @@ npm run render   # out/xero-intro-1920x1080.mp4 + out/xero-intro-1080x1080.mp4
 - Neither key set: uses [Kokoro](https://huggingface.co/hexgrad/Kokoro-82M), a free open-source voice that runs locally. The model is about 90MB and downloads on the first run. The default voice is `am_michael`; set `KOKORO_VOICE` to change it, e.g. `bm_george`.
 - `VO_PROVIDER=none`: removes the voiceover. Each scene then falls back to the `fallbackSeconds` in `src/script.ts`.
 
-Every clip is normalized to -16 LUFS. In the audio only, "XERO" is spelled "Zero" so the voice doesn't read it letter by letter.
+Every clip is normalized to -16 LUFS. In the audio only, "ZERO" is spelled "Zero" so the voice doesn't read it letter by letter.
 
 To use your own recording instead, put `public/vo/<scene-id>.mp3` files in place and fill `src/vo-manifest.json` by hand. The format is `{ "scenes": { "hook": { "file": "vo/hook.mp3", "seconds": 3.1 } } }`.
 

@@ -194,7 +194,7 @@ const HOUR0 = Math.ceil(START_TIME / HOUR) * HOUR;
 const bnEq = (actual: BN, expected: BN) =>
   expect(actual.toString()).to.equal(expected.toString());
 
-describe("xero_policy", () => {
+describe("zero_policy", () => {
   describe("create_policy and deposit", () => {
     it("creates the policy PDA and vault with the configured limits", async () => {
       const t = await funded();

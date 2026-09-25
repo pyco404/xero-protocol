@@ -1,6 +1,6 @@
-# XERO protocol
+# ZERO protocol
 
-Solana programs for XERO. Phase 1 contains a single Anchor program, `xero_policy`: a
+Solana programs for ZERO. Phase 1 contains a single Anchor program, `zero_policy`: a
 policy-controlled token vault that a **spender** (typically an AI agent's key) can pay from within
 owner-defined limits. Amounts are public in this phase. There is no privacy or ZK yet.
 
@@ -8,7 +8,7 @@ owner-defined limits. Amounts are public in this phase. There is no privacy or Z
 
 The TypeScript client lives in [`../sdk`](../sdk).
 
-## Program: `xero_policy`
+## Program: `zero_policy`
 
 Program ID (localnet and devnet): `EK8aHDV1rgmoi7aygKCptretPMwQ9b6U293dioDLGZYW`
 
@@ -77,7 +77,7 @@ Errors (Anchor codes): `Paused` 6000, `RecipientNotAllowed` 6001, `AmountExceeds
 npm install
 npm run build            # anchor build --arch v2 (links the program keypair first, see below)
 npm test                 # build, then the LiteSVM test suite (no validator needed)
-npm run test:ts          # tests only, against the existing target/deploy/xero_policy.so
+npm run test:ts          # tests only, against the existing target/deploy/zero_policy.so
 npm run deploy:localnet  # deploy with ~/.config/solana/id.json as payer and upgrade authority
 npm run smoke            # website example against a live cluster (default http://127.0.0.1:8899)
 ```
@@ -88,7 +88,7 @@ directly with a small priority fee):
 
 ```sh
 npm run build
-solana program deploy target/deploy/xero_policy.so --program-id ~/.config/xero/xero_policy-keypair.json \
+solana program deploy target/deploy/zero_policy.so --program-id ~/.config/zero/zero_policy-keypair.json \
   --keypair ~/.config/solana/id.json --upgrade-authority ~/.config/solana/id.json \
   --max-len 276592 --with-compute-unit-price 10000 --max-sign-attempts 100 -u devnet
 ```
@@ -106,8 +106,8 @@ wallet explicitly, so they don't depend on your `solana config` keypair or clust
 
 ## Program keypair
 
-The program keypair is **not** in the repo. It lives at `~/.config/xero/xero_policy-keypair.json`
-(override with `XERO_PROGRAM_KEYPAIR`), and `npm run build` symlinks it into
+The program keypair is **not** in the repo. It lives at `~/.config/zero/zero_policy-keypair.json`
+(override with `ZERO_PROGRAM_KEYPAIR`), and `npm run build` symlinks it into
 `target/deploy/`. Without it, Anchor generates a throwaway keypair there: builds and tests still
 work, but you can't deploy to `EK8aHDV1…`. On a new machine, either copy the key over or generate
 a new one and run `anchor keys sync`.

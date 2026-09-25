@@ -40,8 +40,8 @@ export const SCRIPT: SceneScript[] = [
   {
     id: "intro",
     fallbackSeconds: 7,
-    vo: "XERO fixes that. Programmable money for agents, on Solana.",
-    captions: ["XERO fixes that.", "Programmable money for agents,", "on Solana."],
+    vo: "ZERO fixes that. Programmable money for agents, on Solana.",
+    captions: ["ZERO fixes that.", "Programmable money for agents,", "on Solana."],
   },
   {
     id: "how",
@@ -59,8 +59,8 @@ export const SCRIPT: SceneScript[] = [
   {
     id: "developers",
     fallbackSeconds: 9,
-    vo: "Developers add it in a few lines with the XERO SDK.",
-    captions: ["Developers add it in a few lines", "with the XERO SDK."],
+    vo: "Developers add it in a few lines with the ZERO SDK.",
+    captions: ["Developers add it in a few lines", "with the ZERO SDK."],
   },
   {
     id: "status",
@@ -71,10 +71,10 @@ export const SCRIPT: SceneScript[] = [
   {
     id: "outro",
     fallbackSeconds: 5.5,
-    vo: "XERO. Programmable money for agents.",
-    captions: ["XERO.", "Programmable money for agents."],
+    vo: "ZERO. Programmable money for agents.",
+    captions: ["ZERO.", "Programmable money for agents."],
   },
 ];
 
 /** Placeholder shown in the outro. Replace with the real URL before publishing. */
-export const OUTRO_URL = "xero.example";
+export const OUTRO_URL = "zero.example";

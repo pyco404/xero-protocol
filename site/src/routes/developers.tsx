@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Developers, FinalCta, Footer, Navbar, Security } from "@/components/xero-landing";
+import { Developers, FinalCta, Footer, Navbar, Security } from "@/components/zero-landing";
 
 export const Route = createFileRoute("/developers")({
   head: () => ({
     meta: [
-      { title: "XERO — Developers" },
+      { title: "ZERO — Developers" },
       {
         name: "description",
         content: "Developer tools and API patterns for creating programmable, policy-aware payments.",

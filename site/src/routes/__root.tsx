@@ -77,12 +77,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "XERO" },
+      { title: "ZERO" },
       {
         name: "description",
         content: "Programmable money for agents on Solana. Privacy in development.",
       },
-      { name: "author", content: "XERO" },
+      { name: "author", content: "ZERO" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

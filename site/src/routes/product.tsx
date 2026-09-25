@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Footer, LiveDemo, Navbar, Problem } from "@/components/xero-landing";
+import { Footer, LiveDemo, Navbar, Problem } from "@/components/zero-landing";
 
 export const Route = createFileRoute("/product")({
   head: () => ({
     meta: [
-      { title: "XERO — Product" },
+      { title: "ZERO — Product" },
       {
         name: "description",
-        content: "Understand the problem XERO solves and how programmable policy checks payments.",
+        content: "Understand the problem ZERO solves and how programmable policy checks payments.",
       },
     ],
   }),

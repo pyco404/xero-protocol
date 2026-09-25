@@ -1,16 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Footer, Hero, Navbar, TrustStrip } from "@/components/xero-landing";
+import { Footer, Hero, Navbar, TrustStrip } from "@/components/zero-landing";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "XERO — Programmable Money for Agents on Solana" },
+      { title: "ZERO — Programmable Money for Agents on Solana" },
       {
         name: "description",
         content:
           "Programmable, verifiable digital-dollar payments for agents on Solana. Privacy in development.",
       },
-      { property: "og:title", content: "XERO — Programmable Money for Agents on Solana" },
+      { property: "og:title", content: "ZERO — Programmable Money for Agents on Solana" },
       {
         property: "og:description",
         content:

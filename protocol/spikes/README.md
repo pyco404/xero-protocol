@@ -1,7 +1,7 @@
 # Privacy spike prototypes (throwaway)
 
 Research code for [`../docs/privacy-spike.md`](../docs/privacy-spike.md). **Localnet only, not
-audited, not for reuse.** Nothing here is part of `xero_policy` or `@xero/sdk`, and none of it is
+audited, not for reuse.** Nothing here is part of `zero_policy` or `@zero/sdk`, and none of it is
 in the protocol's Anchor workspace.
 
 | Directory | What |

@@ -1,6 +1,6 @@
-# Privacy rail evaluation: XERO as a policy layer
+# Privacy rail evaluation: ZERO as a policy layer
 
-Research, 2026-09-24. Direction under evaluation: XERO is the **policy layer for agent money on top
+Research, 2026-09-24. Direction under evaluation: ZERO is the **policy layer for agent money on top
 of existing privacy rails**, not a privacy protocol of its own.
 
 Every claim is tagged:
@@ -18,11 +18,11 @@ require is listed per rail.
 
 - **Three rails have mainnet payment functionality today:** MagicBlock Private Payments, Umbra and
   Token-2022 confidential transfers [VERIFIED program deployments]. **Helius Rings**, the rail
-  whose design is closest to XERO, is **devnet only** [VERIFIED]. **Private Channels** is devnet
+  whose design is closest to ZERO, is **devnet only** [VERIFIED]. **Private Channels** is devnet
   only [VERIFIED]. **Arcium** is on mainnet but is a compute engine, not a payment rail.
-- **Rings custom rings already implement most of XERO v1 natively**, enforced inside their proofs:
+- **Rings custom rings already implement most of ZERO v1 natively**, enforced inside their proofs:
   per-transfer caps, fixed-window spend caps, co-sign thresholds, allowlists, pause, freeze and a
-  mandatory auditor [READ (source)]. On Rings, XERO adds little *unless* it supplies what rings
+  mandatory auditor [READ (source)]. On Rings, ZERO adds little *unless* it supplies what rings
   lack:
   - **Per-agent** limits. Ring rules apply to every member alike.
   - A policy that the **owner** sets, not the ring operator.
@@ -32,12 +32,12 @@ require is listed per rail.
   also has the weakest privacy (the docs themselves say amounts and timing "may still be inferable")
   and a trust model of hardware plus operator, with its custody program upgradeable by **a single
   keypair** [VERIFIED].
-- **What XERO uniquely owns:** a rail-agnostic spending policy (per-agent limits, windows,
+- **What ZERO uniquely owns:** a rail-agnostic spending policy (per-agent limits, windows,
   allowlists, pause, kill switch) defined once by the owner and enforced the strongest way each
-  rail allows. Plus the agent-facing SDK and the "can this agent pay this?" check. XERO does *not*
+  rail allows. Plus the agent-facing SDK and the "can this agent pay this?" check. ZERO does *not*
   own privacy.
 - **Integrate first:** keep the **public vault** (it works). Add **MagicBlock** as the first
-  private rail, with on-chain enforcement via a XERO program owning an eATA. Prototype **Rings** on
+  private rail, with on-chain enforcement via a ZERO program owning an eATA. Prototype **Rings** on
   devnet in parallel and decide per-agent enforcement there once its mainnet date and ring
   activation terms are known.
 
@@ -47,9 +47,9 @@ require is listed per rail.
 
 | Rail | Included because |
 | --- | --- |
-| Public `xero_policy` vault | XERO's existing rail; must stay supported |
+| Public `zero_policy` vault | ZERO's existing rail; must stay supported |
 | Token-2022 confidential transfers | Native Solana baseline; already prototyped (see [privacy-spike.md](privacy-spike.md)) |
-| Helius Rings / Solana Privacy Protocol | Solana's documented "programmable privacy" model; closest design to XERO |
+| Helius Rings / Solana Privacy Protocol | Solana's documented "programmable privacy" model; closest design to ZERO |
 | MagicBlock Private Payments | Mainnet, USDC, agent-oriented (MCP) |
 | Solana Foundation Private Channels | Solana's documented institutional model |
 | Arcium | Mainnet encrypted-compute network; possible policy engine |
@@ -61,7 +61,7 @@ require is listed per rail.
 
 ---
 
-## 1. Public `xero_policy` vault (existing)
+## 1. Public `zero_policy` vault (existing)
 
 | | |
 | --- | --- |
@@ -95,7 +95,7 @@ All from [privacy-spike.md](privacy-spike.md) unless noted.
 | Events / hooks | None beyond transaction logs |
 | Auditor | Mint-level auditor key (amounts only, not balances) [VERIFIED] |
 | Enforcement | **On-chain** [VERIFIED], at 2× the cost of a plain confidential transfer |
-| Overlap with XERO | None: no policy features |
+| Overlap with ZERO | None: no policy features |
 
 ---
 
@@ -181,11 +181,11 @@ possible in principle. Whether a USDC interface exists on devnet: [UNKNOWN].
 
 **Enforcement rating: on-chain** (documented, not tested by me).
 - Ring-wide rules: via a custom ring, which needs Helius governance activation.
-- Per-agent rules: via a XERO ZK program that owns notes, which needs custom circuits.
+- Per-agent rules: via a ZERO ZK program that owns notes, which needs custom circuits.
 
-**Overlap with XERO: high.** max_per_payment ≈ `transfer-cap`, daily_limit ≈ `velocity-window`,
-allowlist, pause and co-sign all exist natively. XERO adds nothing for a single uniform policy
-across a ring. XERO adds value only for **per-agent, owner-set** policies and the agent SDK.
+**Overlap with ZERO: high.** max_per_payment ≈ `transfer-cap`, daily_limit ≈ `velocity-window`,
+allowlist, pause and co-sign all exist natively. ZERO adds nothing for a single uniform policy
+across a ring. ZERO adds value only for **per-agent, owner-set** policies and the agent SDK.
 
 ## 4. MagicBlock Private Payments (Ephemeral SPL Token + Private Ephemeral Rollup)
 
@@ -247,7 +247,7 @@ across a ring. XERO adds value only for **per-agent, owner-set** policies and th
     PDA" ([smart contract integration](https://docs.magicblock.gg/pages/ephemeral-spl-token/smart-contract-integration))
     [READ].
   - The API also accepts off-curve PDA owners as `from` [READ].
-  - Amounts are plaintext to the program inside the enclave, so XERO's **existing** policy logic
+  - Amounts are plaintext to the program inside the enclave, so ZERO's **existing** policy logic
     (max, daily, allowlist, pause) should port almost unchanged. [UNKNOWN until built]: whether
     private-visibility transfers and stealth handles are available from a PDA-signed program path,
     or only through the hosted API.
@@ -259,10 +259,10 @@ across a ring. XERO adds value only for **per-agent, owner-set** policies and th
   [READ].
 - **Auditor:** Permission-program read access for groups (auditors, compliance) [READ].
 
-**Enforcement rating: on-chain** (documented, not tested by me), via a XERO program custodying an
+**Enforcement rating: on-chain** (documented, not tested by me), via a ZERO program custodying an
 eATA.
 
-**Overlap with XERO: low.** MagicBlock has no spend limits, windows or allowlists. XERO's policy is
+**Overlap with ZERO: low.** MagicBlock has no spend limits, windows or allowlists. ZERO's policy is
 additive here.
 
 ## 5. Solana Foundation Private Channels
@@ -298,10 +298,10 @@ someone's. JWT auth is optional [READ].
 - **Events:** a WebSocket streamer; "event schema is not yet publicly documented" [READ].
 - **Auditor:** the operator can grant visibility [READ].
 
-**Enforcement rating: none** on a third-party channel. It is operator-enforced only if XERO forks
+**Enforcement rating: none** on a third-party channel. It is operator-enforced only if ZERO forks
 and runs its own instance (MIT permits it).
 
-**Overlap with XERO:** none, but also no hook for XERO.
+**Overlap with ZERO:** none, but also no hook for ZERO.
 
 ## 6. Arcium
 
@@ -334,7 +334,7 @@ isn't a rail, though; it needs a token layer such as Umbra or C-SPL.
 
 **Enforcement rating: on-chain** (build-your-own, as the engine behind a rail).
 
-**Overlap with XERO:** none.
+**Overlap with ZERO:** none.
 
 ## 7. Umbra (on Arcium)
 
@@ -374,7 +374,7 @@ isn't a rail, though; it needs a token layer such as Umbra or C-SPL.
 
 **Enforcement rating: client-only** (unless PDA ownership turns out to be supported).
 
-**Overlap with XERO:** none.
+**Overlap with ZERO:** none.
 
 ---
 
@@ -382,7 +382,7 @@ isn't a rail, though; it needs a token layer such as Umbra or C-SPL.
 
 | Rail | Mainnet | Native USDC | Hides | Trust model | Cost per payment | Concurrent payments per account | PDA custody | Co-signer | Built-in policy | Hooks | Auditor | **Enforcement** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Public `xero_policy` vault | Not deployed (localnet) | Yes [V] | Nothing | Program | 1 tx [V] | No | Yes [V] | Yes | XERO's own | Logs, events | n/a | **On-chain** [V] |
+| Public `zero_policy` vault | Not deployed (localnet) | Yes [V] | Nothing | Program | 1 tx [V] | No | Yes [V] | Yes | ZERO's own | Logs, events | n/a | **On-chain** [V] |
 | Token-2022 CT | Yes [V] | **No** [V] | Amounts, balances | Crypto | 6 tx, ~250k CU; 11 tx, ~483k CU with policy [V] | **No** [V] | Yes [V] | Yes | None | None | Mint auditor (amounts) [V] | **On-chain** [V] |
 | Helius Rings | **No, devnet** [V] | In principle [R] | Asset, amount (+ parties in anonymous rings) | ZK; hosted prover; ring operator | 1 tx, ~220k CU [R] | Yes, via UTXOs [R] | Yes [R src] | Yes, native [R src] | **Caps, windows, co-sign, allow/block lists, pause, freeze** (ring-wide) [R src] | Webhooks incl. `policy.action_required` [R] | Mandatory in custom rings [R src] | **On-chain** [R] |
 | MagicBlock Private Payments | Yes [V] | Yes, 147.82 in vault [V] | Linkability; amounts "may be inferable" [R] | TEE (TDX) + operator; single-key upgrade [V] | 0.1% + gas, or 0.2 USDC gasless [R] | [UNKNOWN] | Yes, documented [R] | Via program | None (access control only) | None found | Permission groups [R] | **On-chain** [R] |
@@ -394,24 +394,24 @@ isn't a rail, though; it needs a token layer such as Umbra or C-SPL.
 
 ---
 
-## What XERO uniquely owns
+## What ZERO uniquely owns
 
 Given what the rails already do:
 
-1. **One policy, many rails.** An owner defines an agent's rules once and XERO enforces them on
+1. **One policy, many rails.** An owner defines an agent's rules once and ZERO enforces them on
    whichever rail carries the money. No rail offers this. Each rail's policy (where one exists) is
    its own format, scope and operator.
 2. **Per-agent, owner-set policy.** Rings' policies are ring-wide and set by the ring operator;
-   MagicBlock and Umbra have none. XERO's model (this owner, this agent, these limits, revocable at
+   MagicBlock and Umbra have none. ZERO's model (this owner, this agent, these limits, revocable at
    any time) is not native anywhere.
 3. **The agent-side contract:** `check()` before paying, typed `PolicyViolation`s, `status()` with
    remaining budget, and the kill switch. The same semantics regardless of rail.
 4. **The public vault**, which already works and needs no privacy rail.
 
-Where XERO adds **nothing**, being blunt:
+Where ZERO adds **nothing**, being blunt:
 - **Privacy itself.** That belongs to the rails.
 - **A uniform ring-wide policy on Rings.** A custom ring already enforces caps, windows, allowlists
-  and co-signing in its proofs. Wrapping that with XERO would duplicate it.
+  and co-signing in its proofs. Wrapping that with ZERO would duplicate it.
 - **Compliance screening** on MagicBlock (already built in) and **auditor visibility** on Rings
   (mandatory, proof-bound).
 
@@ -421,14 +421,14 @@ Where XERO adds **nothing**, being blunt:
    deployment.
 2. **MagicBlock first** for private payments:
    - The only rail that is **on mainnet with native USDC** *and* documents program (PDA) custody,
-     so XERO can keep **on-chain** enforcement with its existing plaintext policy logic.
+     so ZERO can keep **on-chain** enforcement with its existing plaintext policy logic.
    - Agent-oriented (MCP).
    - Conditions: accept its hardware/operator trust model and weaker privacy; confirm who controls
      the single-key upgrade authority; confirm that private transfers work from a PDA-signed path.
 3. **Rings in parallel on devnet** (local stack, no key needed):
-   - It is the strongest *design fit* and could make most of XERO's policy native.
-   - Decide there between (a) a XERO-operated custom ring (uniform policy, needs Helius
-     activation) and (b) a XERO ZK program for per-agent limits (needs circuits).
+   - It is the strongest *design fit* and could make most of ZERO's policy native.
+   - Decide there between (a) a ZERO-operated custom ring (uniform policy, needs Helius
+     activation) and (b) a ZERO ZK program for per-agent limits (needs circuits).
    - Ship to users once Rings is on mainnet.
 4. **Not now:**
    - Token-2022 CT: no USDC, 11 transactions per policy payment.
@@ -439,9 +439,9 @@ Where XERO adds **nothing**, being blunt:
 ## SDK sketch: rail-agnostic interface
 
 ```ts
-const xero = new XeroClient({ connection, wallet });
+const zero = new ZeroClient({ connection, wallet });
 
-const spender = await xero.createSpender({
+const spender = await zero.createSpender({
   rail: "public" | "magicblock" | "rings",   // default "public"
   spender: agentPublicKey,
   mint: USDC,
@@ -457,7 +457,7 @@ await spender.as(agentWallet).pay({ recipient: dataApi, amount: "0.42" });
 await spender.status();             // same shape; rail-specific details under status.rail
 ```
 
-**Common (XERO core):**
+**Common (ZERO core):**
 - `PolicyDefinition`: limits, window, allowlist, paused.
 - `check()`, evaluated against the policy and the rail's readable state.
 - `PolicyViolation` codes.
@@ -474,21 +474,21 @@ interface RailAdapter {
   createVault(policy, opts): Promise<VaultRef>;
   readState(vault): Promise<{ balance: bigint; spentInWindow: bigint; windowStart: bigint }>;
   buildPayment(vault, req): Promise<UnsignedTx[]>;      // 1 tx (public), rail-specific otherwise
-  mapError(logs): PolicyViolation | XeroError;          // rail errors -> common codes
+  mapError(logs): PolicyViolation | ZeroError;          // rail errors -> common codes
 }
 ```
 
 What each adapter covers:
-- **public:** today's `xero_policy`, unchanged.
-- **magicblock:** a XERO program (or an extension of `xero_policy`) owning an eATA. `buildPayment`
+- **public:** today's `zero_policy`, unchanged.
+- **magicblock:** a ZERO program (or an extension of `zero_policy`) owning an eATA. `buildPayment`
   = delegate if needed, then a PDA-signed private transfer. Needs the bearer-token flow for private
   reads.
-- **rings:** either a custom-ring config (policy mapped to `ring.toml` rows) or a XERO ZK program.
+- **rings:** either a custom-ring config (policy mapped to `ring.toml` rows) or a ZERO ZK program.
   `readState` decrypts with the viewing key. Proofs come from the prover service or, later, local
   proving.
 
-Where the policy lives differs per rail. For public and magicblock it's XERO's program. For rings
-it's either the ring or a XERO ZK program. `check()` stays client-side everywhere and the rail
+Where the policy lives differs per rail. For public and magicblock it's ZERO's program. For rings
+it's either the ring or a ZERO ZK program. `check()` stays client-side everywhere and the rail
 stays the source of truth.
 
 ## Access needed, and who to contact (public channels only)

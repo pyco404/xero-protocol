@@ -79,7 +79,7 @@ function LaunchAction({ children, onLaunch, ...buttonProps }: LaunchActionProps)
               </div>
               <div className="min-w-0 flex-1">
                 <p className="font-mono text-[10px] tracking-[0.16em] text-primary sm:text-xs">
-                  XERO / STATUS
+                  ZERO / STATUS
                 </p>
                 <p className="mt-2 text-base text-foreground sm:text-lg">under-development</p>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -163,19 +163,19 @@ const securityPillars: ReadonlyArray<readonly [string, string, LucideIcon]> = [
 
 const layers = [
   ["USER / AGENT", "Initiates a payment request.", Bot],
-  ["XERO WALLET", "Holds funds under your spending policy.", WalletCards],
+  ["ZERO WALLET", "Holds funds under your spending policy.", WalletCards],
   ["POLICY ENGINE", "Defines what funds are allowed to do.", Braces],
   ["ZK PRIVACY LAYER", "Generates cryptographic proofs. In development.", KeyRound],
   ["SOLANA", "Provides settlement and verification.", Zap],
   ["STABLECOINS", "Provide dollar-denominated value.", CircleDollarSign],
 ] as const;
 
-// The XERO mark (white on transparent). A 128px copy of public/xero-tbg.png keeps it sharp at
+// The ZERO mark (white on transparent). A 128px copy of public/zero-tbg.png keeps it sharp at
 // 3x without shipping the 500px original to every visitor.
 function LogoMark({ className = "size-7" }: { className?: string }) {
   return (
     <img
-      src="/xero-logo-128.png"
+      src="/zero-logo-128.png"
       alt=""
       width={128}
       height={128}
@@ -186,10 +186,10 @@ function LogoMark({ className = "size-7" }: { className?: string }) {
 
 function Logo() {
   return (
-    <Link to="/" className="flex items-center gap-2.5" aria-label="XERO home">
+    <Link to="/" className="flex items-center gap-2.5" aria-label="ZERO home">
       <LogoMark className="size-5 sm:size-7" />
       <span className="font-display text-[13px] font-semibold tracking-[0.22em] sm:text-[15px]">
-        XERO
+        ZERO
       </span>
     </Link>
   );
@@ -348,7 +348,7 @@ function PrivateDollar() {
               <LockKeyhole className="size-[4.5cqw] text-primary" />
             </div>
             <div className="flex items-end justify-between">
-              <span className="font-display text-[11.5cqw] font-semibold leading-none">XERO</span>
+              <span className="font-display text-[11.5cqw] font-semibold leading-none">ZERO</span>
               <span className="font-mono text-[length:max(10px,3.2cqw)] text-primary">
                 VERIFIED
               </span>
@@ -394,7 +394,7 @@ export function Hero() {
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <LaunchAction size="lg">
-              Launch XERO <ArrowRight />
+              Launch ZERO <ArrowRight />
             </LaunchAction>
             <Button variant="outline" size="lg" asChild>
               <a href="#technology">Explore the Protocol</a>
@@ -529,7 +529,7 @@ export function Solution() {
   return (
     <section id="technology" className="section-shell border-y border-border bg-surface/30">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
-        <SectionLabel>The XERO layer</SectionLabel>
+        <SectionLabel>The ZERO layer</SectionLabel>
         <Reveal>
           <h2 className="heading-xl max-w-4xl">
             Verify everything. <span className="text-primary">Reveal less.</span>
@@ -539,7 +539,7 @@ export function Solution() {
           <Reveal className="flex flex-col items-center">
             {[
               "STABLECOINS",
-              "XERO",
+              "ZERO",
               "PRIVATE PAYMENT · IN DEVELOPMENT",
               "ZK PROOF · IN DEVELOPMENT",
               "SOLANA ✓",
@@ -580,7 +580,7 @@ export function PrivateVerifiable() {
           <Reveal>
             <h2 className="heading-xl">Privacy doesn&apos;t mean trust.</h2>
             <p className="mt-6 max-w-xl leading-7 text-muted-foreground">
-              In development: XERO will use privacy rails and cryptographic proofs so payments stay
+              In development: ZERO will use privacy rails and cryptographic proofs so payments stay
               verifiable without exposing unnecessary financial information.
             </p>
           </Reveal>
@@ -653,7 +653,7 @@ export function ProgrammableMoney() {
           </div>
           <div className="border border-border bg-card p-6 sm:p-8">
             <div className="flex items-center justify-between border-b border-border pb-5">
-              <p className="terminal-label">XERO POLICY / {activePolicy.id}</p>
+              <p className="terminal-label">ZERO POLICY / {activePolicy.id}</p>
               <span className="status-dot">ACTIVE</span>
             </div>
             <AnimatePresence mode="wait">
@@ -687,7 +687,7 @@ export function ProgrammableMoney() {
 
 const agentNodes = [
   "AI AGENT",
-  "XERO WALLET",
+  "ZERO WALLET",
   "POLICY ENGINE",
   "ZK PRIVACY · IN DEVELOPMENT",
   "PRIVATE PAYMENT · IN DEVELOPMENT",
@@ -952,7 +952,7 @@ export function LiveDemo() {
               <div className="flex items-center gap-3">
                 <Terminal className="size-4 text-primary" />
                 <div>
-                  <p className="terminal-label">XERO AGENT</p>
+                  <p className="terminal-label">ZERO AGENT</p>
                   <p className="mt-1 font-mono text-xs">research-agent-01</p>
                 </div>
               </div>
@@ -1323,7 +1323,7 @@ export function Architecture() {
   );
 }
 
-const codeSample = `const spender = await xero.createSpender({
+const codeSample = `const spender = await zero.createSpender({
   spender: agentWallet.publicKey,
   mint: usdc,
   deposit: "100",
@@ -1387,7 +1387,7 @@ export function Developers() {
           <Reveal>
             <h2 className="heading-xl">One API for agent money.</h2>
             <p className="mt-6 max-w-lg leading-7 text-muted-foreground">
-              Build wallets, agents, subscriptions, and payroll on XERO, with private payments as
+              Build wallets, agents, subscriptions, and payroll on ZERO, with private payments as
               they come out of development.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -1475,7 +1475,7 @@ export function FinalCta() {
           </p>
           <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
             <LaunchAction size="lg">
-              Launch XERO <ArrowRight />
+              Launch ZERO <ArrowRight />
             </LaunchAction>
             <Button size="lg" variant="outline" asChild>
               <Link to="/developers">
@@ -1561,7 +1561,7 @@ export function Footer() {
           ))}
         </div>
         <div className="flex flex-col gap-3 pt-6 font-mono text-[8px] tracking-[0.14em] text-muted-foreground sm:flex-row sm:justify-between">
-          <span>© 2026 XERO</span>
+          <span>© 2026 ZERO</span>
           <span>BUILT ON SOLANA</span>
         </div>
       </div>
@@ -1569,7 +1569,7 @@ export function Footer() {
   );
 }
 
-export function XeroLanding() {
+export function ZeroLanding() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <Navbar />

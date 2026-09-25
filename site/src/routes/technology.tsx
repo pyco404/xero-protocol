@@ -7,12 +7,12 @@ import {
   ProgrammableMoney,
   Security,
   Solution,
-} from "@/components/xero-landing";
+} from "@/components/zero-landing";
 
 export const Route = createFileRoute("/technology")({
   head: () => ({
     meta: [
-      { title: "XERO — Technology" },
+      { title: "ZERO — Technology" },
       {
         name: "description",
         content: "Privacy-first payment verification with programmable policy enforcement on Solana.",

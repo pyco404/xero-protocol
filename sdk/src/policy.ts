@@ -1,5 +1,5 @@
 import type { PublicKey } from "@solana/web3.js";
-import { type PolicyViolationCode, XeroError } from "./errors.js";
+import { type PolicyViolationCode, ZeroError } from "./errors.js";
 
 /** Width of one spending bucket in seconds (`BUCKET_SECONDS`, one hour). */
 export const BUCKET_SECONDS = 3_600n;
@@ -140,7 +140,7 @@ export function evaluatePayment(
 /** Same rule as the program's `InvalidLimits`. */
 export function validateLimits(maxPerPayment: bigint, dailyLimit: bigint) {
   if (maxPerPayment === 0n || dailyLimit === 0n || maxPerPayment > dailyLimit) {
-    throw new XeroError(
+    throw new ZeroError(
       "InvalidLimits",
       "limits must be non-zero and maxPerPayment must not exceed dailyLimit",
     );

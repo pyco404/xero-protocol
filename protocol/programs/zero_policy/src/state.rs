@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 
 use crate::{
     constants::{BUCKET_SECONDS, MAX_PROVIDERS, POLICY_RESERVED_BYTES, WINDOW_BUCKETS},
-    error::XeroError,
+    error::ZeroError,
 };
 
 const BUCKETS: usize = WINDOW_BUCKETS as usize;
@@ -43,7 +43,7 @@ impl Policy {
     pub fn set_limits(&mut self, max_per_payment: u64, daily_limit: u64) -> Result<()> {
         require!(
             max_per_payment > 0 && daily_limit > 0 && max_per_payment <= daily_limit,
-            XeroError::InvalidLimits
+            ZeroError::InvalidLimits
         );
         self.max_per_payment = max_per_payment;
         self.daily_limit = daily_limit;
@@ -59,9 +59,9 @@ impl Policy {
     }
 
     pub fn add_provider(&mut self, provider: Pubkey) -> Result<()> {
-        require!(!self.is_allowed(&provider), XeroError::DuplicateProvider);
+        require!(!self.is_allowed(&provider), ZeroError::DuplicateProvider);
         let count = self.allowlist_count as usize;
-        require!(count < MAX_PROVIDERS, XeroError::AllowlistFull);
+        require!(count < MAX_PROVIDERS, ZeroError::AllowlistFull);
         self.allowlist[count] = provider;
         self.allowlist_count += 1;
         Ok(())
@@ -73,7 +73,7 @@ impl Policy {
             .providers()
             .iter()
             .position(|p| p == provider)
-            .ok_or(XeroError::ProviderNotFound)?;
+            .ok_or(ZeroError::ProviderNotFound)?;
         let last = self.allowlist_count as usize - 1;
         self.allowlist[index] = self.allowlist[last];
         self.allowlist[last] = Pubkey::default();
@@ -103,7 +103,7 @@ impl Policy {
         self.buckets
             .iter()
             .try_fold(0u64, |sum, b| sum.checked_add(*b))
-            .ok_or_else(|| error!(XeroError::MathOverflow))
+            .ok_or_else(|| error!(ZeroError::MathOverflow))
     }
 
     /// Records a payment of `amount` at unix time `now` if the last 24 hourly buckets plus
@@ -114,14 +114,14 @@ impl Policy {
         let spent = self
             .spent_in_window()?
             .checked_add(amount)
-            .ok_or(XeroError::MathOverflow)?;
-        require!(spent <= self.daily_limit, XeroError::DailyLimitExceeded);
+            .ok_or(ZeroError::MathOverflow)?;
+        require!(spent <= self.daily_limit, ZeroError::DailyLimitExceeded);
         // If the clock moved backwards (hour < last_hour), this bucket still lies inside the
         // window, so the amount is never dropped; at worst it is counted for too long.
         let index = bucket_index(hour);
         self.buckets[index] = self.buckets[index]
             .checked_add(amount)
-            .ok_or(XeroError::MathOverflow)?;
+            .ok_or(ZeroError::MathOverflow)?;
         Ok(spent)
     }
 }

@@ -28,7 +28,7 @@ import {
 } from "litesvm";
 import { expect } from "chai";
 import { readFileSync } from "fs";
-import type { XeroPolicy } from "../target/types/xero_policy";
+import type { ZeroPolicy } from "../target/types/zero_policy";
 
 const { Keypair, PublicKey, SystemProgram, Transaction } = web3;
 type Keypair = web3.Keypair;
@@ -42,9 +42,9 @@ export const DAY = 24 * 60 * 60;
 /** Arbitrary but realistic start time; LiteSVM's clock starts at 0. */
 export const START_TIME = 1_790_000_000;
 
-const PROGRAM_SO = `${__dirname}/../target/deploy/xero_policy.so`;
-const idl: XeroPolicy = JSON.parse(
-  readFileSync(`${__dirname}/../target/idl/xero_policy.json`, "utf8")
+const PROGRAM_SO = `${__dirname}/../target/deploy/zero_policy.so`;
+const idl: ZeroPolicy = JSON.parse(
+  readFileSync(`${__dirname}/../target/idl/zero_policy.json`, "utf8")
 );
 
 // Instructions are built offline with Anchor's coder, so the provider never talks to a cluster.
@@ -53,7 +53,7 @@ const offlineProvider = {
   publicKey: Keypair.generate().publicKey,
 } as unknown as AnchorProvider;
 
-export const program = new Program<XeroPolicy>(idl, offlineProvider);
+export const program = new Program<ZeroPolicy>(idl, offlineProvider);
 const events = new EventParser(program.programId, new BorshCoder(idl));
 
 export type TxResult = TransactionMetadata | FailedTransactionMetadata;

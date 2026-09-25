@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 use crate::{
-    error::XeroError,
+    error::ZeroError,
     events::{LimitsUpdated, PauseChanged, ProviderAdded, ProviderRemoved},
     state::Policy,
 };
@@ -10,7 +10,7 @@ use crate::{
 #[derive(Accounts)]
 pub struct OwnerOnly<'info> {
     pub owner: Signer<'info>,
-    #[account(mut, has_one = owner @ XeroError::Unauthorized)]
+    #[account(mut, has_one = owner @ ZeroError::Unauthorized)]
     pub policy: Account<'info, Policy>,
 }
 

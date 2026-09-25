@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 #[error_code]
-pub enum XeroError {
+pub enum ZeroError {
     #[msg("Policy is paused")]
     Paused,
     #[msg("Recipient is not on the policy allowlist")]

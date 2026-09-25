@@ -3,7 +3,7 @@ use anchor_spl::token_interface::{
     self, CloseAccount, Mint, TokenAccount, TokenInterface, TransferChecked,
 };
 
-use crate::{constants::*, error::XeroError, events::PolicyClosed, state::Policy};
+use crate::{constants::*, error::ZeroError, events::PolicyClosed, state::Policy};
 
 /// Sweeps whatever is left in the vault to `destination`, then closes the vault and the policy
 /// and returns their rent to the owner. Like `withdraw`, it works while paused.
@@ -11,7 +11,7 @@ use crate::{constants::*, error::XeroError, events::PolicyClosed, state::Policy}
 pub struct ClosePolicy<'info> {
     #[account(mut)]
     pub owner: Signer<'info>,
-    #[account(mut, close = owner, has_one = owner @ XeroError::Unauthorized, has_one = mint)]
+    #[account(mut, close = owner, has_one = owner @ ZeroError::Unauthorized, has_one = mint)]
     pub policy: Account<'info, Policy>,
     #[account(mint::token_program = token_program)]
     pub mint: InterfaceAccount<'info, Mint>,

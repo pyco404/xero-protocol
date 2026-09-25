@@ -1,6 +1,6 @@
-# Privacy spike: confidential payments for XERO
+# Privacy spike: confidential payments for ZERO
 
-Research spike, 2026-09-24. Nothing here changes `xero_policy` or `@xero/sdk`. Prototypes live in
+Research spike, 2026-09-24. Nothing here changes `zero_policy` or `@zero/sdk`. Prototypes live in
 [`protocol/spikes/`](../spikes/) and ran on localnet only; the only calls to devnet or mainnet were
 read-only (feature status, account reads, program dumps and `simulateTransaction` with signature
 checks off, which sends nothing and pays nothing).
@@ -126,7 +126,7 @@ accounts and transactions). The deployed mainnet Token-2022 binary was run on lo
   - Install note: `@solana/kit` 8.3.0 pulled `undici-types@8.11.1`, whose tarball returned 404 on
     2026-09-24. An `overrides` pin to 7.16.0 worked around it.
 
-### Can XERO's tokens use it? (read-only, mainnet, 2026-09-24)
+### Can ZERO's tokens use it? (read-only, mainnet, 2026-09-24)
 
 [VERIFIED] with `getAccountInfo` (`jsonParsed`):
 
@@ -138,10 +138,10 @@ accounts and transactions). The deployed mainnet Token-2022 binary was run on lo
 
 Consequences:
 
-- Confidential USDC would require a wrapper mint that XERO or a partner controls. That adds a
+- Confidential USDC would require a wrapper mint that ZERO or a partner controls. That adds a
   custody/redemption trust assumption. One team reports running exactly that on mainnet ([READ,
   third-party comment on token-2022#657](https://github.com/solana-program/token-2022/issues/657)).
-- `xero_policy` v1 rejects PYUSD/USDG today (`UnsupportedMint`: permanent delegate, transfer fee,
+- `zero_policy` v1 rejects PYUSD/USDG today (`UnsupportedMint`: permanent delegate, transfer fee,
   transfer hook).
 - For mints with a transfer-fee config, whether the plain confidential `Transfer` works or
   `TransferWithFee` (with its extra fee proofs) is required: [UNKNOWN], not tested.
@@ -273,7 +273,7 @@ Prototype [VERIFIED]: program `spikes/ct-vault` (native Solana program, SBF buil
 | **B. Owner holds the key; agent asks owner for proofs** | owner | owner, recipient, auditor | owner | Agent is not autonomous (owner or owner's service must be online per payment). Agent learns nothing. Key custody is the owner's problem. |
 | **C. Key derived deterministically, shared owner ↔ agent** (e.g. `ConfidentialKeys` from an owner signature over `pdaWalletPublicSeed`) | both | both, recipient, auditor | both | Owner can audit and recover without a separate backup. Rotating the agent does not rotate the key, so a former agent keeps read access forever. |
 | **D. Key held by MPC or TEE** (Arcium, MagicBlock) | whoever the network releases it to | same | same | Adds an external trust and liveness dependency. Not prototyped. |
-| **Mint auditor** (any option) | **no** [VERIFIED `None`] | **yes** [VERIFIED] | **no** [VERIFIED `None`] | Set by the *mint authority*. On a mint XERO doesn't control (PYUSD/USDG), XERO cannot add or remove it. |
+| **Mint auditor** (any option) | **no** [VERIFIED `None`] | **yes** [VERIFIED] | **no** [VERIFIED `None`] | Set by the *mint authority*. On a mint ZERO doesn't control (PYUSD/USDG), ZERO cannot add or remove it. |
 
 Losing the vault key: withdraw, transfer and empty-account all require proofs made with the secret
 key, so without it confidential funds cannot be moved. This follows from the instruction
@@ -305,7 +305,7 @@ the program:
    - `max_diff  = Enc(max, r=0) − (lo + 2¹⁶·hi)`
    - `new_total = total + (lo + 2¹⁶·hi)`, where `total` is an **encrypted running total stored in
      the policy account**, reset to `Enc(0)` when the 24 h window rolls over (same rule as
-     `xero_policy`).
+     `zero_policy`).
    - `remaining = Enc(daily, r=0) − new_total`
 3. Requires two **ciphertext-commitment equality** contexts, whose ciphertexts must equal
    `max_diff` and `remaining` byte for byte, and one **batched range proof (U128 = 2 × 64 bits)**
@@ -423,7 +423,7 @@ This is not legal advice; these are the primary sources a lawyer would start fro
 
 ### Verdict: go with changes
 
-Use Token-2022 confidential transfers as XERO's layer for **amount and balance** privacy, with
+Use Token-2022 confidential transfers as ZERO's layer for **amount and balance** privacy, with
 policy enforced on encrypted amounts as prototyped. But:
 
 1. **Don't do one confidential transfer per API call.** At 11 transactions, ~483k CU, ~4.5 s and
@@ -432,7 +432,7 @@ policy enforced on encrypted amounts as prototyped. But:
    on-chain confidential payment is dollars, not cents. Per-call metering then stays off-chain
    between agent and provider.
 2. **Not on USDC.** Classic SPL Token has no extensions [VERIFIED]. The realistic assets are
-   PYUSD/USDG, which need issuer approval per account plus `xero_policy` support for their
+   PYUSD/USDG, which need issuer approval per account plus `zero_policy` support for their
    extensions, or a wrapper mint with its own trust model.
 3. **Re-evaluate against Custom Rings once they reach mainnet.** Helius documents one-transaction
    private transfers, transfer limits and auditor visibility in custom rings, and names agentic
@@ -481,7 +481,7 @@ policy enforced on encrypted amounts as prototyped. But:
 
 | Visible | Hidden |
 | --- | --- |
-| Program id (so "this is a XERO vault"), policy PDA, vault, spender signature, owner (from the PDA and the policy account) | Payment amounts |
+| Program id (so "this is a ZERO vault"), policy PDA, vault, spender signature, owner (from the PDA and the policy account) | Payment amounts |
 | Provider token accounts and owners, i.e. who the agent pays | Vault balance, provider balances |
 | Mint, time and frequency of payments, number of incoming credits per account | Daily running total |
 | Policy parameters (max, daily, allowlist) in plaintext, unless also encrypted | |

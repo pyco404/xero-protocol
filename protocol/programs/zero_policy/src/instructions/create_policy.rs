@@ -7,7 +7,7 @@ use anchor_spl::{
     token_interface::{Mint, TokenAccount, TokenInterface},
 };
 
-use crate::{constants::*, error::XeroError, events::PolicyCreated, state::Policy};
+use crate::{constants::*, error::ZeroError, events::PolicyCreated, state::Policy};
 
 #[derive(Accounts)]
 #[instruction(spender: Pubkey)]
@@ -25,7 +25,7 @@ pub struct CreatePolicy<'info> {
     // Checked before the vault is created, so an unsupported mint fails with UnsupportedMint.
     #[account(
         mint::token_program = token_program,
-        constraint = is_supported_mint(&mint.to_account_info()) @ XeroError::UnsupportedMint
+        constraint = is_supported_mint(&mint.to_account_info()) @ ZeroError::UnsupportedMint
     )]
     pub mint: InterfaceAccount<'info, Mint>,
     #[account(
@@ -49,7 +49,7 @@ pub fn handle_create_policy(
     daily_limit: u64,
     allowlist: Vec<Pubkey>,
 ) -> Result<()> {
-    require!(allowlist.len() <= MAX_PROVIDERS, XeroError::AllowlistFull);
+    require!(allowlist.len() <= MAX_PROVIDERS, ZeroError::AllowlistFull);
 
     let policy = &mut ctx.accounts.policy;
     policy.version = POLICY_VERSION;

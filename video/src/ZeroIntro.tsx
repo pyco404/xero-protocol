@@ -32,7 +32,7 @@ const renderScene = (id: SceneId, captions: string[], speechFrames: number) => {
   }
 };
 
-export const XeroIntro: React.FC = () => {
+export const ZeroIntro: React.FC = () => {
   const { durationInFrames, fps } = useVideoConfig();
   const timeline = buildTimeline();
   return (

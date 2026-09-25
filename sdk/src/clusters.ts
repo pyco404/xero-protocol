@@ -1,8 +1,8 @@
 import { PublicKey } from "@solana/web3.js";
 import { IDL } from "./idl/idl.js";
 
-/** Clusters the SDK knows a `xero_policy` deployment for. Mainnet is deliberately absent. */
-export type XeroCluster = "localnet" | "devnet";
+/** Clusters the SDK knows a `zero_policy` deployment for. Mainnet is deliberately absent. */
+export type ZeroCluster = "localnet" | "devnet";
 
 export interface ClusterConfig {
   /** Default public RPC endpoint. Use your own RPC provider for anything beyond testing. */
@@ -15,7 +15,7 @@ export interface ClusterConfig {
 /** The same program ID is deployed on every cluster listed here. */
 const PROGRAM_ID = new PublicKey(IDL.address);
 
-export const CLUSTERS: Readonly<Record<XeroCluster, ClusterConfig>> = {
+export const CLUSTERS: Readonly<Record<ZeroCluster, ClusterConfig>> = {
   localnet: {
     rpcUrl: "http://127.0.0.1:8899",
     programId: PROGRAM_ID,
@@ -31,7 +31,7 @@ export const CLUSTERS: Readonly<Record<XeroCluster, ClusterConfig>> = {
 /** An explorer.solana.com link to a transaction signature or an account address. */
 export function explorerUrl(
   target: string | PublicKey,
-  cluster: XeroCluster,
+  cluster: ZeroCluster,
   kind: "tx" | "address" = typeof target === "string" && target.length > 50 ? "tx" : "address",
 ): string {
   const id = typeof target === "string" ? target : target.toBase58();

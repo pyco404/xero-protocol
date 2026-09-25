@@ -1,5 +1,5 @@
 {
-  "name": "xero-video",
+  "name": "zero-video",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -8,7 +8,7 @@
     "vo": "node scripts/generate-vo.mjs",
     "music": "bash scripts/generate-music.sh",
     "stills": "node scripts/render-stills.mjs",
-    "render": "remotion render XeroIntro out/xero-intro-1920x1080.mp4 && remotion render XeroIntroSquare out/xero-intro-1080x1080.mp4",
+    "render": "remotion render ZeroIntro out/zero-intro-1920x1080.mp4 && remotion render ZeroIntroSquare out/zero-intro-1080x1080.mp4",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

@@ -7,7 +7,7 @@
     "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
     "smoke": "NODE_OPTIONS=--no-experimental-strip-types ts-node -P ./tsconfig.json scripts/smoke.ts",
-    "deploy:localnet": "solana program deploy target/deploy/xero_policy.so --program-id $HOME/.config/xero/xero_policy-keypair.json --keypair $HOME/.config/solana/id.json --upgrade-authority $HOME/.config/solana/id.json --url ${RPC_URL:-http://127.0.0.1:8899}"
+    "deploy:localnet": "solana program deploy target/deploy/zero_policy.so --program-id $HOME/.config/zero/zero_policy-keypair.json --keypair $HOME/.config/solana/id.json --upgrade-authority $HOME/.config/solana/id.json --url ${RPC_URL:-http://127.0.0.1:8899}"
   },
   "dependencies": {
     "@anchor-lang/core": "^1.2.0"
@@ -25,6 +25,6 @@
     "ts-mocha": "^10.0.0",
     "typescript": "^5.7.3"
   },
-  "name": "xero-protocol",
+  "name": "zero-protocol",
   "private": true
 }

@@ -1,13 +1,13 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked};
 
-use crate::{constants::*, error::XeroError, events::Withdrawn, state::Policy};
+use crate::{constants::*, error::ZeroError, events::Withdrawn, state::Policy};
 
 /// Owner withdrawal. Deliberately ignores `paused` so funds are always recoverable.
 #[derive(Accounts)]
 pub struct Withdraw<'info> {
     pub owner: Signer<'info>,
-    #[account(has_one = owner @ XeroError::Unauthorized, has_one = mint)]
+    #[account(has_one = owner @ ZeroError::Unauthorized, has_one = mint)]
     pub policy: Account<'info, Policy>,
     #[account(mint::token_program = token_program)]
     pub mint: InterfaceAccount<'info, Mint>,
@@ -19,7 +19,7 @@ pub struct Withdraw<'info> {
 }
 
 pub fn handle_withdraw(ctx: Context<Withdraw>, amount: u64) -> Result<()> {
-    require!(amount > 0, XeroError::ZeroAmount);
+    require!(amount > 0, ZeroError::ZeroAmount);
     let policy = &ctx.accounts.policy;
     let signer_seeds: &[&[&[u8]]] = &[&[
         POLICY_SEED,

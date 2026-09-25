@@ -4,7 +4,7 @@ import { useLayout } from "../layout";
 import { SceneShell } from "../SceneShell";
 import { COLORS, EASE_IN, SNAP } from "../theme";
 
-const CODE = `const spender = await xero.createSpender({
+const CODE = `const spender = await zero.createSpender({
   maxPerPayment: "5",
   dailyLimit: "20",
   allowedProviders: [dataApi],

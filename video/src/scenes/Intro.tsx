@@ -5,7 +5,7 @@ import { useLayout } from "../layout";
 import { SceneShell } from "../SceneShell";
 import { COLORS, EASE_IN, SNAP } from "../theme";
 
-const WORD = "XERO";
+const WORD = "ZERO";
 
 export const Intro: React.FC = () => {
   const frame = useCurrentFrame();

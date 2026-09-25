@@ -17,7 +17,7 @@ export const Outro: React.FC = () => {
     <SceneShell>
       <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", paddingBottom: 110 }}>
         <Img
-          src={staticFile("xero-logo-white.png")}
+          src={staticFile("zero-logo-white.png")}
           style={{ width: size, height: size, opacity: a, transform: `scale(${0.94 + 0.06 * a})` }}
         />
         <div style={{ marginTop: 36, fontSize: square ? 38 : 46, fontWeight: 500, opacity: b }}>

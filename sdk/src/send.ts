@@ -5,8 +5,8 @@ import {
   Transaction,
   type TransactionInstruction,
 } from "@solana/web3.js";
-import { XeroTransactionError, errorFromLogs } from "./errors.js";
-import type { XeroWallet } from "./wallet.js";
+import { ZeroTransactionError, errorFromLogs } from "./errors.js";
+import type { ZeroWallet } from "./wallet.js";
 
 export interface SendOptions {
   /** Skip the RPC node's simulation, so a failing transaction lands on chain (and pays fees). */
@@ -27,7 +27,7 @@ export interface Sent {
  */
 export async function sendInstructions(
   connection: Connection,
-  wallet: XeroWallet,
+  wallet: ZeroWallet,
   ixs: TransactionInstruction[],
   commitment: Commitment,
   options: SendOptions = {},
@@ -88,7 +88,7 @@ async function confirm(
     if (status?.err) return status.err;
     if (status?.confirmationStatus && wanted.includes(status.confirmationStatus)) return null;
     if ((await connection.getBlockHeight(commitment)) > lastValidBlockHeight) {
-      throw new XeroTransactionError(
+      throw new ZeroTransactionError(
         `transaction ${signature} expired before it was confirmed`,
         [],
         signature,

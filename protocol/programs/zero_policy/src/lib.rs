@@ -14,7 +14,7 @@ pub use state::*;
 declare_id!("EK8aHDV1rgmoi7aygKCptretPMwQ9b6U293dioDLGZYW");
 
 #[program]
-pub mod xero_policy {
+pub mod zero_policy {
     use super::*;
 
     pub fn create_policy(

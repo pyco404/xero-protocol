@@ -1,7 +1,7 @@
 import React from "react";
 import { COLORS } from "./theme";
 
-// Geometry traced from public/xero-logo-white.png on its 500x500 canvas.
+// Geometry traced from public/zero-logo-white.png on its 500x500 canvas.
 const STROKE = 40;
 const BRACKET_TOP = 29;
 const BRACKET_BOTTOM = 463;
@@ -42,7 +42,7 @@ export const Mark: React.FC<{ slash?: number; color?: string }> = ({
         stroke={color}
         strokeWidth={37}
       />
-      <clipPath id="xero-inner">
+      <clipPath id="zero-inner">
         <rect x={x0} y={y1} width={x1 - x0} height={y0 - y1} />
       </clipPath>
       <line
@@ -52,7 +52,7 @@ export const Mark: React.FC<{ slash?: number; color?: string }> = ({
         y2={y0 + 11 - (y0 - y1 + 22) * slash}
         stroke={color}
         strokeWidth={34}
-        clipPath="url(#xero-inner)"
+        clipPath="url(#zero-inner)"
       />
     </g>
   );

@@ -7,7 +7,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-xero_policy = "EK8aHDV1rgmoi7aygKCptretPMwQ9b6U293dioDLGZYW"
+zero_policy = "EK8aHDV1rgmoi7aygKCptretPMwQ9b6U293dioDLGZYW"
 
 [provider]
 cluster = "localnet"

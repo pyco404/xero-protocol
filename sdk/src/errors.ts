@@ -1,4 +1,4 @@
-/** xero_policy program errors, by Anchor error number. Kept in sync with the IDL by a unit test. */
+/** zero_policy program errors, by Anchor error number. Kept in sync with the IDL by a unit test. */
 export const PROGRAM_ERRORS = {
   6000: "Paused",
   6001: "RecipientNotAllowed",
@@ -17,7 +17,7 @@ export const PROGRAM_ERRORS = {
 export type ProgramErrorName = (typeof PROGRAM_ERRORS)[keyof typeof PROGRAM_ERRORS];
 
 /**
- * Reasons a payment is refused. All but `InsufficientFunds` are xero_policy errors;
+ * Reasons a payment is refused. All but `InsufficientFunds` are zero_policy errors;
  * `InsufficientFunds` is the token program refusing a transfer larger than the vault balance.
  */
 export type PolicyViolationCode =
@@ -47,7 +47,7 @@ const DEFAULT_MESSAGES: Record<PolicyViolationCode, string> = {
 };
 
 /** Base class for every error the SDK throws on purpose. */
-export class XeroError extends Error {
+export class ZeroError extends Error {
   constructor(
     readonly code: string,
     message: string,
@@ -61,7 +61,7 @@ export class XeroError extends Error {
  * A payment the policy does not allow. Thrown by `pay()` either before anything is sent (the
  * local check failed, `source: "check"`) or after the chain rejected it (`source: "chain"`).
  */
-export class PolicyViolation extends XeroError {
+export class PolicyViolation extends ZeroError {
   declare readonly code: PolicyViolationCode;
 
   constructor(
@@ -75,14 +75,14 @@ export class PolicyViolation extends XeroError {
 }
 
 /** An amount that can't be converted to base units (bad format, too many decimals, negative). */
-export class InvalidAmountError extends XeroError {
+export class InvalidAmountError extends ZeroError {
   constructor(message: string) {
     super("InvalidAmount", message);
   }
 }
 
-/** A xero_policy or Anchor error other than a policy violation (e.g. Unauthorized, InvalidLimits). */
-export class XeroProgramError extends XeroError {
+/** A zero_policy or Anchor error other than a policy violation (e.g. Unauthorized, InvalidLimits). */
+export class ZeroProgramError extends ZeroError {
   constructor(
     code: string,
     readonly errorNumber: number | undefined,
@@ -94,7 +94,7 @@ export class XeroProgramError extends XeroError {
 }
 
 /** A transaction that failed for a reason the SDK can't attribute to the program. */
-export class XeroTransactionError extends XeroError {
+export class ZeroTransactionError extends ZeroError {
   constructor(
     message: string,
     readonly logs: readonly string[],
@@ -113,13 +113,13 @@ const TOKEN_INSUFFICIENT_FUNDS = /Program log: Error: insufficient funds/;
 
 /**
  * Turns a failed transaction's logs into the matching SDK error: a PolicyViolation for payment
- * rejections, XeroProgramError for other Anchor errors, XeroTransactionError otherwise.
+ * rejections, ZeroProgramError for other Anchor errors, ZeroTransactionError otherwise.
  */
 export function errorFromLogs(
   logs: readonly string[],
   fallback: string,
   signature?: string,
-): XeroError {
+): ZeroError {
   for (const line of logs) {
     const match = ANCHOR_ERROR.exec(line);
     if (!match) continue;
@@ -132,10 +132,10 @@ export function errorFromLogs(
         logs,
       );
     }
-    return new XeroProgramError(code, Number(number), message, logs);
+    return new ZeroProgramError(code, Number(number), message, logs);
   }
   if (logs.some((line) => TOKEN_INSUFFICIENT_FUNDS.test(line))) {
     return new PolicyViolation("InsufficientFunds", undefined, "chain", logs);
   }
-  return new XeroTransactionError(fallback, logs, signature);
+  return new ZeroTransactionError(fallback, logs, signature);
 }

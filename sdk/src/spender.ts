@@ -13,8 +13,8 @@ import {
   parseAmount,
   tokenAmount,
 } from "./amount.js";
-import type { MintInfo, XeroClient } from "./client.js";
-import { PolicyViolation, XeroError, XeroTransactionError } from "./errors.js";
+import type { MintInfo, ZeroClient } from "./client.js";
+import { PolicyViolation, ZeroError, ZeroTransactionError } from "./errors.js";
 import { type PaymentSettledEvent, parsePaymentSettled } from "./events.js";
 import {
   type CheckResult,
@@ -26,7 +26,7 @@ import {
   nextReleaseAt,
   spentInWindow,
 } from "./policy.js";
-import type { XeroWallet } from "./wallet.js";
+import type { ZeroWallet } from "./wallet.js";
 
 export interface PaymentRequest {
   /** Provider wallet to pay. Its associated token account for the mint receives the tokens. */
@@ -97,10 +97,10 @@ export class Spender {
   readonly policy: PublicKey;
   readonly vault: PublicKey;
 
-  /** @internal Use XeroClient.createSpender or XeroClient.getSpender. */
+  /** @internal Use ZeroClient.createSpender or ZeroClient.getSpender. */
   constructor(
-    private readonly client: XeroClient,
-    private readonly wallet: XeroWallet,
+    private readonly client: ZeroClient,
+    private readonly wallet: ZeroWallet,
     readonly owner: PublicKey,
     readonly spender: PublicKey,
     readonly mint: MintInfo,
@@ -110,7 +110,7 @@ export class Spender {
   }
 
   /** The same policy, with transactions signed and paid for by `wallet`. */
-  as(wallet: XeroWallet): Spender {
+  as(wallet: ZeroWallet): Spender {
     return new Spender(this.client, wallet, this.owner, this.spender, this.mint);
   }
 
@@ -162,7 +162,7 @@ export class Spender {
   async pay(request: PaymentRequest, options: PayOptions = {}): Promise<PaymentResult> {
     const amount = parseAmount(request.amount, this.mint.decimals);
     if (!this.wallet.publicKey.equals(this.spender)) {
-      throw new XeroError(
+      throw new ZeroError(
         "Unauthorized",
         `pay() must be signed by the spender ${this.spender.toBase58()}; use spender.as(wallet)`,
       );
@@ -194,7 +194,7 @@ export class Spender {
       e.policy.equals(this.policy),
     );
     if (!event) {
-      throw new XeroTransactionError(
+      throw new ZeroTransactionError(
         `payment ${signature} confirmed but no PaymentSettled event was found in its logs`,
         logs,
         signature,
@@ -357,14 +357,14 @@ export class Spender {
   private evaluate(snapshot: Snapshot, recipientAccount: PublicKey, amount: bigint): Evaluation {
     const account = snapshot.recipientAccount;
     if (!account) {
-      throw new XeroError(
+      throw new ZeroError(
         "RecipientAccountMissing",
         `recipient token account ${recipientAccount.toBase58()} does not exist; the provider ` +
           `must have a token account for mint ${this.mint.address.toBase58()}`,
       );
     }
     if (!account.mint.equals(this.mint.address)) {
-      throw new XeroError(
+      throw new ZeroError(
         "RecipientMintMismatch",
         `token account ${recipientAccount.toBase58()} holds a different mint`,
       );
@@ -389,9 +389,9 @@ export class Spender {
       this.client.commitment,
     );
     if (!policy || !vault) {
-      throw new XeroError("PolicyNotFound", `policy ${this.policy.toBase58()} does not exist`);
+      throw new ZeroError("PolicyNotFound", `policy ${this.policy.toBase58()} does not exist`);
     }
-    if (!clock) throw new XeroError("ClockUnavailable", "could not read the Clock sysvar");
+    if (!clock) throw new ZeroError("ClockUnavailable", "could not read the Clock sysvar");
     return {
       state: this.client.decodePolicy(policy.data),
       vaultBalance: readTokenAccount(vault).amount,
@@ -403,7 +403,7 @@ export class Spender {
 
   private async sendAsOwner(ixs: TransactionInstruction[]): Promise<string> {
     if (!this.wallet.publicKey.equals(this.owner)) {
-      throw new XeroError(
+      throw new ZeroError(
         "Unauthorized",
         `this action must be signed by the owner ${this.owner.toBase58()}; use spender.as(wallet)`,
       );
@@ -411,7 +411,7 @@ export class Spender {
     return (await this.send(ixs)).signature;
   }
 
-  private send(ixs: TransactionInstruction[], options?: Parameters<XeroClient["send"]>[1]) {
+  private send(ixs: TransactionInstruction[], options?: Parameters<ZeroClient["send"]>[1]) {
     return this.client.send(ixs, options, this.wallet);
   }
 }

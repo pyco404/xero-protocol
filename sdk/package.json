@@ -1,7 +1,7 @@
 {
-  "name": "@xero/sdk",
+  "name": "@zero/sdk",
   "version": "0.1.0",
-  "description": "TypeScript client for the xero_policy Solana program (localnet)",
+  "description": "TypeScript client for the zero_policy Solana program (localnet)",
   "private": true,
   "license": "ISC",
   "type": "module",

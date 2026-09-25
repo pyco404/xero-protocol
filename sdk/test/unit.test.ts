@@ -8,8 +8,8 @@ import {
   PROGRAM_ERRORS,
   PolicyViolation,
   type PolicyState,
-  XeroProgramError,
-  XeroTransactionError,
+  ZeroProgramError,
+  ZeroTransactionError,
   errorFromLogs,
   evaluatePayment,
   formatAmount,
@@ -195,7 +195,7 @@ describe("errors", () => {
     assert.deepEqual(fromIdl, PROGRAM_ERRORS);
   });
 
-  it("maps Anchor error logs to PolicyViolation or XeroProgramError", () => {
+  it("maps Anchor error logs to PolicyViolation or ZeroProgramError", () => {
     const violation = errorFromLogs(
       [
         "Program EK8a invoke [1]",
@@ -214,16 +214,16 @@ describe("errors", () => {
       ],
       "fallback",
     );
-    assert.ok(other instanceof XeroProgramError);
+    assert.ok(other instanceof ZeroProgramError);
     assert.equal(other.code, "Unauthorized");
-    assert.equal((other as XeroProgramError).errorNumber, 6007);
+    assert.equal((other as ZeroProgramError).errorNumber, 6007);
 
     const funds = errorFromLogs(["Program log: Error: insufficient funds"], "fallback");
     assert.ok(funds instanceof PolicyViolation);
     assert.equal(funds.code, "InsufficientFunds");
 
     const unknown = errorFromLogs(["Program log: something else"], "fallback");
-    assert.ok(unknown instanceof XeroTransactionError);
+    assert.ok(unknown instanceof ZeroTransactionError);
     assert.equal(unknown.message, "fallback");
   });
 });

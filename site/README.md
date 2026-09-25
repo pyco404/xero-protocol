@@ -1,16 +1,16 @@
-# Xero Private Ledger
+# Zero Private Ledger
 
-Absolutely. I’d make XERO feel like a real financial protocol brand rather than a generic crypto project.
+Absolutely. I’d make ZERO feel like a real financial protocol brand rather than a generic crypto project.
 
 Here’s the updated, ready-to-paste frontend prompt:
 
-Build: XERO — Private Programmable Money on Solana
+Build: ZERO — Private Programmable Money on Solana
 
-Build a premium, production-quality frontend website for XERO, a privacy-focused programmable payments protocol built on Solana.
+Build a premium, production-quality frontend website for ZERO, a privacy-focused programmable payments protocol built on Solana.
 
 Brand
 
-Name: XERO
+Name: ZERO
 
 Primary positioning:
 
@@ -20,7 +20,7 @@ Core statement:
 
 Money that can prove what it's allowed to do without revealing everything it does.
 
-XERO combines:
+ZERO combines:
 
 Solana
 
@@ -42,7 +42,7 @@ Private payroll
 
 Private business payments
 
-XERO should feel like financial infrastructure, not a meme coin, speculative token, or generic Web3 project.
+ZERO should feel like financial infrastructure, not a meme coin, speculative token, or generic Web3 project.
 
 Visual Identity
 
@@ -62,7 +62,7 @@ high-end developer tools
 
 institutional financial software
 
-But give XERO its own identity.
+But give ZERO its own identity.
 
 The visual language should communicate:
 
@@ -118,7 +118,7 @@ Border
 
 Subtle borders.
 
-XERO Mint
+ZERO Mint
 
 #65F5C8
 
@@ -134,7 +134,7 @@ private transactions
 
 active states
 
-XERO Violet
+ZERO Violet
 
 #8B7CFF
 
@@ -208,7 +208,7 @@ Minimal and premium.
 
 Left:
 
-XERO
+ZERO
 
 Use a simple geometric wordmark.
 
@@ -238,7 +238,7 @@ Do not make the navbar oversized.
 
 HERO
 
-The hero should explain XERO within seconds.
+The hero should explain ZERO within seconds.
 
 Small eyebrow:
 
@@ -258,7 +258,7 @@ Move digital dollars without exposing your entire financial history. Define spen
 
 Primary CTA:
 
-Launch XERO →
+Launch ZERO →
 
 Secondary CTA:
 
@@ -277,7 +277,7 @@ Place a central private-dollar object:
               PRIVATE
                  ↓
         ┌─────────────────┐
-        │      XERO       │
+        │      ZERO       │
         │                 │
         │   🔒 PRIVATE    │
         └─────────────────┘
@@ -330,13 +330,13 @@ Then transition into:
 
 What if the blockchain could verify the payment without seeing everything?
 
-SECTION — THE XERO SOLUTION
+SECTION — THE ZERO SOLUTION
 
 Heading:
 
 Verify everything. Reveal less.
 
-Explain XERO's privacy model.
+Explain ZERO's privacy model.
 
 Visual:
 
@@ -461,11 +461,11 @@ Heading:
 
 Watch a private payment happen.
 
-Create an interactive simulated XERO transaction console.
+Create an interactive simulated ZERO transaction console.
 
 Example:
 
-XERO AGENT
+ZERO AGENT
 research-agent-01
 
 REQUEST
@@ -579,7 +579,7 @@ Private trading
 
 API payments
 
-SECTION — HOW XERO WORKS
+SECTION — HOW ZERO WORKS
 
 Heading:
 
@@ -590,7 +590,7 @@ Architecture:
                     USER / AGENT
                          │
                          ↓
-                   XERO WALLET
+                   ZERO WALLET
                          │
                          ↓
                    POLICY ENGINE
@@ -606,7 +606,7 @@ Architecture:
 
 Each layer should be interactive.
 
-XERO Wallet
+ZERO Wallet
 
 Controls private funds.
 
@@ -634,7 +634,7 @@ One API for private money.
 
 Show a polished code example:
 
-const agent = await xero.wallet.createAgent({
+const agent = await zero.wallet.createAgent({
   budget: 100,
   dailyLimit: 20,
   allowedProviders: [
@@ -656,7 +656,7 @@ Secondary:
 
 View GitHub →
 
-Make XERO feel extremely developer-friendly.
+Make ZERO feel extremely developer-friendly.
 
 SECTION — SECURITY
 
@@ -704,7 +704,7 @@ Build payments that are private, programmable, and verifiable.
 
 Primary:
 
-Launch XERO
+Launch ZERO
 
 Secondary:
 
@@ -718,7 +718,7 @@ FOOTER
 
 Logo:
 
-XERO
+ZERO
 
 Columns:
 
@@ -758,7 +758,7 @@ Terms
 
 Bottom:
 
-© 2026 XERO
+© 2026 ZERO
 
 Built on Solana
 
@@ -828,9 +828,9 @@ USDC
 
 ZK infrastructure
 
-XERO privacy layer
+ZERO privacy layer
 
-XERO policy engine
+ZERO policy engine
 
 AI-agent wallets
 
@@ -868,19 +868,19 @@ The website must explain an extremely technical product in seconds.
 
 A visitor should immediately understand:
 
-1. XERO is money.
+1. ZERO is money.
 
-2. XERO is private.
+2. ZERO is private.
 
-3. XERO remains verifiable.
+3. ZERO remains verifiable.
 
-4. XERO is programmable.
+4. ZERO is programmable.
 
-5. XERO enables autonomous AI-agent payments.
+5. ZERO enables autonomous AI-agent payments.
 
 The website should feel like the homepage of a serious financial infrastructure company building the next generation of onchain payments.
 
-XERO's visual personality
+ZERO's visual personality
 
 Obsidian. Mint. Violet. Cryptographic. Financial. Precise.
 
@@ -892,7 +892,7 @@ Not cyberpunk.
 
 Quietly powerful.  ---  EXPLICIT LANDING-PAGE STRUCTURE
 
-Build the XERO landing page as a single, carefully sequenced marketing experience.
+Build the ZERO landing page as a single, carefully sequenced marketing experience.
 
 The page should follow this exact order:
 
@@ -904,7 +904,7 @@ The page should follow this exact order:
         ↓
 04. THE PROBLEM
         ↓
-05. XERO SOLUTION
+05. ZERO SOLUTION
         ↓
 06. PRIVATE + VERIFIABLE
         ↓
@@ -918,7 +918,7 @@ The page should follow this exact order:
         ↓
 11. USE CASES
         ↓
-12. HOW XERO WORKS
+12. HOW ZERO WORKS
         ↓
 13. DEVELOPER SECTION
         ↓
@@ -931,11 +931,11 @@ The page should follow this exact order:
 
 01 — NAVBAR
 
-Purpose: Establish the XERO brand and provide navigation.
+Purpose: Establish the ZERO brand and provide navigation.
 
 Layout:
 
-XERO                    Product  Technology  Use Cases  Developers  Docs
+ZERO                    Product  Technology  Use Cases  Developers  Docs
 
                                            GitHub   Launch App
 
@@ -954,7 +954,7 @@ Mobile hamburger menu
 
 02 — HERO
 
-Purpose: Immediately explain what XERO is.
+Purpose: Immediately explain what ZERO is.
 
 Eyebrow:
 
@@ -974,7 +974,7 @@ Move digital dollars without exposing your entire financial history. Define spen
 
 CTAs:
 
-Launch XERO
+Launch ZERO
 
 Explore the Protocol
 
@@ -1023,7 +1023,7 @@ Keep this section compact.
 
 04 — THE PROBLEM
 
-Purpose: Explain why XERO exists.
+Purpose: Explain why ZERO exists.
 
 Small label:
 
@@ -1057,13 +1057,13 @@ What if the blockchain could verify the payment without seeing everything?
 
 Use this section to create the problem before introducing the solution.
 
-05 — XERO SOLUTION
+05 — ZERO SOLUTION
 
-Purpose: Introduce XERO clearly.
+Purpose: Introduce ZERO clearly.
 
 Small label:
 
-THE XERO LAYER
+THE ZERO LAYER
 
 Headline:
 
@@ -1073,7 +1073,7 @@ Explain the fundamental concept:
 
 USDC
   ↓
-XERO
+ZERO
   ↓
 PRIVATE PAYMENT
   ↓
@@ -1106,7 +1106,7 @@ Privacy doesn't mean trust.
 
 Supporting copy:
 
-XERO uses cryptographic proofs so transactions can remain verifiable without exposing unnecessary financial information.
+ZERO uses cryptographic proofs so transactions can remain verifiable without exposing unnecessary financial information.
 
 Create an animated split-screen:
 
@@ -1140,7 +1140,7 @@ Keep the explanation visual.
 
 07 — PROGRAMMABLE MONEY
 
-Purpose: Establish XERO's major differentiation.
+Purpose: Establish ZERO's major differentiation.
 
 Headline:
 
@@ -1154,7 +1154,7 @@ Create an interactive policy interface.
 
 Example:
 
-XERO POLICY
+ZERO POLICY
 
 Daily limit          $100
 Per transaction      $20
@@ -1189,7 +1189,7 @@ Agent permissions
 
 08 — AI AGENTS
 
-Purpose: Introduce XERO's most differentiated use case.
+Purpose: Introduce ZERO's most differentiated use case.
 
 Headline:
 
@@ -1203,7 +1203,7 @@ Visual architecture:
 
 AI AGENT
    ↓
-XERO WALLET
+ZERO WALLET
    ↓
 POLICY ENGINE
    ↓
@@ -1270,7 +1270,7 @@ SETTLE
 
 Then display:
 
-XERO AGENT
+ZERO AGENT
 research-agent-01
 
 REQUEST
@@ -1370,7 +1370,7 @@ API PAYMENTS
 PRIVATE TRADING
 
 
-12 — HOW XERO WORKS
+12 — HOW ZERO WORKS
 
 Purpose: Explain the architecture.
 
@@ -1382,7 +1382,7 @@ Architecture diagram:
 
 USER / AGENT
      ↓
-XERO WALLET
+ZERO WALLET
      ↓
 POLICY ENGINE
      ↓
@@ -1395,7 +1395,7 @@ USDC
 
 Make each layer expandable.
 
-XERO WALLET
+ZERO WALLET
 
 Controls private funds.
 
@@ -1425,7 +1425,7 @@ One API for private money.
 
 Show code:
 
-const agent = await xero.wallet.createAgent({
+const agent = await zero.wallet.createAgent({
   budget: 100,
   dailyLimit: 20,
   allowedProviders: [
@@ -1442,7 +1442,7 @@ await agent.pay({
 
 Supporting text:
 
-Build wallets, agents, subscriptions, payroll, and private payment applications on XERO.
+Build wallets, agents, subscriptions, payroll, and private payment applications on ZERO.
 
 CTAs:
 
@@ -1497,7 +1497,7 @@ Build payments that are private, programmable, and verifiable.
 
 Primary CTA:
 
-Launch XERO →
+Launch ZERO →
 
 Secondary CTA:
 
@@ -1513,7 +1513,7 @@ Give this section generous vertical spacing.
 
 Minimal and compact.
 
-XERO
+ZERO
 
 Private programmable money on Solana.
 
@@ -1541,7 +1541,7 @@ Terms
 
 Bottom:
 
-© 2026 XERO
+© 2026 ZERO
 BUILT ON SOLANA
 
 
@@ -1586,7 +1586,7 @@ The visitor journey should feel like:
 
 ↓
 
-"I understand what XERO does."
+"I understand what ZERO does."
 
 ↓
 
